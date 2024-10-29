@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij.platform' version '2.1.0'
+}
+
+repositories {
+    mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity '2023.1.1'
+        jetbrainsRuntime()
+
+        bundledPlugin 'com.intellij.java'
+
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+
+        testFramework TestFrameworkType.Platform.INSTANCE
+    }
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    testImplementation libs.junit
+}
+
+patchPluginXml {
+    sinceBuild = "231.1"
+    untilBuild = "998.*"
+}
+
+jar {
+    archiveBaseName = project.pluginName
+}
+composedJar {
+    archiveBaseName = project.pluginName
+}
+buildPlugin {
+    archiveBaseName = project.pluginName
+}
+instrumentedJar {
+    archiveBaseName = project.pluginName
+}
+jarSearchableOptions {
+    archiveBaseName = project.pluginName
+}
+
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)

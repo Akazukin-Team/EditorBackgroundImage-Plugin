@@ -1,0 +1,62 @@
+<idea-plugin>
+    <id>org.akazukin.editorBackgroundImage</id>
+    <name>Editor Background Image</name>
+    <version>1.0.0</version>
+    <vendor email="abcqqqw@gmail.com" url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
+        Akazukin-Team
+    </vendor>
+
+    <description><![CDATA[
+      Set the editor background to a random picture from a folder or selected picture.
+    ]]></description>
+
+    <change-notes>
+        <![CDATA[<html>
+        <h3>1.0.0</h3>
+        <ul>
+          <li>First release.</li>
+        </ul>
+        </html>]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="180"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+
+    <!-- uncomment to enable plugin in all products -->
+    <depends>com.intellij.modules.lang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="org.akazukin.intellij.background.EditorBackgroundImage"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable groupId="appearance" groupWeight="20" id="editor.background.image"
+                                 displayName="Editor Background Image"
+                                 instance="org.akazukin.intellij.background.gui.Settings"/>
+    </extensions>
+
+    <actions>
+        <action id="randomBackgroundImage"
+                class="org.akazukin.intellij.background.actions.SetBackground"
+                text="Set Background To Random Image">
+        </action>
+        <action id="clearBackgroundImage"
+                class="org.akazukin.intellij.background.actions.ClearBackground"
+                text="Clear Background Image">
+        </action>
+        <action id="cacheBackgroundImage"
+                class="org.akazukin.intellij.background.actions.CacheBackgroundImages"
+                text="Cache Background Images">
+        </action>
+        <group id="editorBackgroundImage" text="Editor Background Image" description="Editor Background Image"
+               popup="true">
+            <reference ref="randomBackgroundImage"/>
+            <reference ref="clearBackgroundImage"/>
+            <add-to-group group-id="ViewMenu" anchor="last"/>
+        </group>
+    </actions>
+
+</idea-plugin>
