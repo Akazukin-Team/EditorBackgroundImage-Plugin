@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @State(
         name = EditorBackgroundImage.PLUGIN_NAME + "Config",
         storages = {@Storage(
-                roamingType = RoamingType.DEFAULT,
+                roamingType = RoamingType.PER_OS,
                 value = EditorBackgroundImage.PLUGIN_NAME + "Config.xml"
         )}
 )
