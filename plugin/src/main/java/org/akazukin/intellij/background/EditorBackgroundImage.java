@@ -27,8 +27,8 @@ public final class EditorBackgroundImage implements ProjectActivity, DynamicPlug
     private static File[] imageCache;
 
     @Override
-    public @Nullable Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-        Config.State state = Config.getInstance();
+    public @Nullable Object execute(@NotNull final Project project, @NotNull final Continuation<? super Unit> continuation) {
+        final Config.State state = Config.getInstance();
         if (state.isChanges()) {
             BackgroundScheduler.schedule();
         }
@@ -36,7 +36,7 @@ public final class EditorBackgroundImage implements ProjectActivity, DynamicPlug
     }
 
     @Override
-    public void pluginLoaded(@NotNull IdeaPluginDescriptor pluginDescriptor) {
+    public void pluginLoaded(@NotNull final IdeaPluginDescriptor pluginDescriptor) {
         Utils.notice("Loaded", pluginDescriptor.getPluginId().getIdString(), NotificationType.INFORMATION);
         if (!isEditorBgImgPlugin(pluginDescriptor)) {
             return;
@@ -47,12 +47,12 @@ public final class EditorBackgroundImage implements ProjectActivity, DynamicPlug
         DynamicPluginListener.super.pluginLoaded(pluginDescriptor);
     }
 
-    private static boolean isEditorBgImgPlugin(@NotNull IdeaPluginDescriptor pluginDescriptor) {
+    private static boolean isEditorBgImgPlugin(@NotNull final IdeaPluginDescriptor pluginDescriptor) {
         return pluginDescriptor.getPluginId().equals(PluginId.getId(ACT_PLUGIN_ID));
     }
 
     @Override
-    public void pluginUnloaded(@NotNull IdeaPluginDescriptor pluginDescriptor, boolean isUpdate) {
+    public void pluginUnloaded(@NotNull final IdeaPluginDescriptor pluginDescriptor, final boolean isUpdate) {
         Utils.notice("Unloaded", pluginDescriptor.getPluginId().getIdString(), NotificationType.INFORMATION);
         if (!isEditorBgImgPlugin(pluginDescriptor)) {
             return;

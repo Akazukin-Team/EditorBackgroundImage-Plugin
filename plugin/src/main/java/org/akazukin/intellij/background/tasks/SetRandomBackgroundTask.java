@@ -18,10 +18,10 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
 
     @Override
     public boolean getAsBoolean() {
-        PropertiesComponent props = PropertiesComponent.getInstance();
-        Config.State state = Config.getInstance();
+        final PropertiesComponent props = PropertiesComponent.getInstance();
+        final Config.State state = Config.getInstance();
 
-        List<String> targets = new ArrayList<>();
+        final List<String> targets = new ArrayList<>();
         if (state.isChangeEditor()) {
             targets.add(IdeBackgroundUtil.EDITOR_PROP);
         }
@@ -36,9 +36,9 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
             }
         }
 
-        File[] images = EditorBackgroundImage.getImageCache();
+        final File[] images = EditorBackgroundImage.getImageCache();
         File image = null;
-        for (String type : targets) {
+        for (final String type : targets) {
             if (image == null || !(state.isSynchronizeImages() || images.length == 1)) {
                 for (int i = 0; i < 10; i++) {
                     image = images[random.nextInt(images.length)];

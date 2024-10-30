@@ -16,11 +16,11 @@ import org.jetbrains.annotations.NotNull;
 
 @Service({Service.Level.APP})
 @State(
-        name = EditorBackgroundImage.PLUGIN_NAME + "Config",
-        storages = {@Storage(
-                roamingType = RoamingType.PER_OS,
-                value = EditorBackgroundImage.PLUGIN_NAME + "Config.xml"
-        )}
+    name = EditorBackgroundImage.PLUGIN_NAME + "Config",
+    storages = {@Storage(
+        roamingType = RoamingType.PER_OS,
+        value = EditorBackgroundImage.PLUGIN_NAME + "Config.xml"
+    )}
 )
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,7 +33,7 @@ public final class Config implements PersistentStateComponent<Config.State> {
     }
 
     @Override
-    public void loadState(@NotNull State state) {
+    public void loadState(@NotNull final State state) {
         this.state = state;
     }
 

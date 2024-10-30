@@ -11,7 +11,7 @@ public final class CacheBackgroundImages extends AnAction {
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@NotNull final AnActionEvent e) {
         new CacheBackgroundImagesTask().getAsBoolean();
     }
 }

@@ -20,7 +20,7 @@ public final class Utils {
      * @return Returns true if only if param equal to, ignoring case, the string is "true". or if param equal to, ignoring case, the string is "false".
      * @throws java.lang.IllegalArgumentException throws exception if param is invalid for to return
      */
-    public static boolean getBoolean(@NotNull String name) throws IllegalArgumentException {
+    public static boolean getBoolean(@NotNull final String name) throws IllegalArgumentException {
         if ("true".equalsIgnoreCase(name)) {
             return true;
         }
@@ -30,7 +30,7 @@ public final class Utils {
         throw new IllegalArgumentException("Invalid boolean value " + name);
     }
 
-    public static File[] collectFiles(@NotNull File directory, int depth) {
+    public static File[] collectFiles(@NotNull final File directory, final int depth) {
         if (directory.isFile()) {
             throw new IllegalArgumentException("directory is not a file");
         }
@@ -38,13 +38,13 @@ public final class Utils {
             throw new IllegalArgumentException("depth is not positive");
         }
 
-        File[] files = directory.listFiles();
+        final File[] files = directory.listFiles();
         if (depth == 0) {
             return files;
         }
 
-        List<File> files2 = new ArrayList<>();
-        for (File file : files) {
+        final List<File> files2 = new ArrayList<>();
+        for (final File file : files) {
             if (file.isDirectory()) {
                 files2.addAll(Arrays.asList(collectFiles(file, depth - 1)));
             } else {
@@ -55,11 +55,11 @@ public final class Utils {
         return files2.toArray(new File[0]);
     }
 
-    public static boolean isValidImage(File file) {
+    public static boolean isValidImage(final File file) {
         return file.exists() && file.isFile() && file.canRead() && FILE_TYPE_MAP.getContentType(file).startsWith("image/");
     }
 
-    public static void notice(String title, String message, NotificationType type) {
+    public static void notice(final String title, final String message, final NotificationType type) {
         Notifications.Bus.notify(
             new Notification(
                 EditorBackgroundImage.PLUGIN_ID,
