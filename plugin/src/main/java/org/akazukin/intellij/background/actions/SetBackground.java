@@ -14,8 +14,8 @@ public final class SetBackground extends AnAction {
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
-        Config.State state = Config.getInstance();
+    public void actionPerformed(@NotNull final AnActionEvent e) {
+        final Config.State state = Config.getInstance();
         if (state.isChanges()) {
             BackgroundScheduler.schedule();
         } else {

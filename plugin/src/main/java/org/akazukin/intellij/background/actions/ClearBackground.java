@@ -15,14 +15,14 @@ public final class ClearBackground extends AnAction {
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@NotNull final AnActionEvent e) {
         BackgroundScheduler.shutdown();
 
-        PropertiesComponent props = PropertiesComponent.getInstance();
+        final PropertiesComponent props = PropertiesComponent.getInstance();
         props.setValue(IdeBackgroundUtil.EDITOR_PROP, false);
         props.setValue(IdeBackgroundUtil.FRAME_PROP, false);
 
-        Config.State state = Config.getInstance();
+        final Config.State state = Config.getInstance();
         state.setChanges(false);
     }
 }

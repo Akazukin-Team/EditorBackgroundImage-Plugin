@@ -16,9 +16,9 @@ public final class BackgroundScheduler {
     private static ScheduledExecutorService pool = null;
 
     public static void schedule() {
-        Config.State state = Config.getInstance();
-        int interval = state.getIntervalAmount();
-        int timeUnit = state.getIntervalUnit();
+        final Config.State state = Config.getInstance();
+        final int interval = state.getIntervalAmount();
+        final int timeUnit = state.getIntervalUnit();
 
         if (pool != null) {
             shutdown();
@@ -28,9 +28,9 @@ public final class BackgroundScheduler {
             return;
         }
 
-        PropertiesComponent props = PropertiesComponent.getInstance();
-        int delay = props.isValueSet(IdeBackgroundUtil.EDITOR_PROP) ? interval : 0;
-        TimeUnit timeUnitEnum = Settings.TIME_UNITS[timeUnit];
+        final PropertiesComponent props = PropertiesComponent.getInstance();
+        final int delay = props.isValueSet(IdeBackgroundUtil.EDITOR_PROP) ? interval : 0;
+        final TimeUnit timeUnitEnum = Settings.TIME_UNITS[timeUnit];
 
         pool = Executors.newScheduledThreadPool(1);
         pool.scheduleWithFixedDelay(() -> {

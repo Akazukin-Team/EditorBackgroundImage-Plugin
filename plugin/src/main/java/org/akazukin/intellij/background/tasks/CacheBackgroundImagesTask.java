@@ -13,7 +13,7 @@ import org.akazukin.intellij.background.Utils;
 public final class CacheBackgroundImagesTask implements BooleanSupplier {
     @Override
     public boolean getAsBoolean() {
-        Config.State state = Config.getInstance();
+        final Config.State state = Config.getInstance();
 
         if (state.getImages().isEmpty()) {
             Utils.notice("Warning", "Image paths is empty", NotificationType.WARNING);
@@ -21,14 +21,14 @@ public final class CacheBackgroundImagesTask implements BooleanSupplier {
             EditorBackgroundImage.setImageCache(null);
             return false;
         }
-        
-        File[] files = state.getImages().entrySet().stream()
+
+        final File[] files = state.getImages().entrySet().stream()
             .filter(e -> e.getValue())
             .map(e -> new File(e.getKey()))
             .toArray(File[]::new);
 
-        Set<File> imagePaths = new HashSet<>();
-        for (File path : files) {
+        final Set<File> imagePaths = new HashSet<>();
+        for (final File path : files) {
             if (path.isDirectory()) {
                 imagePaths.addAll(Arrays.asList(Utils.collectFiles(path, 3)));
             } else {

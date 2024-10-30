@@ -31,17 +31,17 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
         new ClickListener() {
             @Override
-            public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+            public boolean onClick(@NotNull final MouseEvent event, final int clickCount) {
                 doClick(event.getButton());
                 return true;
             }
         }.installOn(getTable());
     }
 
-    private void doClick(int button) {
-        int selected = getTable().getSelectedRow();
+    private void doClick(final int button) {
+        final int selected = getTable().getSelectedRow();
         if (selected >= 0) {
-            Pair<File, Boolean> o = clickItem(getData().get(selected), button);
+            final Pair<File, Boolean> o = clickItem(getData().get(selected), button);
             if (o != null) {
                 getData().set(selected, o);
             }
@@ -51,7 +51,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     }
 
     @Nullable
-    private Pair<File, Boolean> clickItem(Pair<File, Boolean> pair, int button) {
+    private Pair<File, Boolean> clickItem(final Pair<File, Boolean> pair, final int button) {
         if (getTable().getSelectedColumn() == 1) {
             return new Pair<>(pair.getFirst(), !pair.getSecond());
         }
@@ -67,7 +67,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
             @Override
             @NotNull
-            public @NlsContexts.ColumnName String getColumnName(int columnIndex) {
+            public @NlsContexts.ColumnName String getColumnName(final int columnIndex) {
                 switch (columnIndex) {
                     case 0:
                         return "Path";
@@ -79,12 +79,12 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
             }
 
             @Override
-            public Object getField(Pair<File, Boolean> o, int columnIndex) {
+            public Object getField(final Pair<File, Boolean> o, final int columnIndex) {
                 return columnIndex == 0 ? o.getFirst() : o.getSecond();
             }
 
             @Override
-            public Class<?> getColumnClass(int columnIndex) {
+            public Class<?> getColumnClass(final int columnIndex) {
                 switch (columnIndex) {
                     case 0:
                         return File.class;
@@ -99,7 +99,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     @Override
     protected @Nullable Pair<File, Boolean> addItem() {
-        VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false), null, defaultFile);
+        final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false), null, defaultFile);
         if (virtualFile == null) {
             return null;
         }
@@ -108,14 +108,14 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     }
 
     @Override
-    protected boolean removeItem(Pair<File, Boolean> o) {
+    protected boolean removeItem(final Pair<File, Boolean> o) {
         return true;
     }
 
     @Override
-    protected @Nullable Pair<File, Boolean> editItem(Pair<File, Boolean> pair) {
+    protected @Nullable Pair<File, Boolean> editItem(final Pair<File, Boolean> pair) {
         if (getTable().getSelectedColumn() == 0) {
-            VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false), null, defaultFile);
+            final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false), null, defaultFile);
             if (virtualFile == null) {
                 return pair;
             }
@@ -126,16 +126,16 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     }
 
     public Map<File, Boolean> getDataAsMap() {
-        Map<File, Boolean> result = new LinkedHashMap<>();
-        for (Pair<File, Boolean> p : getData()) {
+        final Map<File, Boolean> result = new LinkedHashMap<>();
+        for (final Pair<File, Boolean> p : getData()) {
             result.put(p.getFirst(), p.getSecond());
         }
         return result;
     }
 
-    public void setDataFromMap(Map<File, Boolean> map) {
-        List<Pair<File, Boolean>> result = new ArrayList<>();
-        for (Map.Entry<File, Boolean> e : map.entrySet()) {
+    public void setDataFromMap(final Map<File, Boolean> map) {
+        final List<Pair<File, Boolean>> result = new ArrayList<>();
+        for (final Map.Entry<File, Boolean> e : map.entrySet()) {
             result.add(Pair.create(e.getKey(), e.getValue()));
         }
         setData(result);
