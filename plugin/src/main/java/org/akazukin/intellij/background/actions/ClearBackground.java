@@ -4,7 +4,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
-import org.akazukin.intellij.background.gui.Settings;
+import org.akazukin.intellij.background.Config;
 import org.akazukin.intellij.background.tasks.BackgroundScheduler;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +21,8 @@ public final class ClearBackground extends AnAction {
         PropertiesComponent props = PropertiesComponent.getInstance();
         props.setValue(IdeBackgroundUtil.EDITOR_PROP, false);
         props.setValue(IdeBackgroundUtil.FRAME_PROP, false);
-        props.setValue(Settings.CHANGE_EVERY, false);
+
+        Config.State state = Config.getInstance();
+        state.setChanges(false);
     }
 }

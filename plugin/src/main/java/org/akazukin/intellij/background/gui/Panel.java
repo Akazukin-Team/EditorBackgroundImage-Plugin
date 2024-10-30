@@ -103,10 +103,8 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
         if (virtualFile == null) {
             return null;
         }
-
-        File file = new File(virtualFile.getPath());
         defaultFile = virtualFile;
-        return new Pair<>(file, true);
+        return new Pair<>(new File(virtualFile.getPath()), true);
     }
 
     @Override
@@ -121,14 +119,10 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
             if (virtualFile == null) {
                 return pair;
             }
-
-            File file = new File(virtualFile.getPath());
             defaultFile = virtualFile;
-            return new Pair<>(file, pair.getSecond());
-        } else {
-            //return new Pair<>(pair.getFirst(), !pair.getSecond());
-            return pair;
+            return new Pair<>(new File(virtualFile.getPath()), pair.getSecond());
         }
+        return pair;
     }
 
     public Map<File, Boolean> getDataAsMap() {
