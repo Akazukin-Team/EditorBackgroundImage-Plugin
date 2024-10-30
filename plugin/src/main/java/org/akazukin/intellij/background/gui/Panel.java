@@ -26,7 +26,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     public Panel() {
         super(getTableModel(), new ArrayList<>(), "Backgrounds");
         getTable().setShowColumns(true);
-        getTable().getColumnModel().getColumn(0).setPreferredWidth(575);
+        getTable().getColumnModel().getColumn(1).setMaxWidth(75);
 
 
         new ClickListener() {
