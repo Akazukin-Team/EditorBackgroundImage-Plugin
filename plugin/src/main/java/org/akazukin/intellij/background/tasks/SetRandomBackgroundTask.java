@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
+import org.akazukin.intellij.background.Config;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.Utils;
-import org.akazukin.intellij.background.gui.Settings;
 
 public final class SetRandomBackgroundTask implements BooleanSupplier {
 
@@ -19,27 +19,27 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
     @Override
     public boolean getAsBoolean() {
         PropertiesComponent props = PropertiesComponent.getInstance();
+        Config.State state = Config.getInstance();
 
         List<String> targets = new ArrayList<>();
-        if (props.getBoolean(Settings.EDITOR_BUTTON, false)) {
+        if (state.isChangeEditor()) {
             targets.add(IdeBackgroundUtil.EDITOR_PROP);
         }
-        if (props.getBoolean(Settings.FRAME_BUTTON, false)) {
+        if (state.isChangeFrame()) {
             targets.add(IdeBackgroundUtil.FRAME_PROP);
         }
 
         if (EditorBackgroundImage.getImageCache() == null) {
             if (!new CacheBackgroundImagesTask().getAsBoolean()) {
-                props.setValue(Settings.EDITOR_BUTTON, false);
+                state.setChanges(false);
                 return false;
             }
         }
 
-        boolean keepSameImage = props.getBoolean(Settings.SYNCHRONIZE_IMAGE);
         File[] images = EditorBackgroundImage.getImageCache();
         File image = null;
         for (String type : targets) {
-            if (image == null || !(keepSameImage || images.length == 1)) {
+            if (image == null || !(state.isSynchronizeImages() || images.length == 1)) {
                 for (int i = 0; i < 10; i++) {
                     image = images[random.nextInt(images.length)];
                     if (image != null && Utils.isValidImage(image)) {
@@ -50,7 +50,7 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
                 }
                 if (image == null) {
                     Utils.notice("Error", "Failed to fetch image paths", NotificationType.ERROR);
-                    props.setValue(Settings.EDITOR_BUTTON, false);
+                    state.setChanges(false);
                     return false;
                 }
             }
