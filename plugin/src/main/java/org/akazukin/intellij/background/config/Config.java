@@ -1,5 +1,6 @@
-package org.akazukin.intellij.background;
+package org.akazukin.intellij.background.config;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
@@ -12,9 +13,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.PluginHandler;
 import org.jetbrains.annotations.NotNull;
 
-@Service({Service.Level.APP})
+@Service
 @State(
     name = EditorBackgroundImage.PLUGIN_NAME + "Config",
     storages = {@Storage(
@@ -24,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 )
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class Config implements PersistentStateComponent<Config.State> {
+public final class Config implements PersistentStateComponent<Config.State>, Disposable {
     State state;
 
     @NotNull
@@ -42,6 +45,13 @@ public final class Config implements PersistentStateComponent<Config.State> {
         if (state == null) {
             state = new State();
         }
+    }
+
+    @Override
+    public void dispose() {
+        state = null;
+
+        PluginHandler.onUnload();
     }
 
     @Setter

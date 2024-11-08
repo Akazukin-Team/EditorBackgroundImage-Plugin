@@ -20,7 +20,7 @@ public final class Utils {
      * @return Returns true if only if param equal to, ignoring case, the string is "true". or if param equal to, ignoring case, the string is "false".
      * @throws java.lang.IllegalArgumentException throws exception if param is invalid for to return
      */
-    public static boolean getBoolean(@NotNull final String name) throws IllegalArgumentException {
+    public static boolean getAsBoolean(@NotNull final String name) throws IllegalArgumentException {
         if ("true".equalsIgnoreCase(name)) {
             return true;
         }
@@ -56,7 +56,11 @@ public final class Utils {
     }
 
     public static boolean isValidImage(final File file) {
-        return file.exists() && file.isFile() && file.canRead() && FILE_TYPE_MAP.getContentType(file).startsWith("image/");
+        if (!(file.exists() && file.isFile() && file.canRead())) {
+            return false;
+        }
+        final String contentType = FILE_TYPE_MAP.getContentType(file);
+        return contentType.startsWith("image/") || contentType.equals("application/octet-stream");
     }
 
     public static void notice(final String title, final String message, final NotificationType type) {
