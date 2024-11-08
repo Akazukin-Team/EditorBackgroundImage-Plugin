@@ -27,10 +27,12 @@ public final class CacheBackgroundImagesTask implements BooleanSupplier {
             .map(e -> new File(e.getKey()))
             .toArray(File[]::new);
 
+        int depth = (state.isHierarchicalExplore() ? state.getHierarchicalAmount() : 0);
+        
         final Set<File> imagePaths = new HashSet<>();
         for (final File path : files) {
             if (path.isDirectory()) {
-                imagePaths.addAll(Arrays.asList(Utils.collectFiles(path, 3)));
+                imagePaths.addAll(Arrays.asList(Utils.collectFiles(path, depth)));
             } else {
                 imagePaths.add(path);
             }
