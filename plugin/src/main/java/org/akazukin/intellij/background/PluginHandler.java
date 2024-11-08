@@ -1,7 +1,6 @@
 package org.akazukin.intellij.background;
 
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.extensions.PluginId;
 import org.akazukin.intellij.background.config.Config;
 import org.akazukin.intellij.background.tasks.BackgroundScheduler;
@@ -9,7 +8,6 @@ import org.akazukin.intellij.background.tasks.SetRandomBackgroundTask;
 
 public class PluginHandler {
     public static void onUnload() {
-        Utils.notice("onUnload", "", NotificationType.INFORMATION);
         BackgroundScheduler.shutdown();
     }
 
@@ -18,8 +16,6 @@ public class PluginHandler {
     }
 
     public static void onLoad() {
-        Utils.notice("onLoad", "", NotificationType.INFORMATION);
-
         final Config.State state = Config.getInstance();
         if (state.isChanges()) {
             new SetRandomBackgroundTask().getAsBoolean();
