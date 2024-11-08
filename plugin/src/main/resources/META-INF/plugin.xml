@@ -1,8 +1,10 @@
 <idea-plugin>
     <id>org.akazukin.editorBackgroundImage</id>
     <name>Editor Background Image</name>
-    <version>1.0.0</version>
-    <vendor email="abcqqqw@gmail.com" url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
+    <version>1.1.0</version>
+    <vendor
+        email="akazukin.team+intellij-background@gmail.com"
+        url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
         Akazukin-Team
     </vendor>
 
@@ -11,12 +13,19 @@
     ]]></description>
 
     <change-notes>
-        <![CDATA[<html>
-        <h3>1.0.0</h3>
-        <ul>
-          <li>First release.</li>
-        </ul>
-        </html>]]>
+        <![CDATA[
+            <html>
+                <h3>1.0.0</h3>
+                <ul>
+                    <a target="_blank" href="https://plugins.jetbrains.com/plugin/25691-editor-background-image/versions/stable/630625">2024/11/9</a> - First release
+                </ul>
+
+                <h3>1.1.0</h3>
+                <ul>
+                    <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.0.0...1.1.0">2024/11/9</a> - Added hierarchical setting
+                </ul>
+            </html>
+        ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
