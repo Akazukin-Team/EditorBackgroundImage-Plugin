@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 import lombok.Setter;
+import org.akazukin.intellij.background.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,7 +100,12 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     @Override
     protected @Nullable Pair<File, Boolean> addItem() {
-        final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false), null, defaultFile);
+        final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false) {
+            @Override
+            public boolean isFileSelectable(@Nullable final VirtualFile file) {
+                return super.isFileSelectable(file) || Utils.isValidImage(new File(file.getPath()));
+            }
+        }, null, defaultFile);
         if (virtualFile == null) {
             return null;
         }
@@ -115,7 +121,12 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     @Override
     protected @Nullable Pair<File, Boolean> editItem(final Pair<File, Boolean> pair) {
         if (getTable().getSelectedColumn() == 0) {
-            final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false), null, defaultFile);
+            final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false) {
+                @Override
+                public boolean isFileSelectable(@Nullable final VirtualFile file) {
+                    return super.isFileSelectable(file) || Utils.isValidImage(new File(file.getPath()));
+                }
+            }, null, defaultFile);
             if (virtualFile == null) {
                 return pair;
             }

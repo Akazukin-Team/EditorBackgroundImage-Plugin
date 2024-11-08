@@ -4,7 +4,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
-import org.akazukin.intellij.background.Config;
+import org.akazukin.intellij.background.config.Config;
 import org.akazukin.intellij.background.tasks.BackgroundScheduler;
 import org.jetbrains.annotations.NotNull;
 

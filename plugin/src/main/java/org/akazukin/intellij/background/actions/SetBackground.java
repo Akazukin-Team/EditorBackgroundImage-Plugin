@@ -2,7 +2,7 @@ package org.akazukin.intellij.background.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.akazukin.intellij.background.Config;
+import org.akazukin.intellij.background.config.Config;
 import org.akazukin.intellij.background.tasks.BackgroundScheduler;
 import org.akazukin.intellij.background.tasks.SetRandomBackgroundTask;
 import org.jetbrains.annotations.NotNull;

@@ -1,12 +1,14 @@
 package org.akazukin.intellij.background.tasks;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.experimental.UtilityClass;
-import org.akazukin.intellij.background.Config;
+import org.akazukin.intellij.background.Utils;
+import org.akazukin.intellij.background.config.Config;
 import org.akazukin.intellij.background.gui.Settings;
 
 @UtilityClass
@@ -16,6 +18,7 @@ public final class BackgroundScheduler {
     private static ScheduledExecutorService pool = null;
 
     public static void schedule() {
+        Utils.notice("schedule", "", NotificationType.INFORMATION);
         final Config.State state = Config.getInstance();
         final int interval = state.getIntervalAmount();
         final int timeUnit = state.getIntervalUnit();
@@ -41,9 +44,10 @@ public final class BackgroundScheduler {
     }
 
     public static void shutdown() {
+        Utils.notice("shutdown", "", NotificationType.INFORMATION);
         if (pool != null && !pool.isTerminated()) {
             pool.shutdownNow();
+            pool = null;
         }
-        pool = null;
     }
 }

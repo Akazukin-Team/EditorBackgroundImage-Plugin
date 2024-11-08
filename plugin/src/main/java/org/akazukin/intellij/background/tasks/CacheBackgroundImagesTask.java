@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
-import org.akazukin.intellij.background.Config;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.Utils;
+import org.akazukin.intellij.background.config.Config;
 
 public final class CacheBackgroundImagesTask implements BooleanSupplier {
     @Override
