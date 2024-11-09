@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.akazukin.editorBackgroundImage</id>
     <name>Editor Background Image</name>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <vendor
         email="akazukin.team+intellij-background@gmail.com"
         url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
@@ -15,14 +15,28 @@
     <change-notes>
         <![CDATA[
             <html>
-                <h3>1.0.0</h3>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1c8bb286a80a568feff776f793bf68f4ba9692a3...1.0.0"><h2>1.0.0 - 2024/11/9</a>
                 <ul>
-                    <a target="_blank" href="https://plugins.jetbrains.com/plugin/25691-editor-background-image/versions/stable/630625">2024/11/9</a> - First release
+                    <li>
+                        First release
+                    </li>
                 </ul>
 
-                <h3>1.1.0</h3>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.0.0...1.1.0"><h2>1.1.0 - 2024/11/9</a>
                 <ul>
-                    <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.0.0...1.1.0">2024/11/9</a> - Added hierarchical setting
+                    <li>
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/219b60d39eefa06926d64bfd4f61ec38c43596d3...779c8b96785e3785f641d1aa9af78f5905a8c53c">2024/11/9</a> - Added hierarchical setting
+                    </li>
+                </ul>
+
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.1.0...1.1.1"><h2>1.1.1 - 2024/11/9</a>
+                <ul>
+                    <li>
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/8f32c0e3903465190c279371eb2ec0916d2aca42...c2319d8cb33d56c6f870bf2637d4a670db7b594b">2024/11/9</a> - Remove bundled plugin
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/2d828f699274219a7b19a37d309155bf7f4db8c6...9809fc26e67c1975e6e43e05f7af1f95449ae2bf">2024/11/9</a> - Fix form layout
+                    </li>
                 </ul>
             </html>
         ]]>
