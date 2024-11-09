@@ -27,7 +27,7 @@ public final class CacheBackgroundImagesTask implements BooleanSupplier {
             .map(e -> new File(e.getKey()))
             .toArray(File[]::new);
 
-        int depth = (state.isHierarchicalExplore() ? state.getHierarchicalAmount() : 0);
+        int depth = (state.isHierarchicalExplore() ? state.getHierarchicalDepth() : 0);
 
         final Set<File> imagePaths = new HashSet<>();
         for (final File path : files) {
