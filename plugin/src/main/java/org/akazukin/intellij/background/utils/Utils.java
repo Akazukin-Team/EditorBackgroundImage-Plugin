@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background;
+package org.akazukin.intellij.background.utils;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.activation.MimetypesFileTypeMap;
 import lombok.experimental.UtilityClass;
+import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
