@@ -19,7 +19,7 @@ dependencies {
         intellijIdeaCommunity '2024.2.4'
         jetbrainsRuntime()
 
-        bundledPlugin 'com.intellij.java'
+        //bundledPlugin 'com.intellij.java'
 
         pluginVerifier()
         zipSigner()
