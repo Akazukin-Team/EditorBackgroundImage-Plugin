@@ -69,7 +69,7 @@ public final class Config implements PersistentStateComponent<Config.State>, Dis
         boolean synchronizeImages;
 
         boolean hierarchicalExplore = false;
-        int hierarchicalAmount = 3;
+        int hierarchicalDepth = 3;
 
         Map<String, Boolean> images = new LinkedHashMap<>();
     }
