@@ -8,6 +8,8 @@ indent_size = 4
 
 insert_final_newline = true
 
+end_of_line = lf
 
-[*.{java,gradle,gitignore,editorconfig,form}]
+
+[*.{java,gradle,gitignore,editorconfig,form,html}]
 trim_trailing_whitespace = true
