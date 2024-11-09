@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.Utils;
 import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.utils.Utils;
 
 public final class SetRandomBackgroundTask implements BooleanSupplier {
 

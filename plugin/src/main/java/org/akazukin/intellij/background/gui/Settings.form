@@ -64,7 +64,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Change background"/>
+          <text value="Set background"/>
         </properties>
       </component>
       <grid id="19a72" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -84,7 +84,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Editor"/>
+              <text value="Editor and Tools"/>
             </properties>
           </component>
           <component id="f81d2" class="javax.swing.JCheckBox" binding="frameButton">
@@ -94,7 +94,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Frame"/>
+              <text value="Empty Frame"/>
             </properties>
           </component>
           <hspacer id="4c7ad">
@@ -126,7 +126,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Hierarchical Explore"/>
+          <text resource-bundle="messages/EditorBackgroundImage" key="settings.hierarchical.explore"/>
         </properties>
       </component>
       <grid id="79cb1" layout-manager="GridBagLayout">

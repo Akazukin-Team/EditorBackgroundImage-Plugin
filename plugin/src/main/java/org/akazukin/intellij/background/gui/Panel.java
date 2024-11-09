@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 import lombok.Setter;
-import org.akazukin.intellij.background.Utils;
+import org.akazukin.intellij.background.utils.BundleUtils;
+import org.akazukin.intellij.background.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,14 +70,18 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
             @Override
             @NotNull
             public @NlsContexts.ColumnName String getColumnName(final int columnIndex) {
+                final String id;
                 switch (columnIndex) {
                     case 0:
-                        return "Path";
+                        id = "path";
+                        break;
                     case 1:
-                        return "Enabled";
+                        id = "enabled";
+                        break;
                     default:
                         throw new IllegalArgumentException(INVALID_COLUMN_MESSAGE);
                 }
+                return BundleUtils.message("settings.backgrounds." + id);
             }
 
             @Override

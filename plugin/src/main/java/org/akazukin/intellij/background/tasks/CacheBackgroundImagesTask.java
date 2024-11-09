@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.Utils;
 import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.utils.Utils;
 
 public final class CacheBackgroundImagesTask implements BooleanSupplier {
     @Override
@@ -28,7 +28,7 @@ public final class CacheBackgroundImagesTask implements BooleanSupplier {
             .toArray(File[]::new);
 
         int depth = (state.isHierarchicalExplore() ? state.getHierarchicalAmount() : 0);
-        
+
         final Set<File> imagePaths = new HashSet<>();
         for (final File path : files) {
             if (path.isDirectory()) {
