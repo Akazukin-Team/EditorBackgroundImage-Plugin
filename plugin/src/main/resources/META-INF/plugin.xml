@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.akazukin.editorBackgroundImage</id>
     <name>Editor Background Image</name>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <vendor
         email="akazukin.team+intellij-background@gmail.com"
         url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
@@ -43,6 +43,13 @@
                 </ul>
 
                 <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.1.1...1.2.0"><h2>1.2.0 - 2024/11/10</a>
+                <ul>
+                    <li>
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/738c62cdb19e79f30718ceece21332495dc1a577...c37d6788463de2ad86f39c32f8d2615a4cbd17fd">2024/11/10</a> - Remove bundled plugin
+                    </li>
+                </ul>
+
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.2.0...1.2.1"><h2>1.2.1 - 2024/11/28</a>
                 <ul>
                     <li>
                         <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/738c62cdb19e79f30718ceece21332495dc1a577...c37d6788463de2ad86f39c32f8d2615a4cbd17fd">2024/11/10</a> - Remove bundled plugin
