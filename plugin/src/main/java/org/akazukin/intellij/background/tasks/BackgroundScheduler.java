@@ -2,12 +2,13 @@ package org.akazukin.intellij.background.tasks;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import lombok.experimental.UtilityClass;
 import org.akazukin.intellij.background.config.Config;
 import org.akazukin.intellij.background.gui.Settings;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @UtilityClass
 public final class BackgroundScheduler {

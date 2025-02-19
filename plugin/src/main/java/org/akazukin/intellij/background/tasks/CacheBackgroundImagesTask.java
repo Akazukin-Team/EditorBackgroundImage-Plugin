@@ -1,14 +1,15 @@
 package org.akazukin.intellij.background.tasks;
 
 import com.intellij.notification.NotificationType;
+import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.utils.Utils;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
-import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.config.Config;
-import org.akazukin.intellij.background.utils.Utils;
 
 public final class CacheBackgroundImagesTask implements BooleanSupplier {
     @Override
@@ -27,7 +28,7 @@ public final class CacheBackgroundImagesTask implements BooleanSupplier {
             .map(e -> new File(e.getKey()))
             .toArray(File[]::new);
 
-        int depth = (state.isHierarchicalExplore() ? state.getHierarchicalDepth() : 0);
+        final int depth = (state.isHierarchicalExplore() ? state.getHierarchicalDepth() : 0);
 
         final Set<File> imagePaths = new HashSet<>();
         for (final File path : files) {

@@ -3,14 +3,15 @@ package org.akazukin.intellij.background.tasks;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
+import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.utils.Utils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
-import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.config.Config;
-import org.akazukin.intellij.background.utils.Utils;
 
 public final class SetRandomBackgroundTask implements BooleanSupplier {
 
@@ -41,7 +42,7 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
         for (final String type : targets) {
             if (image == null || !(state.isSynchronizeImages() || images.length == 1)) {
                 for (int i = 0; i < 10; i++) {
-                    image = images[random.nextInt(images.length)];
+                    image = images[this.random.nextInt(images.length)];
                     if (image != null && Utils.isValidImage(image)) {
                         break;
                     } else {

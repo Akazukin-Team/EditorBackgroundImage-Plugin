@@ -7,8 +7,6 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +14,9 @@ import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Service
 @State(
@@ -42,14 +43,14 @@ public final class Config implements PersistentStateComponent<Config.State>, Dis
 
     @Override
     public void initializeComponent() {
-        if (state == null) {
-            state = new State();
+        if (this.state == null) {
+            this.state = new State();
         }
     }
 
     @Override
     public void dispose() {
-        state = null;
+        this.state = null;
 
         PluginHandler.onUnload();
     }

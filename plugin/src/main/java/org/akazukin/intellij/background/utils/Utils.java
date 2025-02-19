@@ -3,14 +3,15 @@ package org.akazukin.intellij.background.utils;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import lombok.experimental.UtilityClass;
+import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.jetbrains.annotations.NotNull;
+
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.activation.MimetypesFileTypeMap;
-import lombok.experimental.UtilityClass;
-import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public final class Utils {
