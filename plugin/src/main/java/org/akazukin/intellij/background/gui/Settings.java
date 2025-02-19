@@ -6,17 +6,6 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
 import org.akazukin.intellij.background.config.Config;
@@ -25,11 +14,26 @@ import org.akazukin.intellij.background.tasks.SetRandomBackgroundTask;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 
 public final class Settings implements Configurable {
     public static final TimeUnit[] TIME_UNITS = new TimeUnit[]{
         TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS
     };
+
+    private static final int MAX_TIME = 360;
+    private static final int MAX_DEPTH = 10;
 
     private JPanel rootPanel;
     private JCheckBox changeEveryButton;
@@ -52,117 +56,116 @@ public final class Settings implements Configurable {
     public JComponent createComponent() {
         BackgroundScheduler.shutdown();
 
-        intervalSpinner.setModel(new SpinnerNumberModel(0, 0, 360, 2));
-        changeEveryButton.addActionListener(e -> {
-            intervalSpinner.setEnabled(changeEveryButton.isSelected());
-            timeUnitBox.setEnabled(changeEveryButton.isSelected());
+        this.intervalSpinner.setModel(new SpinnerNumberModel(0, 0, MAX_TIME, 2));
+        this.changeEveryButton.addActionListener(e -> {
+            this.intervalSpinner.setEnabled(this.changeEveryButton.isSelected());
+            this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
         });
 
-        for (TimeUnit timeUnit : TIME_UNITS) {
-            timeUnitBox.addItem(BundleUtils.message("settings.change.timeunit." + timeUnit.name().toLowerCase()));
+        for (final TimeUnit timeUnit : TIME_UNITS) {
+            this.timeUnitBox.addItem(BundleUtils.message("settings.change.timeunit." + timeUnit.name().toLowerCase()));
         }
 
 
-        editorButton.setText(IdeBundle.message("toggle.editor.and.tools"));
-        frameButton.setText(IdeBundle.message("toggle.empty.frame"));
+        this.editorButton.setText(IdeBundle.message("toggle.editor.and.tools"));
+        this.frameButton.setText(IdeBundle.message("toggle.empty.frame"));
 
 
-        hierarchicalButton.addActionListener(e -> {
-            hierarchialSpinner.setEnabled(hierarchicalButton.isSelected());
-        });
-        hierarchialSpinner.setModel(new SpinnerNumberModel(3, 1, 10, 1));
+        this.hierarchicalButton.addActionListener(e ->
+            this.hierarchialSpinner.setEnabled(this.hierarchicalButton.isSelected()));
+        this.hierarchialSpinner.setModel(new SpinnerNumberModel(3, 1, MAX_DEPTH, 1));
 
 
-        return rootPanel;
+        return this.rootPanel;
     }
 
     @Override
     public boolean isModified() {
-        Config.State state = Config.getInstance();
+        final Config.State state = Config.getInstance();
 
-        List<Pair<File, Boolean>> bgImgs = state.getImages().entrySet().stream()
+        final List<Pair<File, Boolean>> bgImgs = state.getImages().entrySet().stream()
             .map(e -> Pair.pair(new File(e.getKey()), e.getValue())).toList();
 
-        return state.getIntervalAmount() != ((SpinnerNumberModel) intervalSpinner.getModel()).getNumber().intValue()
-            || state.getIntervalUnit() != timeUnitBox.getSelectedIndex()
+        return state.getIntervalAmount() != ((SpinnerNumberModel) this.intervalSpinner.getModel()).getNumber().intValue()
+            || state.getIntervalUnit() != this.timeUnitBox.getSelectedIndex()
 
-            || state.isChangeEditor() != editorButton.isSelected()
-            || state.isChangeFrame() != frameButton.isSelected()
+            || state.isChangeEditor() != this.editorButton.isSelected()
+            || state.isChangeFrame() != this.frameButton.isSelected()
 
-            || state.isChanges() != changeEveryButton.isSelected()
-            || state.isSynchronizeImages() != synchronizeImageButton.isSelected()
+            || state.isChanges() != this.changeEveryButton.isSelected()
+            || state.isSynchronizeImages() != this.synchronizeImageButton.isSelected()
 
-            || state.isHierarchicalExplore() != hierarchicalButton.isSelected()
-            || state.getHierarchicalDepth() != ((SpinnerNumberModel) hierarchialSpinner.getModel()).getNumber().intValue()
+            || state.isHierarchicalExplore() != this.hierarchicalButton.isSelected()
+            || state.getHierarchicalDepth() != ((SpinnerNumberModel) this.hierarchialSpinner.getModel()).getNumber().intValue()
 
-            || !new HashSet<>(bgImgs).containsAll(backgroundsListPanel.getData())
-            || !new HashSet<>(backgroundsListPanel.getData()).containsAll(bgImgs);
+            || !new HashSet<>(bgImgs).containsAll(this.backgroundsListPanel.getData())
+            || !new HashSet<>(this.backgroundsListPanel.getData()).containsAll(bgImgs);
     }
 
     @Override
     public void apply() {
-        Config.State state = Config.getInstance();
+        final Config.State state = Config.getInstance();
 
-        state.setIntervalAmount(((SpinnerNumberModel) intervalSpinner.getModel()).getNumber().intValue());
-        state.setChanges(changeEveryButton.isSelected());
+        state.setIntervalAmount(((SpinnerNumberModel) this.intervalSpinner.getModel()).getNumber().intValue());
+        state.setChanges(this.changeEveryButton.isSelected());
 
-        state.setSynchronizeImages(synchronizeImageButton.isSelected());
-        state.setIntervalUnit(timeUnitBox.getSelectedIndex());
+        state.setSynchronizeImages(this.synchronizeImageButton.isSelected());
+        state.setIntervalUnit(this.timeUnitBox.getSelectedIndex());
 
-        state.setChangeEditor(editorButton.isSelected());
-        state.setChangeFrame(frameButton.isSelected());
-
-
-        state.setHierarchicalExplore(hierarchicalButton.isSelected());
-        state.setHierarchicalDepth(((SpinnerNumberModel) hierarchialSpinner.getModel()).getNumber().intValue());
+        state.setChangeEditor(this.editorButton.isSelected());
+        state.setChangeFrame(this.frameButton.isSelected());
 
 
-        List<Pair<File, Boolean>> bgImgs = state.getImages().entrySet().stream()
+        state.setHierarchicalExplore(this.hierarchicalButton.isSelected());
+        state.setHierarchicalDepth(((SpinnerNumberModel) this.hierarchialSpinner.getModel()).getNumber().intValue());
+
+
+        final List<Pair<File, Boolean>> bgImgs = state.getImages().entrySet().stream()
             .map(e -> Pair.pair(new File(e.getKey()), e.getValue())).toList();
-        if (!new HashSet<>(bgImgs).containsAll(backgroundsListPanel.getData())
-            || !new HashSet<>(backgroundsListPanel.getData()).containsAll(bgImgs)) {
+        if (!new HashSet<>(bgImgs).containsAll(this.backgroundsListPanel.getData())
+            || !new HashSet<>(this.backgroundsListPanel.getData()).containsAll(bgImgs)) {
             EditorBackgroundImage.setImageCache(null);
         }
         state.setImages(
-            Map.ofEntries(backgroundsListPanel.getData().stream()
+            Map.ofEntries(this.backgroundsListPanel.getData().stream()
                 .map(e -> Map.entry(e.first.getAbsolutePath(), e.second))
                 .toArray(Map.Entry[]::new))
         );
 
-        intervalSpinner.setEnabled(changeEveryButton.isSelected());
-        timeUnitBox.setEnabled(changeEveryButton.isSelected());
+        this.intervalSpinner.setEnabled(this.changeEveryButton.isSelected());
+        this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
     }
 
     @Override
     public void reset() {
-        Config.State state = Config.getInstance();
+        final Config.State state = Config.getInstance();
 
-        changeEveryButton.setSelected(state.isChanges());
+        this.changeEveryButton.setSelected(state.isChanges());
 
-        intervalSpinner.setValue(state.getIntervalAmount());
-        intervalSpinner.setEnabled(changeEveryButton.isSelected());
-
-
-        timeUnitBox.setSelectedIndex(state.getIntervalUnit());
-        timeUnitBox.setEnabled(changeEveryButton.isSelected());
+        this.intervalSpinner.setValue(state.getIntervalAmount());
+        this.intervalSpinner.setEnabled(this.changeEveryButton.isSelected());
 
 
-        editorButton.setSelected(state.isChangeEditor());
-        frameButton.setSelected(state.isChangeFrame());
+        this.timeUnitBox.setSelectedIndex(state.getIntervalUnit());
+        this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
 
 
-        synchronizeImageButton.setSelected(state.isSynchronizeImages());
+        this.editorButton.setSelected(state.isChangeEditor());
+        this.frameButton.setSelected(state.isChangeFrame());
 
 
-        hierarchicalButton.setSelected(state.isHierarchicalExplore());
-
-        hierarchialSpinner.setValue(state.getHierarchicalDepth());
-        hierarchialSpinner.setEnabled(hierarchicalButton.isSelected());
+        this.synchronizeImageButton.setSelected(state.isSynchronizeImages());
 
 
-        List<Pair<File, Boolean>> bgImgs = new ArrayList<>(state.getImages().entrySet().stream()
+        this.hierarchicalButton.setSelected(state.isHierarchicalExplore());
+
+        this.hierarchialSpinner.setValue(state.getHierarchicalDepth());
+        this.hierarchialSpinner.setEnabled(this.hierarchicalButton.isSelected());
+
+
+        final List<Pair<File, Boolean>> bgImgs = new ArrayList<>(state.getImages().entrySet().stream()
             .map(e -> Pair.pair(new File(e.getKey()), e.getValue())).toList());
-        backgroundsListPanel.setData(bgImgs);
+        this.backgroundsListPanel.setData(bgImgs);
     }
 
     @Override
@@ -171,11 +174,16 @@ public final class Settings implements Configurable {
             return;
         }
 
-        if (changeEveryButton.isSelected() && ((SpinnerNumberModel) intervalSpinner.getModel()).getNumber().intValue() > 0) {
-            PropertiesComponent props = PropertiesComponent.getInstance();
+        if (this.changeEveryButton.isSelected() && ((SpinnerNumberModel) this.intervalSpinner.getModel()).getNumber().intValue() > 0) {
+            final PropertiesComponent props = PropertiesComponent.getInstance();
             if (EditorBackgroundImage.getImageCache() == null
-                || (editorButton.isSelected() && !props.isValueSet(IdeBackgroundUtil.EDITOR_PROP))
-                || (frameButton.isSelected() && !props.isValueSet(IdeBackgroundUtil.FRAME_PROP))) {
+                || (
+                this.editorButton.isSelected()
+                    && !props.isValueSet(IdeBackgroundUtil.EDITOR_PROP))
+                || (
+                this.frameButton.isSelected()
+                    && !props.isValueSet(IdeBackgroundUtil.FRAME_PROP))) {
+
                 new SetRandomBackgroundTask().getAsBoolean();
             }
             BackgroundScheduler.schedule();

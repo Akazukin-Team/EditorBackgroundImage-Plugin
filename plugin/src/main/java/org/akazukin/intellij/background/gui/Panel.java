@@ -7,54 +7,61 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AddEditRemovePanel;
 import com.intellij.ui.ClickListener;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import javax.swing.table.AbstractTableModel;
 import lombok.Setter;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.akazukin.intellij.background.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.table.AbstractTableModel;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 @Setter
 public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     public static final String INVALID_COLUMN_MESSAGE = "Invalid column index";
+    private static final FileChooserDescriptor CHOOSER = new FileChooserDescriptor(true, true, false, false, false, false);
+
+    static {
+        CHOOSER.withFileFilter(f -> Utils.isValidImage(new File(f.getPath())));
+    }
+
     private VirtualFile defaultFile = null;
 
     public Panel() {
         super(getTableModel(), new ArrayList<>(), "Backgrounds");
-        getTable().setShowColumns(true);
-        getTable().getColumnModel().getColumn(1).setMaxWidth(75);
+        this.getTable().setShowColumns(true);
+        this.getTable().getColumnModel().getColumn(1).setMaxWidth(75);
 
 
         new ClickListener() {
             @Override
             public boolean onClick(@NotNull final MouseEvent event, final int clickCount) {
-                doClick(event.getButton());
+                Panel.this.doClick(event.getButton());
                 return true;
             }
-        }.installOn(getTable());
+        }.installOn(this.getTable());
     }
 
     private void doClick(final int button) {
-        final int selected = getTable().getSelectedRow();
+        final int selected = this.getTable().getSelectedRow();
         if (selected >= 0) {
-            final Pair<File, Boolean> o = clickItem(getData().get(selected), button);
+            final Pair<File, Boolean> o = this.clickItem(this.getData().get(selected), button);
             if (o != null) {
-                getData().set(selected, o);
+                this.getData().set(selected, o);
             }
 
-            ((AbstractTableModel) getTable().getModel()).fireTableRowsUpdated(selected, selected);
+            ((AbstractTableModel) this.getTable().getModel()).fireTableRowsUpdated(selected, selected);
         }
     }
 
     @Nullable
     private Pair<File, Boolean> clickItem(final Pair<File, Boolean> pair, final int button) {
-        if (getTable().getSelectedColumn() == 1) {
+        if (this.getTable().getSelectedColumn() == 1) {
             return new Pair<>(pair.getFirst(), !pair.getSecond());
         }
         return pair;
@@ -79,7 +86,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
                         id = "enabled";
                         break;
                     default:
-                        throw new IllegalArgumentException(INVALID_COLUMN_MESSAGE);
+                        throw new IllegalArgumentException(Panel.INVALID_COLUMN_MESSAGE);
                 }
                 return BundleUtils.message("settings.backgrounds." + id);
             }
@@ -97,7 +104,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
                     case 1:
                         return Boolean.class;
                     default:
-                        throw new IllegalArgumentException(INVALID_COLUMN_MESSAGE);
+                        throw new IllegalArgumentException(Panel.INVALID_COLUMN_MESSAGE);
                 }
             }
         };
@@ -105,16 +112,13 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     @Override
     protected @Nullable Pair<File, Boolean> addItem() {
-        final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false) {
-            @Override
-            public boolean isFileSelectable(@Nullable final VirtualFile file) {
-                return super.isFileSelectable(file) || Utils.isValidImage(new File(file.getPath()));
-            }
-        }, null, defaultFile);
+        final VirtualFile virtualFile = FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
+
         if (virtualFile == null) {
             return null;
         }
-        defaultFile = virtualFile;
+
+        this.defaultFile = virtualFile;
         return new Pair<>(new File(virtualFile.getPath()), true);
     }
 
@@ -125,17 +129,14 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     @Override
     protected @Nullable Pair<File, Boolean> editItem(final Pair<File, Boolean> pair) {
-        if (getTable().getSelectedColumn() == 0) {
-            final VirtualFile virtualFile = FileChooser.chooseFile(new FileChooserDescriptor(true, true, false, false, false, false) {
-                @Override
-                public boolean isFileSelectable(@Nullable final VirtualFile file) {
-                    return super.isFileSelectable(file) || Utils.isValidImage(new File(file.getPath()));
-                }
-            }, null, defaultFile);
+        if (this.getTable().getSelectedColumn() == 0) {
+            final VirtualFile virtualFile = FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
+
             if (virtualFile == null) {
                 return pair;
             }
-            defaultFile = virtualFile;
+
+            this.defaultFile = virtualFile;
             return new Pair<>(new File(virtualFile.getPath()), pair.getSecond());
         }
         return pair;
@@ -143,7 +144,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     public Map<File, Boolean> getDataAsMap() {
         final Map<File, Boolean> result = new LinkedHashMap<>();
-        for (final Pair<File, Boolean> p : getData()) {
+        for (final Pair<File, Boolean> p : this.getData()) {
             result.put(p.getFirst(), p.getSecond());
         }
         return result;
@@ -154,6 +155,6 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
         for (final Map.Entry<File, Boolean> e : map.entrySet()) {
             result.add(Pair.create(e.getKey(), e.getValue()));
         }
-        setData(result);
+        this.setData(result);
     }
 }
