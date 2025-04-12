@@ -15,51 +15,51 @@
     <change-notes>
         <![CDATA[
             <html>
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1c8bb286a80a568feff776f793bf68f4ba9692a3...1.0.0"><h2>1.0.0 - 2024/11/9</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1c8bb286a80a568feff776f793bf68f4ba9692a3...1.0.0"><h2>1.0.0 - 2024/11/9</a>
                 <ul>
                     <li>
                         First release
                     </li>
                 </ul>
 
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.0.0...1.1.0"><h2>1.1.0 - 2024/11/9</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.0.0...1.1.0"><h2>1.1.0 - 2024/11/9</a>
                 <ul>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/219b60d39eefa06926d64bfd4f61ec38c43596d3...779c8b96785e3785f641d1aa9af78f5905a8c53c">2024/11/9</a> - Added hierarchical setting
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/219b60d39eefa06926d64bfd4f61ec38c43596d3...779c8b96785e3785f641d1aa9af78f5905a8c53c">2024/11/9</a> - Added hierarchical setting
                     </li>
                 </ul>
 
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.1.0...1.1.1"><h2>1.1.1 - 2024/11/9</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.1.0...1.1.1"><h2>1.1.1 - 2024/11/9</a>
                 <ul>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/8f32c0e3903465190c279371eb2ec0916d2aca42...c2319d8cb33d56c6f870bf2637d4a670db7b594b">2024/11/9</a> - Remove bundled plugin
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/8f32c0e3903465190c279371eb2ec0916d2aca42...c2319d8cb33d56c6f870bf2637d4a670db7b594b">2024/11/9</a> - Remove bundled plugin
                     </li>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/2d828f699274219a7b19a37d309155bf7f4db8c6...9809fc26e67c1975e6e43e05f7af1f95449ae2bf">2024/11/9</a> - Fix form layout
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/2d828f699274219a7b19a37d309155bf7f4db8c6...9809fc26e67c1975e6e43e05f7af1f95449ae2bf">2024/11/9</a> - Fix form layout
                     </li>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/ad1e13de58cf5cff568899856cac36ce4142b653...ac51f6fbd0d71ec4f5beafac0e6b00a75205cb2d">2024/11/9</a> - Fix form layout
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/ad1e13de58cf5cff568899856cac36ce4142b653...ac51f6fbd0d71ec4f5beafac0e6b00a75205cb2d">2024/11/9</a> - Fix form layout
                     </li>
                 </ul>
 
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.1.1...1.2.0"><h2>1.2.0 - 2024/11/10</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.1.1...1.2.0"><h2>1.2.0 - 2024/11/10</a>
                 <ul>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/738c62cdb19e79f30718ceece21332495dc1a577...c37d6788463de2ad86f39c32f8d2615a4cbd17fd">2024/11/10</a> - Remove bundled plugin
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/738c62cdb19e79f30718ceece21332495dc1a577...c37d6788463de2ad86f39c32f8d2615a4cbd17fd">2024/11/10</a> - Remove bundled plugin
                     </li>
                 </ul>
 
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.2.0...1.2.1"><h2>1.2.1 - 2024/11/28</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.2.0...1.2.1"><h2>1.2.1 - 2024/11/28</a>
                 <ul>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/c37d6788463de2ad86f39c32f8d2615a4cbd17fd...8a38614447f091bdfb162cca5a1cc46dab801966">2024/11/10</a> - Remove bundled plugin
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/c37d6788463de2ad86f39c32f8d2615a4cbd17fd...8a38614447f091bdfb162cca5a1cc46dab801966">2024/11/10</a> - Remove bundled plugin
                     </li>
                 </ul>
 
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/1.2.1...1.3.0"><h2>1.3.0 - 2025/2/19</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.2.1...1.3.0"><h2>1.3.0 - 2025/2/19</a>
                 <ul>
                     <li>
-                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage/compare/8a38614447f091bdfb162cca5a1cc46dab801966...06c59738f00484ba119318ff1db840728b37ba95">2025/2/19</a> - Fix deprecated api method calls
+                        <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/8a38614447f091bdfb162cca5a1cc46dab801966...06c59738f00484ba119318ff1db840728b37ba95">2025/2/19</a> - Fix deprecated api method calls
                     </li>
                 </ul>
             </html>
