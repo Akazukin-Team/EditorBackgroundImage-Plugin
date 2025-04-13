@@ -24,7 +24,8 @@ import java.util.Map;
 @Setter
 public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     public static final String INVALID_COLUMN_MESSAGE = "Invalid column index";
-    private static final FileChooserDescriptor CHOOSER = new FileChooserDescriptor(true, true, false, false, false, false);
+    private static final FileChooserDescriptor CHOOSER =
+        new FileChooserDescriptor(true, true, false, false, false, false);
 
     static {
         CHOOSER.withFileFilter(f -> Utils.isValidImage(new File(f.getPath())));
@@ -35,12 +36,14 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     public Panel() {
         super(getTableModel(), new ArrayList<>(), "Backgrounds");
         this.getTable().setShowColumns(true);
-        this.getTable().getColumnModel().getColumn(1).setMaxWidth(75);
+        this.getTable().getColumnModel()
+            .getColumn(1).setMaxWidth(75);
 
 
         new ClickListener() {
             @Override
-            public boolean onClick(@NotNull final MouseEvent event, final int clickCount) {
+            public boolean onClick(
+                @NotNull final MouseEvent event, final int clickCount) {
                 Panel.this.doClick(event.getButton());
                 return true;
             }
@@ -50,17 +53,20 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     private void doClick(final int button) {
         final int selected = this.getTable().getSelectedRow();
         if (selected >= 0) {
-            final Pair<File, Boolean> o = this.clickItem(this.getData().get(selected), button);
+            final Pair<File, Boolean> o =
+                this.clickItem(this.getData().get(selected), button);
             if (o != null) {
                 this.getData().set(selected, o);
             }
 
-            ((AbstractTableModel) this.getTable().getModel()).fireTableRowsUpdated(selected, selected);
+            ((AbstractTableModel) this.getTable().getModel())
+                .fireTableRowsUpdated(selected, selected);
         }
     }
 
     @Nullable
-    private Pair<File, Boolean> clickItem(final Pair<File, Boolean> pair, final int button) {
+    private Pair<File, Boolean> clickItem(
+        final Pair<File, Boolean> pair, final int button) {
         if (this.getTable().getSelectedColumn() == 1) {
             return new Pair<>(pair.getFirst(), !pair.getSecond());
         }
@@ -76,7 +82,8 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
             @Override
             @NotNull
-            public @NlsContexts.ColumnName String getColumnName(final int columnIndex) {
+            public @NlsContexts.ColumnName String getColumnName(
+                final int columnIndex) {
                 final String id;
                 switch (columnIndex) {
                     case 0:
@@ -86,13 +93,15 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
                         id = "enabled";
                         break;
                     default:
-                        throw new IllegalArgumentException(Panel.INVALID_COLUMN_MESSAGE);
+                        throw new IllegalArgumentException(
+                            Panel.INVALID_COLUMN_MESSAGE);
                 }
                 return BundleUtils.message("settings.backgrounds." + id);
             }
 
             @Override
-            public Object getField(final Pair<File, Boolean> o, final int columnIndex) {
+            public Object getField(
+                final Pair<File, Boolean> o, final int columnIndex) {
                 return columnIndex == 0 ? o.getFirst() : o.getSecond();
             }
 
@@ -104,7 +113,8 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
                     case 1:
                         return Boolean.class;
                     default:
-                        throw new IllegalArgumentException(Panel.INVALID_COLUMN_MESSAGE);
+                        throw new IllegalArgumentException(
+                            Panel.INVALID_COLUMN_MESSAGE);
                 }
             }
         };
@@ -112,7 +122,8 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     @Override
     protected @Nullable Pair<File, Boolean> addItem() {
-        final VirtualFile virtualFile = FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
+        final VirtualFile virtualFile =
+            FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
 
         if (virtualFile == null) {
             return null;
@@ -128,16 +139,19 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     }
 
     @Override
-    protected @Nullable Pair<File, Boolean> editItem(final Pair<File, Boolean> pair) {
+    protected @Nullable Pair<File, Boolean> editItem(
+        final Pair<File, Boolean> pair) {
         if (this.getTable().getSelectedColumn() == 0) {
-            final VirtualFile virtualFile = FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
+            final VirtualFile virtualFile =
+                FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
 
             if (virtualFile == null) {
                 return pair;
             }
 
             this.defaultFile = virtualFile;
-            return new Pair<>(new File(virtualFile.getPath()), pair.getSecond());
+            return new Pair<>(
+                new File(virtualFile.getPath()), pair.getSecond());
         }
         return pair;
     }

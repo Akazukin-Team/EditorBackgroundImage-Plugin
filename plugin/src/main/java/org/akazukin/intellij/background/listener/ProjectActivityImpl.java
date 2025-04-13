@@ -10,7 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ProjectActivityImpl implements ProjectActivity {
     @Override
-    public @Nullable Object execute(@NotNull final Project project, @NotNull final Continuation<? super Unit> continuation) {
+    public @Nullable Object execute(
+        @NotNull final Project project,
+        @NotNull final Continuation<? super Unit> continuation) {
         PluginHandler.onLoad();
 
         return null;

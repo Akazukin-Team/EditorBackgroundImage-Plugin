@@ -56,14 +56,17 @@ public final class Settings implements Configurable {
     public JComponent createComponent() {
         BackgroundScheduler.shutdown();
 
-        this.intervalSpinner.setModel(new SpinnerNumberModel(0, 0, MAX_TIME, 2));
+        this.intervalSpinner
+            .setModel(new SpinnerNumberModel(0, 0, MAX_TIME, 2));
         this.changeEveryButton.addActionListener(e -> {
-            this.intervalSpinner.setEnabled(this.changeEveryButton.isSelected());
+            this.intervalSpinner
+                .setEnabled(this.changeEveryButton.isSelected());
             this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
         });
 
         for (final TimeUnit timeUnit : TIME_UNITS) {
-            this.timeUnitBox.addItem(BundleUtils.message("settings.change.timeunit." + timeUnit.name().toLowerCase()));
+            this.timeUnitBox.addItem(BundleUtils.message(
+                "settings.change.timeunit." + timeUnit.name().toLowerCase()));
         }
 
 
@@ -72,8 +75,10 @@ public final class Settings implements Configurable {
 
 
         this.hierarchicalButton.addActionListener(e ->
-            this.hierarchialSpinner.setEnabled(this.hierarchicalButton.isSelected()));
-        this.hierarchialSpinner.setModel(new SpinnerNumberModel(3, 1, MAX_DEPTH, 1));
+            this.hierarchialSpinner
+                .setEnabled(this.hierarchicalButton.isSelected()));
+        this.hierarchialSpinner
+            .setModel(new SpinnerNumberModel(3, 1, MAX_DEPTH, 1));
 
 
         return this.rootPanel;
@@ -83,30 +88,53 @@ public final class Settings implements Configurable {
     public boolean isModified() {
         final Config.State state = Config.getInstance();
 
-        final List<Pair<File, Boolean>> bgImgs = state.getImages().entrySet().stream()
-            .map(e -> Pair.pair(new File(e.getKey()), e.getValue())).toList();
+        final List<Pair<File, Boolean>> bgImgs =
+            state.getImages().entrySet().stream()
+                .map(e ->
+                    Pair.pair(new File(e.getKey()), e.getValue())).toList();
 
-        return state.getIntervalAmount() != ((SpinnerNumberModel) this.intervalSpinner.getModel()).getNumber().intValue()
-            || state.getIntervalUnit() != this.timeUnitBox.getSelectedIndex()
+        return
+            state.getIntervalAmount()
+                != ((SpinnerNumberModel) this.intervalSpinner.getModel())
+                .getNumber().intValue()
 
-            || state.isChangeEditor() != this.editorButton.isSelected()
-            || state.isChangeFrame() != this.frameButton.isSelected()
 
-            || state.isChanges() != this.changeEveryButton.isSelected()
-            || state.isSynchronizeImages() != this.synchronizeImageButton.isSelected()
+                || state.getIntervalUnit() != this.timeUnitBox
+                .getSelectedIndex()
 
-            || state.isHierarchicalExplore() != this.hierarchicalButton.isSelected()
-            || state.getHierarchicalDepth() != ((SpinnerNumberModel) this.hierarchialSpinner.getModel()).getNumber().intValue()
 
-            || !new HashSet<>(bgImgs).containsAll(this.backgroundsListPanel.getData())
-            || !new HashSet<>(this.backgroundsListPanel.getData()).containsAll(bgImgs);
+                || state.isChangeEditor() != this.editorButton.isSelected()
+                || state.isChangeFrame() != this.frameButton.isSelected()
+
+
+                || state.isChanges() != this.changeEveryButton.isSelected()
+
+                || state.isSynchronizeImages()
+                != this.synchronizeImageButton.isSelected()
+
+
+                || state.isHierarchicalExplore()
+                != this.hierarchicalButton.isSelected()
+
+                || state.getHierarchicalDepth()
+                != ((SpinnerNumberModel) this.hierarchialSpinner.getModel())
+                .getNumber().intValue()
+
+
+                || !new HashSet<>(bgImgs)
+                .containsAll(this.backgroundsListPanel.getData())
+
+                || !new HashSet<>(this.backgroundsListPanel.getData())
+                .containsAll(bgImgs);
     }
 
     @Override
     public void apply() {
         final Config.State state = Config.getInstance();
 
-        state.setIntervalAmount(((SpinnerNumberModel) this.intervalSpinner.getModel()).getNumber().intValue());
+        state.setIntervalAmount(
+            ((SpinnerNumberModel) this.intervalSpinner.getModel())
+                .getNumber().intValue());
         state.setChanges(this.changeEveryButton.isSelected());
 
         state.setSynchronizeImages(this.synchronizeImageButton.isSelected());
@@ -117,13 +145,21 @@ public final class Settings implements Configurable {
 
 
         state.setHierarchicalExplore(this.hierarchicalButton.isSelected());
-        state.setHierarchicalDepth(((SpinnerNumberModel) this.hierarchialSpinner.getModel()).getNumber().intValue());
+        state.setHierarchicalDepth(
+            ((SpinnerNumberModel) this.hierarchialSpinner.getModel())
+                .getNumber().intValue());
 
 
-        final List<Pair<File, Boolean>> bgImgs = state.getImages().entrySet().stream()
-            .map(e -> Pair.pair(new File(e.getKey()), e.getValue())).toList();
-        if (!new HashSet<>(bgImgs).containsAll(this.backgroundsListPanel.getData())
-            || !new HashSet<>(this.backgroundsListPanel.getData()).containsAll(bgImgs)) {
+        final List<Pair<File, Boolean>> bgImgs =
+            state.getImages().entrySet().stream()
+                .map(e ->
+                    Pair.pair(new File(e.getKey()), e.getValue())).toList();
+        if (!new HashSet<>(bgImgs)
+            .containsAll(this.backgroundsListPanel.getData())
+
+            || !new HashSet<>(this.backgroundsListPanel.getData())
+            .containsAll(bgImgs)) {
+
             EditorBackgroundImage.setImageCache(null);
         }
         state.setImages(
@@ -160,11 +196,15 @@ public final class Settings implements Configurable {
         this.hierarchicalButton.setSelected(state.isHierarchicalExplore());
 
         this.hierarchialSpinner.setValue(state.getHierarchicalDepth());
-        this.hierarchialSpinner.setEnabled(this.hierarchicalButton.isSelected());
+        this.hierarchialSpinner.setEnabled(
+            this.hierarchicalButton.isSelected());
 
 
-        final List<Pair<File, Boolean>> bgImgs = new ArrayList<>(state.getImages().entrySet().stream()
-            .map(e -> Pair.pair(new File(e.getKey()), e.getValue())).toList());
+        final List<Pair<File, Boolean>> bgImgs =
+            new ArrayList<>(state.getImages().entrySet().stream()
+                .map(e ->
+                    Pair.pair(new File(e.getKey()), e.getValue()))
+                .toList());
         this.backgroundsListPanel.setData(bgImgs);
     }
 
@@ -174,7 +214,10 @@ public final class Settings implements Configurable {
             return;
         }
 
-        if (this.changeEveryButton.isSelected() && ((SpinnerNumberModel) this.intervalSpinner.getModel()).getNumber().intValue() > 0) {
+        if (this.changeEveryButton.isSelected()
+            && ((SpinnerNumberModel) this.intervalSpinner.getModel())
+            .getNumber().intValue() > 0) {
+
             final PropertiesComponent props = PropertiesComponent.getInstance();
             if (EditorBackgroundImage.getImageCache() == null
                 || (
