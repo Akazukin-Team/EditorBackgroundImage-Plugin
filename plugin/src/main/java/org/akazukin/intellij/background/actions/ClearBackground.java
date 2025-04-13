@@ -11,7 +11,9 @@ import org.jetbrains.annotations.NotNull;
 public final class ClearBackground extends AnAction {
 
     public ClearBackground() {
-        super("Clear Background", "Clear background images and stop animation", null);
+        super("Clear Background",
+            "Clear background images and stop animation",
+            null);
     }
 
     @Override

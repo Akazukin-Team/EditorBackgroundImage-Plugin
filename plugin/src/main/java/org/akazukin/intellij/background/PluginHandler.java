@@ -8,13 +8,15 @@ import org.akazukin.intellij.background.tasks.BackgroundScheduler;
 import org.akazukin.intellij.background.tasks.SetRandomBackgroundTask;
 
 @UtilityClass
-public class PluginHandler {
+public final class PluginHandler {
     public void onUnload() {
         BackgroundScheduler.shutdown();
     }
 
     public boolean isLoaded() {
-        return PluginManager.getInstance().findEnabledPlugin(PluginId.findId(EditorBackgroundImage.ACT_PLUGIN_ID)) != null;
+        return PluginManager.getInstance()
+            .findEnabledPlugin(
+                PluginId.findId(EditorBackgroundImage.ACT_PLUGIN_ID)) != null;
     }
 
     public void onLoad() {

@@ -15,14 +15,18 @@ import java.util.List;
 
 @UtilityClass
 public final class Utils {
-    private static final MimetypesFileTypeMap FILE_TYPE_MAP = new MimetypesFileTypeMap();
+    private static final MimetypesFileTypeMap FILE_TYPE_MAP
+        = new MimetypesFileTypeMap();
 
     /**
      * @param name boolean as strings as
-     * @return Returns true if only if param equal to, ignoring case, the string is "true". or if param equal to, ignoring case, the string is "false".
-     * @throws java.lang.IllegalArgumentException throws exception if param is invalid for to return
+     * @return Returns true if only param equal to,
+     * ignoring case, the string is "true".
+     * or if param equal to, ignoring case, the string is "false".
+     * @throws IllegalArgumentException if param is invalid for to return
      */
-    public static boolean getAsBoolean(@NotNull final String name) throws IllegalArgumentException {
+    public static boolean getAsBoolean(@NotNull final String name)
+        throws IllegalArgumentException {
         if ("true".equalsIgnoreCase(name)) {
             return true;
         }
@@ -32,7 +36,8 @@ public final class Utils {
         throw new IllegalArgumentException("Invalid boolean value " + name);
     }
 
-    public static File[] collectFiles(@NotNull final File directory, final int depth) {
+    public static File[] collectFiles(
+        @NotNull final File directory, final int depth) {
         if (directory.isFile()) {
             throw new IllegalArgumentException("directory is not a file");
         }
@@ -62,10 +67,12 @@ public final class Utils {
             return false;
         }
         final String contentType = FILE_TYPE_MAP.getContentType(file);
-        return contentType.startsWith("image/") || contentType.equals("application/octet-stream");
+        return contentType.startsWith("image/")
+            || contentType.equals("application/octet-stream");
     }
 
-    public static void notice(final String title, final String message, final NotificationType type) {
+    public static void notice(
+        final String title, final String message, final NotificationType type) {
         Notifications.Bus.notify(
             new Notification(
                 EditorBackgroundImage.PLUGIN_ID,

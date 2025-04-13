@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public final class BackgroundScheduler {
 
-    private static final SetRandomBackgroundTask TASK = new SetRandomBackgroundTask();
+    private static final SetRandomBackgroundTask TASK =
+        new SetRandomBackgroundTask();
     private static ScheduledExecutorService pool = null;
 
     public static void schedule() {
@@ -30,7 +31,8 @@ public final class BackgroundScheduler {
         }
 
         final PropertiesComponent props = PropertiesComponent.getInstance();
-        final int delay = props.isValueSet(IdeBackgroundUtil.EDITOR_PROP) ? interval : 0;
+        final int delay = props.isValueSet(IdeBackgroundUtil.EDITOR_PROP)
+            ? interval : 0;
         final TimeUnit timeUnitEnum = Settings.TIME_UNITS[timeUnit];
 
         pool = Executors.newScheduledThreadPool(1);

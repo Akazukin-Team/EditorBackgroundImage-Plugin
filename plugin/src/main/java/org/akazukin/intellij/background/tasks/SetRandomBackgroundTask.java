@@ -40,7 +40,8 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
         final File[] images = EditorBackgroundImage.getImageCache();
         File image = null;
         for (final String type : targets) {
-            if (image == null || !(state.isSynchronizeImages() || images.length == 1)) {
+            if (image == null
+                || !(state.isSynchronizeImages() || images.length == 1)) {
                 for (int i = 0; i < 10; i++) {
                     image = images[this.random.nextInt(images.length)];
                     if (image != null && Utils.isValidImage(image)) {
@@ -50,7 +51,9 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
                     }
                 }
                 if (image == null) {
-                    Utils.notice("Error", "Failed to fetch image paths", NotificationType.ERROR);
+                    Utils.notice("Error",
+                        "Failed to fetch image paths",
+                        NotificationType.ERROR);
                     state.setChanges(false);
                     return false;
                 }

@@ -8,8 +8,8 @@ import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
@@ -28,12 +28,14 @@ import java.util.Map;
 )
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class Config implements PersistentStateComponent<Config.State>, Disposable {
+public final class Config
+    implements PersistentStateComponent<Config.State>, Disposable {
     State state;
 
     @NotNull
     public static Config.State getInstance() {
-        return ApplicationManager.getApplication().getService(Config.class).getState();
+        return ApplicationManager.getApplication()
+            .getService(Config.class).getState();
     }
 
     @Override
@@ -55,9 +57,7 @@ public final class Config implements PersistentStateComponent<Config.State>, Dis
         PluginHandler.onUnload();
     }
 
-    @Setter
-    @Getter
-    @FieldDefaults(level = AccessLevel.PRIVATE)
+    @Data
     public static class State {
         boolean changes;
 

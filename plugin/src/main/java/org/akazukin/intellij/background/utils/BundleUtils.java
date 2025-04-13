@@ -7,7 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class BundleUtils {
-    private static final DynamicBundle INSTANCE = new DynamicBundle(BundleUtils.class, "messages." + EditorBackgroundImage.PLUGIN_NAME);
+    private static final DynamicBundle INSTANCE =
+        new DynamicBundle(BundleUtils.class,
+            "messages." + EditorBackgroundImage.PLUGIN_NAME);
 
     @NotNull
     public String message(final String message, final Object... params) {

@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public final class SetBackground extends AnAction {
 
     public SetBackground() {
-        super("Set Random Background Image", "Set random background image from cached images", null);
+        super("Set Random Background Image",
+            "Set random background image from cached images", null);
     }
 
     @Override
