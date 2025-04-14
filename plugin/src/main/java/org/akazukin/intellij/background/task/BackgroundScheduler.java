@@ -55,7 +55,7 @@ public final class BackgroundScheduler {
         if (this.pool != null && !this.pool.isTerminated()) {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
                 .getTask(SetRandomBackgroundTask.class).getTaskName());
-            
+
             this.pool.shutdownNow();
             this.pool = null;
         }
