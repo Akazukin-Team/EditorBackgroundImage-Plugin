@@ -1,24 +1,36 @@
-package org.akazukin.intellij.background.tasks;
+package org.akazukin.intellij.background.task;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.config.Config;
-import org.akazukin.intellij.background.utils.Utils;
+import org.akazukin.intellij.background.utils.FileUtils;
+import org.akazukin.intellij.background.utils.NotificationUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BooleanSupplier;
 
-public final class SetRandomBackgroundTask implements BooleanSupplier {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@AllArgsConstructor
+public final class SetRandomBackgroundTask implements ITask<Boolean> {
+    EditorBackgroundImage plugin;
 
-    private final Random random = new Random();
+    Random random = new Random();
 
     @Override
-    public boolean getAsBoolean() {
+    public String getTaskName() {
+        return "SetRandomBackground";
+    }
+
+    @Override
+    @NotNull
+    public Boolean get() {
         final PropertiesComponent props = PropertiesComponent.getInstance();
         final Config.State state = Config.getInstance();
 
@@ -30,30 +42,30 @@ public final class SetRandomBackgroundTask implements BooleanSupplier {
             targets.add(IdeBackgroundUtil.FRAME_PROP);
         }
 
-        if (EditorBackgroundImage.getImageCache() == null) {
-            if (!new CacheBackgroundImagesTask().getAsBoolean()) {
+        if (this.plugin.getImageCache() == null) {
+            if (!this.plugin.getTaskMgr()
+                .getTask(CacheBackgroundImagesTask.class).get()) {
                 state.setChanges(false);
                 return false;
             }
         }
 
-        final File[] images = EditorBackgroundImage.getImageCache();
+        final File[] images = this.plugin.getImageCache();
         File image = null;
         for (final String type : targets) {
             if (image == null
                 || !(state.isSynchronizeImages() || images.length == 1)) {
                 for (int i = 0; i < 10; i++) {
                     image = images[this.random.nextInt(images.length)];
-                    if (image != null && Utils.isValidImage(image)) {
+                    if (image != null && FileUtils.isValidImage(image)) {
                         break;
                     } else {
                         image = null;
                     }
                 }
                 if (image == null) {
-                    Utils.notice("Error",
-                        "Failed to fetch image paths",
-                        NotificationType.ERROR);
+                    NotificationUtils.error("Error",
+                        "Failed to fetch image paths");
                     state.setChanges(false);
                     return false;
                 }

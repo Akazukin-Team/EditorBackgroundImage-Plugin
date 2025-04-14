@@ -1,10 +1,6 @@
 package org.akazukin.intellij.background.utils;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import lombok.experimental.UtilityClass;
-import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.jetbrains.annotations.NotNull;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -14,27 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @UtilityClass
-public final class Utils {
+public final class FileUtils {
+    public static final File[] EMPTY_FILES = new File[0];
     private static final MimetypesFileTypeMap FILE_TYPE_MAP
         = new MimetypesFileTypeMap();
-
-    /**
-     * @param name boolean as strings as
-     * @return Returns true if only param equal to,
-     * ignoring case, the string is "true".
-     * or if param equal to, ignoring case, the string is "false".
-     * @throws IllegalArgumentException if param is invalid for to return
-     */
-    public static boolean getAsBoolean(@NotNull final String name)
-        throws IllegalArgumentException {
-        if ("true".equalsIgnoreCase(name)) {
-            return true;
-        }
-        if ("false".equalsIgnoreCase(name)) {
-            return false;
-        }
-        throw new IllegalArgumentException("Invalid boolean value " + name);
-    }
 
     public static File[] collectFiles(
         @NotNull final File directory, final int depth) {
@@ -59,7 +38,7 @@ public final class Utils {
             }
         }
 
-        return files2.toArray(new File[0]);
+        return files2.toArray(EMPTY_FILES);
     }
 
     public static boolean isValidImage(final File file) {
@@ -69,16 +48,5 @@ public final class Utils {
         final String contentType = FILE_TYPE_MAP.getContentType(file);
         return contentType.startsWith("image/")
             || contentType.equals("application/octet-stream");
-    }
-
-    public static void notice(
-        final String title, final String message, final NotificationType type) {
-        Notifications.Bus.notify(
-            new Notification(
-                EditorBackgroundImage.PLUGIN_ID,
-                title,
-                message,
-                type
-            ));
     }
 }

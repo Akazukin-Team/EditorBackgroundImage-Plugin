@@ -9,7 +9,7 @@ import com.intellij.ui.AddEditRemovePanel;
 import com.intellij.ui.ClickListener;
 import lombok.Setter;
 import org.akazukin.intellij.background.utils.BundleUtils;
-import org.akazukin.intellij.background.utils.Utils;
+import org.akazukin.intellij.background.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
         new FileChooserDescriptor(true, true, false, false, false, false);
 
     static {
-        CHOOSER.withFileFilter(f -> Utils.isValidImage(new File(f.getPath())));
+        CHOOSER.withFileFilter(f -> FileUtils.isValidImage(new File(f.getPath())));
     }
 
     private VirtualFile defaultFile = null;

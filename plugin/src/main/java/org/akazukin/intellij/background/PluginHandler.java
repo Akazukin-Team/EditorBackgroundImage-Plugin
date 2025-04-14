@@ -1,29 +1,35 @@
 package org.akazukin.intellij.background;
 
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.openapi.extensions.PluginId;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.akazukin.intellij.background.config.Config;
-import org.akazukin.intellij.background.tasks.BackgroundScheduler;
-import org.akazukin.intellij.background.tasks.SetRandomBackgroundTask;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public final class PluginHandler {
+    @Getter
+    @Nullable
+    private static EditorBackgroundImage plugin;
+
+    public void init() {
+        plugin = new EditorBackgroundImage();
+    }
+
     public void onUnload() {
-        BackgroundScheduler.shutdown();
+        plugin.onUnload();
+        plugin = null;
     }
 
     public boolean isLoaded() {
         return PluginManager.getInstance()
-            .findEnabledPlugin(
-                PluginId.findId(EditorBackgroundImage.ACT_PLUGIN_ID)) != null;
+            .enablePlugin(EditorBackgroundImage.ACT_PLUGIN_ID);
+    }
+
+    public boolean isInitialized() {
+        return plugin != null;
     }
 
     public void onLoad() {
-        final Config.State state = Config.getInstance();
-        if (state.isChanges()) {
-            new SetRandomBackgroundTask().getAsBoolean();
-            BackgroundScheduler.schedule();
-        }
+        plugin.onLoad();
     }
 }

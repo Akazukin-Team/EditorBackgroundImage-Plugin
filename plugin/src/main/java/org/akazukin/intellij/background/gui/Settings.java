@@ -6,11 +6,13 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
 import org.akazukin.intellij.background.config.Config;
-import org.akazukin.intellij.background.tasks.BackgroundScheduler;
-import org.akazukin.intellij.background.tasks.SetRandomBackgroundTask;
+import org.akazukin.intellij.background.task.CacheBackgroundImagesTask;
+import org.akazukin.intellij.background.task.SetRandomBackgroundTask;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Settings implements Configurable {
     public static final TimeUnit[] TIME_UNITS = new TimeUnit[]{
         TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS
@@ -35,16 +37,16 @@ public final class Settings implements Configurable {
     private static final int MAX_TIME = 360;
     private static final int MAX_DEPTH = 10;
 
-    private JPanel rootPanel;
-    private JCheckBox changeEveryButton;
-    private JSpinner intervalSpinner;
-    private ComboBox<String> timeUnitBox;
-    private JCheckBox synchronizeImageButton;
-    private JCheckBox editorButton;
-    private JCheckBox frameButton;
-    private JCheckBox hierarchicalButton;
-    private JSpinner hierarchialSpinner;
-    private Panel backgroundsListPanel;
+    JPanel rootPanel;
+    JCheckBox changeEveryButton;
+    JSpinner intervalSpinner;
+    ComboBox<String> timeUnitBox;
+    JCheckBox synchronizeImageButton;
+    JCheckBox editorButton;
+    JCheckBox frameButton;
+    JCheckBox hierarchicalButton;
+    JSpinner hierarchialSpinner;
+    Panel backgroundsListPanel;
 
     @Override
     public String getDisplayName() {
@@ -54,7 +56,9 @@ public final class Settings implements Configurable {
     @NotNull
     @Override
     public JComponent createComponent() {
-        BackgroundScheduler.shutdown();
+        if (PluginHandler.isLoaded()) {
+            PluginHandler.getPlugin().getScheduler().shutdown();
+        }
 
         this.intervalSpinner
             .setModel(new SpinnerNumberModel(0, 0, MAX_TIME, 2));
@@ -160,7 +164,10 @@ public final class Settings implements Configurable {
             || !new HashSet<>(this.backgroundsListPanel.getData())
             .containsAll(bgImgs)) {
 
-            EditorBackgroundImage.setImageCache(null);
+            if (PluginHandler.isLoaded()) {
+                PluginHandler.getPlugin().getTaskMgr()
+                    .getTask(CacheBackgroundImagesTask.class).get();
+            }
         }
         state.setImages(
             Map.ofEntries(this.backgroundsListPanel.getData().stream()
@@ -210,26 +217,27 @@ public final class Settings implements Configurable {
 
     @Override
     public void disposeUIResources() {
-        if (!PluginHandler.isLoaded()) {
+        if (!PluginHandler.isLoaded()
+            || PluginHandler.getPlugin().getImageCache() == null) {
             return;
         }
 
-        if (this.changeEveryButton.isSelected()
-            && ((SpinnerNumberModel) this.intervalSpinner.getModel())
-            .getNumber().intValue() > 0) {
-
+        if (this.changeEveryButton.isSelected()) {
             final PropertiesComponent props = PropertiesComponent.getInstance();
-            if (EditorBackgroundImage.getImageCache() == null
-                || (
+            if ((
                 this.editorButton.isSelected()
                     && !props.isValueSet(IdeBackgroundUtil.EDITOR_PROP))
                 || (
                 this.frameButton.isSelected()
                     && !props.isValueSet(IdeBackgroundUtil.FRAME_PROP))) {
 
-                new SetRandomBackgroundTask().getAsBoolean();
+                PluginHandler.getPlugin().getTaskMgr()
+                    .getTask(SetRandomBackgroundTask.class).get();
             }
-            BackgroundScheduler.schedule();
+
+            if (this.editorButton.isSelected() || this.frameButton.isSelected()) {
+                PluginHandler.getPlugin().getScheduler().schedule();
+            }
         }
     }
 }

@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.PluginHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -53,8 +52,6 @@ public final class Config
     @Override
     public void dispose() {
         this.state = null;
-
-        PluginHandler.onUnload();
     }
 
     @Data
