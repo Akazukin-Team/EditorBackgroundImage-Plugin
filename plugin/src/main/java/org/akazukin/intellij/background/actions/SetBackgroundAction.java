@@ -15,7 +15,7 @@ public final class SetBackgroundAction extends AnAction {
     }
 
     @Override
-    public void actionPerformed(@NotNull final AnActionEvent e) {
+    public synchronized void actionPerformed(@NotNull final AnActionEvent e) {
         final Config.State state = Config.getInstance();
         if (state.isChanges()) {
             PluginHandler.getPlugin().getScheduler().schedule();

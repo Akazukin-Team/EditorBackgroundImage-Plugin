@@ -28,9 +28,14 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         return "SetRandomBackground";
     }
 
+
     @Override
-    @NotNull
     public Boolean get() {
+        return this.get(0);
+    }
+
+    @NotNull
+    public Boolean get(final int tries) {
         final PropertiesComponent props = PropertiesComponent.getInstance();
         final Config.State state = Config.getInstance();
 
@@ -42,7 +47,10 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             targets.add(IdeBackgroundUtil.FRAME_PROP);
         }
 
-        if (this.plugin.getImageCache() == null) {
+        final int imgsCount = state.isSynchronizeImages() ? 1 : targets.size();
+
+        if (this.plugin.getImageCache() == null
+            || this.plugin.getImageCache().length < imgsCount) {
             if (!this.plugin.getTaskMgr()
                 .getTask(CacheBackgroundImagesTask.class).get()) {
                 state.setChanges(false);
@@ -50,27 +58,64 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             }
         }
 
-        final File[] images = this.plugin.getImageCache();
-        File image = null;
-        for (final String type : targets) {
-            if (image == null
-                || !(state.isSynchronizeImages() || images.length == 1)) {
-                for (int i = 0; i < 10; i++) {
-                    image = images[this.random.nextInt(images.length)];
-                    if (image != null && FileUtils.isValidImage(image)) {
-                        break;
-                    } else {
-                        image = null;
-                    }
-                }
-                if (image == null) {
-                    NotificationUtils.error("Error",
-                        "Failed to fetch image paths");
-                    state.setChanges(false);
-                    return false;
-                }
+        final List<File> cachedImgs =
+            new ArrayList<>(List.of(this.plugin.getImageCache()));
+        final List<File> curImgs = new ArrayList<>();
+        for (int i = 0; i < imgsCount; i++) {
+            // Set target for the image that selected during the current loop
+            final List<String> curTargets = new ArrayList<>();
+            if (state.isSynchronizeImages()) {
+                curTargets.addAll(targets);
+            } else {
+                curTargets.add(targets.get(i));
             }
-            props.setValue(type, image.getAbsolutePath());
+
+            // Set selectable images by cache
+            final List<File> images =
+                new ArrayList<>(cachedImgs);
+            // remove the images that already selected
+            images.removeAll(curImgs);
+            // remove duplicated image from props
+            images.removeIf(f -> curTargets.stream().anyMatch(t ->
+                f.getAbsolutePath().equals(props.getValue(t))));
+
+            // select an image in some tried or less
+            File img = null;
+            while (img == null) {
+                if (images.isEmpty()) {
+                    break;
+                }
+
+                img = images.get(this.random.nextInt(images.size()));
+                images.remove(img);
+
+                if (!FileUtils.isValidImage(img)) {
+                    cachedImgs.remove(img);
+                    img = null;
+                    continue;
+                }
+
+                curImgs.add(img);
+            }
+
+            // when failed to fetch the image
+            if (img == null) {
+                NotificationUtils.errorBundled(
+                    "messages.failedFetchImg.title",
+                    "messages.failedFetchImg.message");
+                this.plugin.setImageCache(null);
+                return false;
+            }
+        }
+        this.plugin.setImageCache(cachedImgs.toArray(FileUtils.EMPTY_FILES));
+
+        // Set the backgrounds
+        int i3 = 0;
+        for (final String t : targets) {
+            props.setValue(t, curImgs.get(i3).getAbsolutePath());
+            if (!state.isSynchronizeImages()) {
+                i3++;
+            }
         }
 
         return true;

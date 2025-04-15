@@ -33,7 +33,7 @@ public final class EditorBackgroundImage {
         this.taskMgr.registerTasks();
     }
 
-    public void onLoad() {
+    public void onEnable() {
         final Config.State state = Config.getInstance();
         if (state.isChanges()) {
             this.taskMgr.getTask(SetRandomBackgroundTask.class).get();

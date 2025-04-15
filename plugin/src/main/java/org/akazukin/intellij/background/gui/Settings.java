@@ -1,6 +1,5 @@
 package org.akazukin.intellij.background.gui;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.ComboBox;
@@ -72,11 +71,6 @@ public final class Settings implements Configurable {
             this.timeUnitBox.addItem(BundleUtils.message(
                 "settings.change.timeunit." + timeUnit.name().toLowerCase()));
         }
-
-
-        this.editorButton.setText(IdeBundle.message("toggle.editor.and.tools"));
-        this.frameButton.setText(IdeBundle.message("toggle.empty.frame"));
-
 
         this.hierarchicalButton.addActionListener(e ->
             this.hierarchialSpinner
@@ -218,7 +212,8 @@ public final class Settings implements Configurable {
     @Override
     public void disposeUIResources() {
         if (!PluginHandler.isLoaded()
-            || PluginHandler.getPlugin().getImageCache() == null) {
+            || PluginHandler.getPlugin().getImageCache() == null
+            || PluginHandler.getPlugin().getImageCache().length == 0) {
             return;
         }
 

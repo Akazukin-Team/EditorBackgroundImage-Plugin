@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public final class BackgroundScheduler {
     final EditorBackgroundImage plugin;
     ScheduledExecutorService pool = null;
+    int failed;
 
     public void schedule() {
         final Config.State state = Config.getInstance();
@@ -45,7 +46,12 @@ public final class BackgroundScheduler {
             this.pool.scheduleWithFixedDelay(() -> {
                 if (!this.plugin.getTaskMgr()
                     .getTask(SetRandomBackgroundTask.class).get()) {
-                    this.shutdown();
+                    this.failed++;
+                    if (this.failed > 10) {
+                        this.shutdown();
+                    }
+                } else {
+                    this.failed = 0;
                 }
             }, delay, interval, timeUnitEnum);
         }

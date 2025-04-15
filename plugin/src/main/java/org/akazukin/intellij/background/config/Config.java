@@ -56,15 +56,15 @@ public final class Config
 
     @Data
     public static class State {
-        boolean changes;
+        boolean changes = true;
 
-        int intervalAmount;
+        int intervalAmount = 1;
         int intervalUnit = 1;
 
-        boolean changeEditor;
-        boolean changeFrame;
+        boolean changeEditor = true;
+        boolean changeFrame = true;
 
-        boolean synchronizeImages;
+        boolean synchronizeImages = true;
 
         boolean hierarchicalExplore = false;
         int hierarchicalDepth = 3;

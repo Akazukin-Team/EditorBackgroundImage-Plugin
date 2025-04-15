@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 @Slf4j
-public class DynamicPluginListenerImpl implements DynamicPluginListener {
+public final class DynamicPluginListenerImpl implements DynamicPluginListener {
     @Override
     public void pluginLoaded(
         @NotNull final IdeaPluginDescriptor pluginDescriptor) {
@@ -23,7 +23,7 @@ public class DynamicPluginListenerImpl implements DynamicPluginListener {
         if (!PluginHandler.isInitialized()) {
             PluginHandler.init();
         }
-        PluginHandler.onLoad();
+        PluginHandler.onEnable();
     }
 
     @Override

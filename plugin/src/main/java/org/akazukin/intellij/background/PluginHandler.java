@@ -16,6 +16,9 @@ public final class PluginHandler {
     }
 
     public void onUnload() {
+        if (plugin == null) {
+            return;
+        }
         plugin.onUnload();
         plugin = null;
     }
@@ -29,7 +32,11 @@ public final class PluginHandler {
         return plugin != null;
     }
 
-    public void onLoad() {
-        plugin.onLoad();
+    public void onEnable() {
+        plugin.onEnable();
+    }
+
+    public void onDisable() {
+        plugin.onUnload();
     }
 }

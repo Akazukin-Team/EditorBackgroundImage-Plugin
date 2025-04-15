@@ -22,12 +22,12 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
 
     @Override
     @NotNull
-    public Boolean get() {
+    public synchronized Boolean get() {
         final Config.State state = Config.getInstance();
 
         if (state.getImages().isEmpty()) {
-            NotificationUtils.warning("Invalid setting",
-                "Image paths is empty");
+            NotificationUtils.warningBundled("messages.nopath.title",
+                "messages.nopath.message");
             state.setChanges(false);
             this.plugin.setImageCache(null);
             return false;
@@ -53,13 +53,14 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
         imagePaths.removeIf(file -> !FileUtils.isValidImage(file));
 
         if (imagePaths.isEmpty()) {
-            NotificationUtils.error("Not found", "Any valid images are not found");
+            NotificationUtils.errorBundled("messages.noimage.title",
+                "messages.noimage.message");
             state.setChanges(false);
             this.plugin.setImageCache(null);
             return false;
         }
 
-        this.plugin.setImageCache(imagePaths.toArray(new File[0]));
+        this.plugin.setImageCache(imagePaths.toArray(FileUtils.EMPTY_FILES));
         return true;
     }
 

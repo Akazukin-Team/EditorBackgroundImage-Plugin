@@ -7,7 +7,9 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AddEditRemovePanel;
 import com.intellij.ui.ClickListener;
+import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.akazukin.intellij.background.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
     public static final String INVALID_COLUMN_MESSAGE = "Invalid column index";
     private static final FileChooserDescriptor CHOOSER =
@@ -31,10 +34,11 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
         CHOOSER.withFileFilter(f -> FileUtils.isValidImage(new File(f.getPath())));
     }
 
-    private VirtualFile defaultFile = null;
+    VirtualFile defaultFile = null;
 
     public Panel() {
-        super(getTableModel(), new ArrayList<>(), "Backgrounds");
+        super(getTableModel(), new ArrayList<>(),
+            BundleUtils.message("settings.backgrounds.label"));
         this.getTable().setShowColumns(true);
         this.getTable().getColumnModel()
             .getColumn(1).setMaxWidth(75);
