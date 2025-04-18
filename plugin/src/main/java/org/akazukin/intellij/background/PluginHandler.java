@@ -23,9 +23,9 @@ public final class PluginHandler {
         plugin = null;
     }
 
-    public boolean isLoaded() {
+    public boolean isEnabled() {
         return PluginManager.getInstance()
-            .enablePlugin(EditorBackgroundImage.ACT_PLUGIN_ID);
+            .findEnabledPlugin(EditorBackgroundImage.ACT_PLUGIN_ID) != null;
     }
 
     public boolean isInitialized() {

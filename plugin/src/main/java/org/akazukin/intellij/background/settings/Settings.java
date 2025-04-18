@@ -32,7 +32,8 @@ public final class Settings implements Configurable {
         TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS
     };
 
-    private static final int MAX_TIME = 360;
+    private static final int MAX_INTERVAL = 360;
+    private static final int MAX_RETRIES = 50;
     private static final int MAX_DEPTH = 10;
 
     JPanel rootPanel;
@@ -59,17 +60,33 @@ public final class Settings implements Configurable {
     @NotNull
     @Override
     public JComponent createComponent() {
-        if (PluginHandler.isLoaded()) {
+        if (PluginHandler.isInitialized()) {
             PluginHandler.getPlugin().getScheduler().shutdown();
         }
 
-        this.autoChangeIntervalSpinner
-            .setModel(new SpinnerNumberModel(0, 0, MAX_TIME, 2));
         this.autoChangeEnableButton.addActionListener(e -> {
             this.autoChangeIntervalSpinner
                 .setEnabled(this.autoChangeEnableButton.isSelected());
-            this.autoChangeTimeUnitBox.setEnabled(this.autoChangeEnableButton.isSelected());
+            this.autoChangeTimeUnitBox
+                .setEnabled(this.autoChangeEnableButton.isSelected());
         });
+        this.autoChangeIntervalSpinner
+            .setModel(new SpinnerNumberModel(1, 1, MAX_INTERVAL, 2));
+
+
+        this.retryEnableButton.addActionListener(e -> {
+            this.retryTimesSpinner
+                .setEnabled(this.retryEnableButton.isSelected());
+            this.retryIntervalSpinner
+                .setEnabled(this.retryEnableButton.isSelected());
+            this.retryTimeUnitBox
+                .setEnabled(this.retryEnableButton.isSelected());
+        });
+        this.retryTimesSpinner
+            .setModel(new SpinnerNumberModel(1, 1, MAX_RETRIES, 1));
+        this.retryIntervalSpinner
+            .setModel(new SpinnerNumberModel(1, 1, MAX_INTERVAL, 2));
+
 
         for (final TimeUnit timeUnit : TIME_UNITS) {
             final String msg = BundleUtils.message(
@@ -193,7 +210,7 @@ public final class Settings implements Configurable {
             || !new HashSet<>(this.backgroundsListPanel.getData())
             .containsAll(bgImgs)) {
 
-            if (PluginHandler.isLoaded()) {
+            if (PluginHandler.isInitialized()) {
                 PluginHandler.getPlugin().getTaskMgr()
                     .getTask(CacheBackgroundImagesTask.class).get();
             }
@@ -276,7 +293,7 @@ public final class Settings implements Configurable {
 
     @Override
     public void disposeUIResources() {
-        if (!PluginHandler.isLoaded()
+        if (!PluginHandler.isEnabled()
             || PluginHandler.getPlugin().getImageCache() == null
             || PluginHandler.getPlugin().getImageCache().length == 0) {
             return;
