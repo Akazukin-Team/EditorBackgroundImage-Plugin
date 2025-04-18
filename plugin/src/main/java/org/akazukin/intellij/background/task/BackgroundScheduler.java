@@ -25,7 +25,6 @@ public final class BackgroundScheduler {
     ScheduledExecutorService pool;
 
     public void schedule() {
-        System.out.println("schedule");
         final Config.State state = Config.getInstance();
         final int autoChangeInterval = state.getAutoChangeIntervalAmount();
         final TimeUnit autoChangeTimeUnit
@@ -53,8 +52,6 @@ public final class BackgroundScheduler {
             = Executors.newSingleThreadScheduledExecutor();
 
         final Runnable task = () -> {
-            System.out.println(1);
-            //if (false) {
             if (BackgroundScheduler.this.plugin.getTaskMgr()
                 .getTask(SetRandomBackgroundTask.class).get()) {
                 return;
@@ -63,19 +60,19 @@ public final class BackgroundScheduler {
             for (int fails = 0, end = state.getRetryTimes();
                  fails < end; ) {
                 try {
-                    NotificationUtils.warning("Retrying...",
-                        "Retying after " + retryInterval + " ["
-                            + BundleUtils.message(
-                            "settings.timeunit."
-                                + retryTimeUnit.name().toLowerCase())
-                            + "]");
+                    NotificationUtils.warning(
+                        BundleUtils.message("messages.retry.title"),
+                        BundleUtils.message("messages.retry.message",
+                            retryInterval,
+                            BundleUtils.message(
+                                "settings.timeunit."
+                                    + retryTimeUnit.name().toLowerCase())));
                     Thread.sleep(
                         retryTimeUnit.toMillis(retryInterval));
                 } catch (final InterruptedException e) {
                     throw new RuntimeException(e);
                 }
 
-                //if (true) {
                 if (!BackgroundScheduler.this.plugin.getTaskMgr()
                     .getTask(SetRandomBackgroundTask.class).get()) {
                     fails++;
@@ -101,7 +98,6 @@ public final class BackgroundScheduler {
 
     @SneakyThrows
     public synchronized void shutdown() {
-        System.out.println("shutdown");
         if (this.pool != null) {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
                 .getTask(SetRandomBackgroundTask.class).getTaskName());
