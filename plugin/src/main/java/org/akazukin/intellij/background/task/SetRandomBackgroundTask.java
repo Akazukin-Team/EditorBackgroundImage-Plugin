@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.utils.FileUtils;
 import org.akazukin.intellij.background.utils.NotificationUtils;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +53,7 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             || this.plugin.getImageCache().length < imgsCount) {
             if (!this.plugin.getTaskMgr()
                 .getTask(CacheBackgroundImagesTask.class).get()) {
-                state.setChanges(false);
+                state.setAutoChangeEnabled(false);
                 return false;
             }
         }

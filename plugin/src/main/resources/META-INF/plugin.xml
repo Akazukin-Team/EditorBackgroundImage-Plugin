@@ -76,9 +76,9 @@
 
         <applicationConfigurable groupId="appearance" groupWeight="20" id="editor.background.image"
                                  displayName="Editor Background Image"
-                                 instance="org.akazukin.intellij.background.gui.Settings"/>
+                                 instance="org.akazukin.intellij.background.settings.Settings"/>
 
-        <applicationService serviceImplementation="org.akazukin.intellij.background.config.Config"/>
+        <applicationService serviceImplementation="org.akazukin.intellij.background.settings.Config"/>
     </extensions>
 
 

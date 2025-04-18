@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.gui;
+package org.akazukin.intellij.background.settings;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
-import org.akazukin.intellij.background.config.Config;
 import org.akazukin.intellij.background.task.CacheBackgroundImagesTask;
 import org.akazukin.intellij.background.task.SetRandomBackgroundTask;
 import org.akazukin.intellij.background.utils.BundleUtils;
@@ -37,15 +36,20 @@ public final class Settings implements Configurable {
     private static final int MAX_DEPTH = 10;
 
     JPanel rootPanel;
-    JCheckBox changeEveryButton;
-    JSpinner intervalSpinner;
-    ComboBox<String> timeUnitBox;
+    JCheckBox autoChangeEnableButton;
+    JSpinner autoChangeIntervalSpinner;
+    ComboBox<String> autoChangeTimeUnitBox;
     JCheckBox synchronizeImageButton;
     JCheckBox editorButton;
     JCheckBox frameButton;
     JCheckBox hierarchicalButton;
     JSpinner hierarchialSpinner;
-    Panel backgroundsListPanel;
+    PathList backgroundsListPanel;
+    private JPanel autoChangePanel;
+    private ComboBox<String> retryTimeUnitBox;
+    private JSpinner retryIntervalSpinner;
+    private JCheckBox retryEnableButton;
+    private JSpinner retryTimesSpinner;
 
     @Override
     public String getDisplayName() {
@@ -59,17 +63,19 @@ public final class Settings implements Configurable {
             PluginHandler.getPlugin().getScheduler().shutdown();
         }
 
-        this.intervalSpinner
+        this.autoChangeIntervalSpinner
             .setModel(new SpinnerNumberModel(0, 0, MAX_TIME, 2));
-        this.changeEveryButton.addActionListener(e -> {
-            this.intervalSpinner
-                .setEnabled(this.changeEveryButton.isSelected());
-            this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
+        this.autoChangeEnableButton.addActionListener(e -> {
+            this.autoChangeIntervalSpinner
+                .setEnabled(this.autoChangeEnableButton.isSelected());
+            this.autoChangeTimeUnitBox.setEnabled(this.autoChangeEnableButton.isSelected());
         });
 
         for (final TimeUnit timeUnit : TIME_UNITS) {
-            this.timeUnitBox.addItem(BundleUtils.message(
-                "settings.change.timeunit." + timeUnit.name().toLowerCase()));
+            final String msg = BundleUtils.message(
+                "settings.timeunit." + timeUnit.name().toLowerCase());
+            this.autoChangeTimeUnitBox.addItem(msg);
+            this.retryTimeUnitBox.addItem(msg);
         }
 
         this.hierarchicalButton.addActionListener(e ->
@@ -92,20 +98,34 @@ public final class Settings implements Configurable {
                     Pair.pair(new File(e.getKey()), e.getValue())).toList();
 
         return
-            state.getIntervalAmount()
-                != ((SpinnerNumberModel) this.intervalSpinner.getModel())
+            state.isAutoChangeEnabled()
+                != this.autoChangeEnableButton.isSelected()
+
+                || state.getAutoChangeIntervalAmount()
+                != ((SpinnerNumberModel) this.autoChangeIntervalSpinner
+                .getModel()).getNumber().intValue()
+
+                || state.getAutoChangeIntervalUnit()
+                != this.autoChangeTimeUnitBox.getSelectedIndex()
+
+
+                || state.isRetryEnabled() != this.retryEnableButton.isSelected()
+
+                || state.getRetryTimes()
+                != ((SpinnerNumberModel) this.retryTimesSpinner.getModel())
                 .getNumber().intValue()
 
+                || state.getRetryIntervalAmount()
+                != ((SpinnerNumberModel) this.retryIntervalSpinner.getModel())
+                .getNumber().intValue()
 
-                || state.getIntervalUnit() != this.timeUnitBox
+                || state.getRetryIntervalUnit() != this.retryTimeUnitBox
                 .getSelectedIndex()
 
 
                 || state.isChangeEditor() != this.editorButton.isSelected()
                 || state.isChangeFrame() != this.frameButton.isSelected()
 
-
-                || state.isChanges() != this.changeEveryButton.isSelected()
 
                 || state.isSynchronizeImages()
                 != this.synchronizeImageButton.isSelected()
@@ -130,13 +150,28 @@ public final class Settings implements Configurable {
     public void apply() {
         final Config.State state = Config.getInstance();
 
-        state.setIntervalAmount(
-            ((SpinnerNumberModel) this.intervalSpinner.getModel())
+
+        state.setAutoChangeEnabled(this.autoChangeEnableButton.isSelected());
+        state.setAutoChangeIntervalAmount(
+            ((SpinnerNumberModel) this.autoChangeIntervalSpinner.getModel())
                 .getNumber().intValue());
-        state.setChanges(this.changeEveryButton.isSelected());
+        state.setAutoChangeIntervalUnit(
+            this.autoChangeTimeUnitBox.getSelectedIndex());
+
+
+        state.setRetryEnabled(this.retryEnableButton.isSelected());
+        state.setRetryTimes(
+            ((SpinnerNumberModel) this.retryTimesSpinner.getModel())
+                .getNumber().intValue());
+        state.setRetryIntervalAmount(
+            ((SpinnerNumberModel) this.retryIntervalSpinner.getModel())
+                .getNumber().intValue());
+        state.setRetryIntervalUnit(
+            this.retryTimeUnitBox.getSelectedIndex());
+
 
         state.setSynchronizeImages(this.synchronizeImageButton.isSelected());
-        state.setIntervalUnit(this.timeUnitBox.getSelectedIndex());
+
 
         state.setChangeEditor(this.editorButton.isSelected());
         state.setChangeFrame(this.frameButton.isSelected());
@@ -169,22 +204,52 @@ public final class Settings implements Configurable {
                 .toArray(Map.Entry[]::new))
         );
 
-        this.intervalSpinner.setEnabled(this.changeEveryButton.isSelected());
-        this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
+        this.autoChangeIntervalSpinner
+            .setEnabled(this.autoChangeEnableButton.isSelected());
+        this.autoChangeTimeUnitBox
+            .setEnabled(this.autoChangeEnableButton.isSelected());
+
+        this.retryTimesSpinner
+            .setEnabled(this.retryEnableButton.isSelected());
+        this.retryIntervalSpinner
+            .setEnabled(this.retryEnableButton.isSelected());
+        this.retryTimeUnitBox
+            .setEnabled(this.retryEnableButton.isSelected());
     }
 
     @Override
     public void reset() {
         final Config.State state = Config.getInstance();
 
-        this.changeEveryButton.setSelected(state.isChanges());
+        this.autoChangeEnableButton.setSelected(state.isAutoChangeEnabled());
 
-        this.intervalSpinner.setValue(state.getIntervalAmount());
-        this.intervalSpinner.setEnabled(this.changeEveryButton.isSelected());
+        this.autoChangeIntervalSpinner
+            .setValue(state.getAutoChangeIntervalAmount());
+        this.autoChangeIntervalSpinner
+            .setEnabled(this.autoChangeEnableButton.isSelected());
+
+        this.autoChangeTimeUnitBox
+            .setSelectedIndex(state.getAutoChangeIntervalUnit());
+        this.autoChangeTimeUnitBox
+            .setEnabled(this.autoChangeEnableButton.isSelected());
 
 
-        this.timeUnitBox.setSelectedIndex(state.getIntervalUnit());
-        this.timeUnitBox.setEnabled(this.changeEveryButton.isSelected());
+        this.retryEnableButton.setSelected(state.isRetryEnabled());
+
+        this.retryTimesSpinner
+            .setValue(state.getRetryTimes());
+        this.retryTimesSpinner
+            .setEnabled(this.retryEnableButton.isSelected());
+
+        this.retryIntervalSpinner
+            .setValue(state.getRetryIntervalAmount());
+        this.retryIntervalSpinner
+            .setEnabled(this.retryEnableButton.isSelected());
+
+        this.retryTimeUnitBox
+            .setSelectedIndex(state.getRetryIntervalUnit());
+        this.retryTimeUnitBox
+            .setEnabled(this.retryEnableButton.isSelected());
 
 
         this.editorButton.setSelected(state.isChangeEditor());
@@ -217,7 +282,7 @@ public final class Settings implements Configurable {
             return;
         }
 
-        if (this.changeEveryButton.isSelected()) {
+        if (this.autoChangeEnableButton.isSelected()) {
             final PropertiesComponent props = PropertiesComponent.getInstance();
             if ((
                 this.editorButton.isSelected()
@@ -230,7 +295,8 @@ public final class Settings implements Configurable {
                     .getTask(SetRandomBackgroundTask.class).get();
             }
 
-            if (this.editorButton.isSelected() || this.frameButton.isSelected()) {
+            if (this.editorButton.isSelected()
+                || this.frameButton.isSelected()) {
                 PluginHandler.getPlugin().getScheduler().schedule();
             }
         }

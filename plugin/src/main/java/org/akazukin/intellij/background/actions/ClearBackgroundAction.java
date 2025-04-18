@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import org.akazukin.intellij.background.PluginHandler;
-import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.settings.Config;
 import org.jetbrains.annotations.NotNull;
 
 public final class ClearBackgroundAction extends AnAction {
@@ -25,6 +25,6 @@ public final class ClearBackgroundAction extends AnAction {
         props.setValue(IdeBackgroundUtil.FRAME_PROP, false);
 
         final Config.State state = Config.getInstance();
-        state.setChanges(false);
+        state.setAutoChangeEnabled(false);
     }
 }

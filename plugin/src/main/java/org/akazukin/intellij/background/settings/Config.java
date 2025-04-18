@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.config;
+package org.akazukin.intellij.background.settings;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -56,10 +56,19 @@ public final class Config
 
     @Data
     public static class State {
-        boolean changes = true;
+        boolean autoChangeEnabled = true;
 
-        int intervalAmount = 1;
-        int intervalUnit = 1;
+        int autoChangeIntervalAmount = 1;
+        int autoChangeIntervalUnit = 1;
+
+
+        boolean retryEnabled = true;
+
+        int retryTimes = 10;
+
+        int retryIntervalAmount = 30;
+        int retryIntervalUnit = 0;
+
 
         boolean changeEditor = true;
         boolean changeFrame = true;

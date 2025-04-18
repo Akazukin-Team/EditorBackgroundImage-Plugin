@@ -4,11 +4,13 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.config.Config;
-import org.akazukin.intellij.background.gui.Settings;
+import org.akazukin.intellij.background.settings.Config;
+import org.akazukin.intellij.background.settings.Settings;
+import org.akazukin.intellij.background.utils.BundleUtils;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,50 +21,89 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public final class BackgroundScheduler {
     final EditorBackgroundImage plugin;
-    ScheduledExecutorService pool = null;
-    int failed;
+    ScheduledExecutorService pool;
 
     public void schedule() {
         final Config.State state = Config.getInstance();
-        final int interval = state.getIntervalAmount();
-        final int timeUnit = state.getIntervalUnit();
+        final int autoChangeInterval = state.getAutoChangeIntervalAmount();
+        final TimeUnit autoChangeTimeUnit
+            = Settings.TIME_UNITS[state.getAutoChangeIntervalUnit()];
 
-        if (interval == 0) {
+        if (autoChangeInterval == 0) {
             return;
         }
 
         final PropertiesComponent props = PropertiesComponent.getInstance();
         final int delay = props.isValueSet(IdeBackgroundUtil.EDITOR_PROP)
-            ? interval : 0;
-        final TimeUnit timeUnitEnum = Settings.TIME_UNITS[timeUnit];
+            ? autoChangeInterval : 0;
+
+
+        final int retryInterval = state.getRetryIntervalAmount();
+        final TimeUnit retryTimeUnit
+            = Settings.TIME_UNITS[state.getRetryIntervalUnit()];
+
+
+        log.info("Schedule " + this.plugin.getTaskMgr()
+            .getTask(SetRandomBackgroundTask.class).getTaskName());
+
+
+        final ScheduledExecutorService pool
+            = Executors.newSingleThreadScheduledExecutor();
+
+        final Runnable task = () -> {
+            if (false) {
+            /*if (BackgroundScheduler.this.plugin.getTaskMgr()
+                .getTask(SetRandomBackgroundTask.class).get()) {*/
+                return;
+            }
+
+            for (int fails = 0, end = state.getRetryTimes();
+                 fails < end; ) {
+                try {
+                    BackgroundScheduler.log.info(
+                        "Retying after " + retryInterval + " ["
+                            + BundleUtils.message(
+                            "settings.change.timeunit."
+                                + retryTimeUnit.name().toLowerCase())
+                            + "]");
+                    Thread.sleep(
+                        retryTimeUnit.toMillis(retryInterval));
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (true) {
+                /*if (!BackgroundScheduler.this.plugin.getTaskMgr()
+                    .getTask(SetRandomBackgroundTask.class).get()) {*/
+                    fails++;
+
+                    if (fails == end) {
+                        synchronized (BackgroundScheduler.this) {
+                            if (BackgroundScheduler.this.pool == pool) {
+                                BackgroundScheduler.this.shutdown();
+                            }
+                        }
+                    }
+                }
+            }
+        };
 
         synchronized (this) {
             this.shutdown();
-
-            log.info("Schedule " + this.plugin.getTaskMgr()
-                .getTask(SetRandomBackgroundTask.class).getTaskName());
-
-            this.pool = Executors.newScheduledThreadPool(1);
-            this.pool.scheduleWithFixedDelay(() -> {
-                if (!this.plugin.getTaskMgr()
-                    .getTask(SetRandomBackgroundTask.class).get()) {
-                    this.failed++;
-                    if (this.failed > 10) {
-                        this.shutdown();
-                    }
-                } else {
-                    this.failed = 0;
-                }
-            }, delay, interval, timeUnitEnum);
+            this.pool = pool;
+            this.pool.scheduleWithFixedDelay(task, delay,
+                autoChangeInterval, autoChangeTimeUnit);
         }
     }
 
+    @SneakyThrows
     public synchronized void shutdown() {
-        if (this.pool != null && !this.pool.isTerminated()) {
+        if (this.pool != null) {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
                 .getTask(SetRandomBackgroundTask.class).getTaskName());
 
             this.pool.shutdownNow();
+            this.pool.awaitTermination(10, TimeUnit.SECONDS);
             this.pool = null;
         }
     }

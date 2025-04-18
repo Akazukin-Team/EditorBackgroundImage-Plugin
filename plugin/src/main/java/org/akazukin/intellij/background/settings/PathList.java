@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.gui;
+package org.akazukin.intellij.background.settings;
 
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
+public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
     public static final String INVALID_COLUMN_MESSAGE = "Invalid column index";
     private static final FileChooserDescriptor CHOOSER =
         new FileChooserDescriptor(true, true, false, false, false, false);
@@ -36,9 +36,9 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     VirtualFile defaultFile = null;
 
-    public Panel() {
+    public PathList() {
         super(getTableModel(), new ArrayList<>(),
-            BundleUtils.message("settings.backgrounds.label"));
+            BundleUtils.message("settings.backgrounds.title"));
         this.getTable().setShowColumns(true);
         this.getTable().getColumnModel()
             .getColumn(1).setMaxWidth(75);
@@ -48,7 +48,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
             @Override
             public boolean onClick(
                 @NotNull final MouseEvent event, final int clickCount) {
-                Panel.this.doClick(event.getButton());
+                PathList.this.doClick(event.getButton());
                 return true;
             }
         }.installOn(this.getTable());
@@ -94,11 +94,11 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
                         id = "path";
                         break;
                     case 1:
-                        id = "enabled";
+                        id = "enable";
                         break;
                     default:
                         throw new IllegalArgumentException(
-                            Panel.INVALID_COLUMN_MESSAGE);
+                            PathList.INVALID_COLUMN_MESSAGE);
                 }
                 return BundleUtils.message("settings.backgrounds." + id);
             }
@@ -118,7 +118,7 @@ public final class Panel extends AddEditRemovePanel<Pair<File, Boolean>> {
                         return Boolean.class;
                     default:
                         throw new IllegalArgumentException(
-                            Panel.INVALID_COLUMN_MESSAGE);
+                            PathList.INVALID_COLUMN_MESSAGE);
                 }
             }
         };

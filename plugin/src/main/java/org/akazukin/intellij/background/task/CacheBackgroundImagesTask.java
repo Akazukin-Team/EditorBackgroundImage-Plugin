@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.config.Config;
+import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.utils.FileUtils;
 import org.akazukin.intellij.background.utils.NotificationUtils;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
         if (state.getImages().isEmpty()) {
             NotificationUtils.warningBundled("messages.nopath.title",
                 "messages.nopath.message");
-            state.setChanges(false);
+            state.setAutoChangeEnabled(false);
             this.plugin.setImageCache(null);
             return false;
         }
@@ -55,7 +55,7 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
         if (imagePaths.isEmpty()) {
             NotificationUtils.errorBundled("messages.noimage.title",
                 "messages.noimage.message");
-            state.setChanges(false);
+            state.setAutoChangeEnabled(false);
             this.plugin.setImageCache(null);
             return false;
         }
