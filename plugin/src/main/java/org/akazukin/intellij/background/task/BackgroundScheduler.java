@@ -12,6 +12,7 @@ import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.settings.Settings;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.akazukin.intellij.background.utils.NotificationUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,7 +23,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public final class BackgroundScheduler {
     final EditorBackgroundImage plugin;
+    @Nullable
     ScheduledExecutorService pool;
+
+    public boolean isScheduled() {
+        return this.pool != null;
+    }
 
     public void schedule() {
         final Config.State state = Config.getInstance();
