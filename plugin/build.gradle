@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij.platform' version '2.1.0'
+    id 'org.jetbrains.intellij.platform' version '2.5.0'
 }
 
 repositories {
@@ -40,7 +40,9 @@ patchPluginXml {
     untilBuild = "998.*"
 }
 
-intellijPlatform.autoReload = true
+intellijPlatform {
+    autoReload = true
+}
 
 jar {
     archiveBaseName = project.pluginName

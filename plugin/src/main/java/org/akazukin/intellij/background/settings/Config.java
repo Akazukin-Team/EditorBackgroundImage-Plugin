@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.config;
+package org.akazukin.intellij.background.settings;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
-import org.akazukin.intellij.background.PluginHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -53,21 +52,28 @@ public final class Config
     @Override
     public void dispose() {
         this.state = null;
-
-        PluginHandler.onUnload();
     }
 
     @Data
     public static class State {
-        boolean changes;
+        boolean autoChangeEnabled = true;
 
-        int intervalAmount;
-        int intervalUnit = 1;
+        int autoChangeIntervalAmount = 1;
+        int autoChangeIntervalUnit = 1;
 
-        boolean changeEditor;
-        boolean changeFrame;
 
-        boolean synchronizeImages;
+        boolean retryEnabled = true;
+
+        int retryTimes = 10;
+
+        int retryIntervalAmount = 30;
+        int retryIntervalUnit = 0;
+
+
+        boolean changeEditor = true;
+        boolean changeFrame = true;
+
+        boolean synchronizeImages = true;
 
         boolean hierarchicalExplore = false;
         int hierarchicalDepth = 3;
