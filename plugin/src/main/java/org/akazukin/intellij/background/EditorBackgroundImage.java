@@ -35,8 +35,12 @@ public final class EditorBackgroundImage {
     public void onEnable() {
         final Config.State state = Config.getInstance();
         if (state.isAutoChangeEnabled()) {
-            this.taskMgr.getTask(SetRandomBackgroundTask.class).get();
-            this.scheduler.schedule();
+            synchronized (this.scheduler) {
+                if (!this.scheduler.isScheduled()) {
+                    this.taskMgr.getTask(SetRandomBackgroundTask.class).get();
+                    this.scheduler.schedule();
+                }
+            }
         }
     }
 
