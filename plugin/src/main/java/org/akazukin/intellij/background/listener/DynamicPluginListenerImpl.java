@@ -19,11 +19,7 @@ public final class DynamicPluginListenerImpl implements DynamicPluginListener {
             return;
         }
 
-        log.warn("pluginLoaded");
-        if (!PluginHandler.isInitialized()) {
-            PluginHandler.init();
-        }
-        PluginHandler.onEnable();
+        PluginHandler.onStartup();
     }
 
     @Override
@@ -32,8 +28,6 @@ public final class DynamicPluginListenerImpl implements DynamicPluginListener {
             EditorBackgroundImage.ACT_PLUGIN_ID)) {
             return;
         }
-
-        log.warn("beforePluginUnload");
-        PluginHandler.onUnload();
+        PluginHandler.onDisable();
     }
 }

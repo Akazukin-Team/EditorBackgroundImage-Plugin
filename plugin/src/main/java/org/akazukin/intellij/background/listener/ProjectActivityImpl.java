@@ -15,10 +15,7 @@ public final class ProjectActivityImpl implements ProjectActivity {
     public @Nullable Object execute(
         @NotNull final Project project,
         @NotNull final Continuation<? super Unit> continuation) {
-        if (!PluginHandler.isInitialized()) {
-            PluginHandler.init();
-        }
-        PluginHandler.onEnable();
+        PluginHandler.onStartup();
         return null;
     }
 }

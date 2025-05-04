@@ -75,6 +75,9 @@ public final class BackgroundScheduler {
                                     + retryTimeUnit.name().toLowerCase())));
                     Thread.sleep(
                         retryTimeUnit.toMillis(retryInterval));
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
                 } catch (final InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -99,6 +102,8 @@ public final class BackgroundScheduler {
             this.pool = pool;
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
+            log.info("Scheduled " + this.plugin.getTaskMgr()
+                .getTask(SetRandomBackgroundTask.class).getTaskName());
         }
     }
 
@@ -108,8 +113,10 @@ public final class BackgroundScheduler {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
                 .getTask(SetRandomBackgroundTask.class).getTaskName());
 
-            this.pool.shutdownNow();
-            this.pool.awaitTermination(10, TimeUnit.SECONDS);
+            this.pool.shutdown();
+            if (this.pool.awaitTermination(5, TimeUnit.SECONDS)) {
+                this.pool.shutdownNow();
+            }
             this.pool = null;
         }
     }

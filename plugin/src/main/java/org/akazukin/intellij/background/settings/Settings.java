@@ -293,7 +293,8 @@ public final class Settings implements Configurable {
 
     @Override
     public void disposeUIResources() {
-        if (!PluginHandler.isEnabled()
+        if (!PluginHandler.isLoaded()
+            || !PluginHandler.isEnabled()
             || PluginHandler.getPlugin().getImageCache() == null
             || PluginHandler.getPlugin().getImageCache().length == 0) {
             return;

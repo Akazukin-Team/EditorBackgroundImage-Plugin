@@ -11,32 +11,43 @@ public final class PluginHandler {
     @Nullable
     private static EditorBackgroundImage plugin;
 
-    public void init() {
-        plugin = new EditorBackgroundImage();
-    }
-
-    public void onUnload() {
+    public synchronized void onUnload() {
         if (plugin == null) {
             return;
         }
-        plugin.onUnload();
+        plugin.onDisable();
         plugin = null;
     }
 
-    public boolean isEnabled() {
+    public boolean isLoaded() {
         return PluginManager.getInstance()
             .findEnabledPlugin(EditorBackgroundImage.ACT_PLUGIN_ID) != null;
+    }
+
+    public synchronized void onStartup() {
+        if (!isInitialized()) {
+            init();
+        }
+        plugin.onEnable();
+    }
+
+    public synchronized void init() {
+        plugin = new EditorBackgroundImage();
     }
 
     public boolean isInitialized() {
         return plugin != null;
     }
 
-    public void onEnable() {
+    public synchronized boolean isEnabled() {
+        return plugin != null && plugin.isEnabled();
+    }
+
+    public synchronized void onEnable() {
         plugin.onEnable();
     }
 
-    public void onDisable() {
-        plugin.onUnload();
+    public synchronized void onDisable() {
+        plugin.onDisable();
     }
 }
