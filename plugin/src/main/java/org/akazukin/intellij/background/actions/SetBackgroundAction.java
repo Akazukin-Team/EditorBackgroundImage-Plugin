@@ -21,7 +21,7 @@ public final class SetBackgroundAction extends AnAction {
             PluginHandler.getPlugin().getScheduler().schedule();
         } else {
             PluginHandler.getPlugin().getTaskMgr()
-                .getTask(SetRandomBackgroundTask.class).get();
+                .getServiceByImplementation(SetRandomBackgroundTask.class).get();
         }
     }
 }

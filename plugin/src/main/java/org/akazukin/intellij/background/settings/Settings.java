@@ -212,7 +212,7 @@ public final class Settings implements Configurable {
 
             if (PluginHandler.isInitialized()) {
                 PluginHandler.getPlugin().getTaskMgr()
-                    .getTask(CacheBackgroundImagesTask.class).get();
+                    .getServiceByImplementation(CacheBackgroundImagesTask.class).get();
             }
         }
         state.setImages(
@@ -310,7 +310,7 @@ public final class Settings implements Configurable {
                     && !props.isValueSet(IdeBackgroundUtil.FRAME_PROP))) {
 
                 PluginHandler.getPlugin().getTaskMgr()
-                    .getTask(SetRandomBackgroundTask.class).get();
+                    .getServiceByImplementation(SetRandomBackgroundTask.class).get();
             }
 
             if (this.editorButton.isSelected()
