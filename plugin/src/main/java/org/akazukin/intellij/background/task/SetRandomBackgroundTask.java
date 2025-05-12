@@ -28,6 +28,10 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         return "SetRandomBackground";
     }
 
+    @Override
+    public long getServiceId() {
+        return 1L;
+    }
 
     @Override
     public Boolean get() {
@@ -52,7 +56,7 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         if (this.plugin.getImageCache() == null
             || this.plugin.getImageCache().length < imgsCount) {
             if (!this.plugin.getTaskMgr()
-                .getTask(CacheBackgroundImagesTask.class).get()) {
+                .getServiceByImplementation(CacheBackgroundImagesTask.class).get()) {
                 state.setAutoChangeEnabled(false);
                 return false;
             }

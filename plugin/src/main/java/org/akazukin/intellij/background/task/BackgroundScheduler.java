@@ -51,7 +51,7 @@ public final class BackgroundScheduler {
 
 
         log.info("Schedule " + this.plugin.getTaskMgr()
-            .getTask(SetRandomBackgroundTask.class).getTaskName());
+            .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
 
 
         final ScheduledExecutorService pool
@@ -59,7 +59,7 @@ public final class BackgroundScheduler {
 
         final Runnable task = () -> {
             if (BackgroundScheduler.this.plugin.getTaskMgr()
-                .getTask(SetRandomBackgroundTask.class).get()) {
+                .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
                 return;
             }
 
@@ -83,7 +83,7 @@ public final class BackgroundScheduler {
                 }
 
                 if (!BackgroundScheduler.this.plugin.getTaskMgr()
-                    .getTask(SetRandomBackgroundTask.class).get()) {
+                    .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
                     fails++;
 
                     if (fails == end) {
@@ -103,7 +103,7 @@ public final class BackgroundScheduler {
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
             log.info("Scheduled " + this.plugin.getTaskMgr()
-                .getTask(SetRandomBackgroundTask.class).getTaskName());
+                .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
         }
     }
 
@@ -111,7 +111,7 @@ public final class BackgroundScheduler {
     public synchronized void shutdown() {
         if (this.pool != null) {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
-                .getTask(SetRandomBackgroundTask.class).getTaskName());
+                .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
 
             this.pool.shutdown();
             if (this.pool.awaitTermination(5, TimeUnit.SECONDS)) {

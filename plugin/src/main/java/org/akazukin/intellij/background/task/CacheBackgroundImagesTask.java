@@ -21,6 +21,16 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
     EditorBackgroundImage plugin;
 
     @Override
+    public String getTaskName() {
+        return "CacheBackgroundImages";
+    }
+
+    @Override
+    public long getServiceId() {
+        return 0L;
+    }
+
+    @Override
     @NotNull
     public synchronized Boolean get() {
         final Config.State state = Config.getInstance();
@@ -62,10 +72,5 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
 
         this.plugin.setImageCache(imagePaths.toArray(FileUtils.EMPTY_FILES));
         return true;
-    }
-
-    @Override
-    public String getTaskName() {
-        return "CacheBackgroundImages";
     }
 }

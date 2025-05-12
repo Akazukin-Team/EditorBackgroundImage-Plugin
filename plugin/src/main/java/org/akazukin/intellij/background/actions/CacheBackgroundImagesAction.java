@@ -14,6 +14,6 @@ public final class CacheBackgroundImagesAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
         PluginHandler.getPlugin().getTaskMgr()
-            .getTask(CacheBackgroundImagesTask.class).get();
+            .getServiceByImplementation(CacheBackgroundImagesTask.class).get();
     }
 }

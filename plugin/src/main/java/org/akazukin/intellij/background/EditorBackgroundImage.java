@@ -31,7 +31,7 @@ public final class EditorBackgroundImage {
     File[] imageCache;
 
     {
-        this.taskMgr.registerTasks();
+        this.taskMgr.registerServices();
     }
 
     public boolean isEnabled() {
@@ -44,7 +44,7 @@ public final class EditorBackgroundImage {
         if (state.isAutoChangeEnabled()) {
             synchronized (this.scheduler) {
                 if (!this.scheduler.isScheduled()) {
-                    this.taskMgr.getTask(SetRandomBackgroundTask.class).get();
+                    this.taskMgr.getServiceByImplementation(SetRandomBackgroundTask.class).get();
                     this.scheduler.schedule();
                 }
             }
