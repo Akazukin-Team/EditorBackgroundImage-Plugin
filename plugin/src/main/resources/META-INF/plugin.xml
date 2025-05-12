@@ -65,9 +65,6 @@
     <applicationListeners>
         <listener class="org.akazukin.intellij.background.listener.DynamicPluginListenerImpl"
                   topic="com.intellij.ide.plugins.DynamicPluginListener"/>
-
-        <listener class="org.akazukin.intellij.background.listener.AppLifecycleListenerImpl"
-                  topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>
 
 
