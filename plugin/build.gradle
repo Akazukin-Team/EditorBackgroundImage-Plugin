@@ -3,9 +3,10 @@ plugins {
     id 'buildlogic.java-manifest-conventions'
     id 'buildlogic.java-test-conventions'
     id 'buildlogic.java-intellij-conventions'
-    id 'buildlogic.java-fatjar-conventions'
+    id 'buildlogic.java-library-fatjar-conventions'
+    id 'buildlogic.java-builddata-conventions'
 }
 
 dependencies {
-    include libs.akz.service
+    libFatjar libs.akz.service
 }

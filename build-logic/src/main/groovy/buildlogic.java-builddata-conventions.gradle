@@ -18,14 +18,13 @@ String commitHash = 'git rev-parse --verify HEAD'.execute().text.trim()
 processResources {
     filesMatching('build-data.properties') {
         expand([
-            version   : props.getProperty('version'),
-            vendor    : props.getProperty('vendor'),
-            commit    : commit,
-            commitHash: commitHash,
-            buildDate : date
+                version   : props.getProperty('version'),
+                vendor    : props.getProperty('vendor'),
+                commit    : commit,
+                commitHash: commitHash,
+                buildDate : date
         ])
     }
 }
 
 tasks.compileJava.dependsOn(processResources)
-tasks.patchPluginXml.dependsOn(processResources)
