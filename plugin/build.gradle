@@ -1,64 +1,11 @@
 plugins {
-    id 'java'
-    id 'org.jetbrains.intellij.platform' version '2.5.0'
+    id 'buildlogic.java-module-conventions'
+    id 'buildlogic.java-manifest-conventions'
+    id 'buildlogic.java-test-conventions'
+    id 'buildlogic.java-intellij-conventions'
+    id 'buildlogic.java-fatjar-conventions'
 }
-
-repositories {
-    mavenCentral()
-
-    intellijPlatform {
-        defaultRepositories()
-        jetbrainsRuntime()
-    }
-}
-
-
-import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 dependencies {
-    intellijPlatform {
-        intellijIdeaCommunity '2025.1'
-        jetbrainsRuntime()
-
-        //bundledPlugin 'com.intellij.java'
-
-        pluginVerifier()
-        zipSigner()
-        instrumentationTools()
-
-        testFramework TestFrameworkType.Platform.INSTANCE
-    }
-
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
-
-    testImplementation libs.junit
+    include libs.akz.service
 }
-
-patchPluginXml {
-    sinceBuild = "231.1"
-    untilBuild = "998.*"
-}
-
-intellijPlatform {
-    autoReload = true
-}
-
-jar {
-    archiveBaseName = project.pluginName
-}
-composedJar {
-    archiveBaseName = project.pluginName
-}
-buildPlugin {
-    archiveBaseName = project.pluginName
-}
-instrumentedJar {
-    archiveBaseName = project.pluginName
-}
-jarSearchableOptions {
-    archiveBaseName = project.pluginName
-}
-
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)

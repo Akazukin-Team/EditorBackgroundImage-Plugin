@@ -1,0 +1,47 @@
+plugins {
+    id 'buildlogic.java-common-conventions'
+    id 'org.jetbrains.intellij.platform'
+}
+
+repositories {
+    intellijPlatform {
+        defaultRepositories()
+        jetbrainsRuntime()
+    }
+}
+
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity '2025.1'
+        jetbrainsRuntime()
+
+        //bundledPlugin 'com.intellij.java'
+
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+
+        testFramework TestFrameworkType.Platform.INSTANCE
+    }
+}
+
+patchPluginXml {
+    sinceBuild = '231.1'
+    untilBuild = '998.*'
+}
+
+intellijPlatform {
+    autoReload = true
+}
+
+
+Properties props = new Properties()
+try (FileInputStream fis = new FileInputStream(new File(parent.rootDir.getPath(), 'application.properties'))) {
+    props.load(fis)
+}
+
+tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+    archiveBaseName = props.getProperty('artifactId')
+}
