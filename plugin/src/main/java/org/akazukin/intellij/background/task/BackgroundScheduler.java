@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.settings.Settings;
+import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.akazukin.intellij.background.utils.NotificationUtils;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +19,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The class manages background operations for scheduling
+ * and executing tasks related to the Editor Background Image plugin. It
+ * schedules tasks to set random background images and allows retrying the task
+ * execution in case of failure, based on configuration settings.
+ * <br>
+ * This class ensures the scheduling of tasks adheres to the configured
+ * intervals and automatically shuts down scheduled tasks when required.
+ * <p>
+ * Thread-safety is maintained by synchronizing critical operations.
+ */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @Slf4j

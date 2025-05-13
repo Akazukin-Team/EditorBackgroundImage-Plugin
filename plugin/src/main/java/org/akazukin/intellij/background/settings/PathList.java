@@ -23,6 +23,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The PathList class provides a graphical interface for managing a list
+ * of file paths with their respective boolean statuses (enabled/disabled).
+ * It extends AddEditRemovePanel to allow adding, editing, and removing items.
+ * The class integrates functionalities such as file selection, item toggle, and data mapping.
+ */
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {

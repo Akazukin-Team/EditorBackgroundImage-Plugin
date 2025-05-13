@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.task;
+package org.akazukin.intellij.background.task.tasks;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
@@ -16,6 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A task implementation for setting a random background image in the IDE.
+ * This task is responsible for fetching a random image from a cache of
+ * preloaded images and updating the editor and/or frame background
+ * properties based on the user's configuration.
+ * <p>
+ * The task ensures that the images used are valid and not already applied
+ * as a background. Supports synchronized or independent updates to the
+ * editor and frame backgrounds based on the configuration settings.
+ */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
 public final class SetRandomBackgroundTask implements ITask<Boolean> {
@@ -26,11 +36,6 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
     @Override
     public String getTaskName() {
         return "SetRandomBackground";
-    }
-
-    @Override
-    public long getServiceId() {
-        return 1L;
     }
 
     @Override
@@ -66,7 +71,7 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             new ArrayList<>(List.of(this.plugin.getImageCache()));
         final List<File> curImgs = new ArrayList<>();
         for (int i = 0; i < imgsCount; i++) {
-            // Set target for the image that selected during the current loop
+            // Set a target for the image that selected during the current loop
             final List<String> curTargets = new ArrayList<>();
             if (state.isSynchronizeImages()) {
                 curTargets.addAll(targets);

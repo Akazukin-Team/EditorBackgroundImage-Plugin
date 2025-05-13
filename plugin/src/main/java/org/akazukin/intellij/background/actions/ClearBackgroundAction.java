@@ -8,6 +8,21 @@ import org.akazukin.intellij.background.PluginHandler;
 import org.akazukin.intellij.background.settings.Config;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An action that clears background images
+ * and stops a scheduled background task for an automatic change background.
+ * <p>
+ * Once triggered, the action:
+ * - Shuts down the background scheduler associated with the plugin.
+ * - Resets the editor and frame properties for background images
+ * to their default disabled state.
+ * - Disables the auto-change functionality for background images
+ * in the plugin's configuration.
+ * <p>
+ * Use this action to reset the plugin's background features to an
+ * inactive state, stopping any ongoing or automated operations
+ * related to background images.
+ */
 public final class ClearBackgroundAction extends AnAction {
 
     public ClearBackgroundAction() {

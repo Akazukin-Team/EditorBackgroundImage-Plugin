@@ -4,12 +4,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.ProjectActivity;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.PluginHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Slf4j
+/**
+ * An implementation of the ProjectActivity interface
+ * used to handle actions triggered during the startup of an IntelliJ project.
+ * This class ensures the activation of the necessary plugin parts.
+ * <p>
+ * The execute method invokes the PluginHandler's startup logic to initialize
+ * or enable the associated plugin.
+ */
 public final class ProjectActivityImpl implements ProjectActivity {
     @Override
     public @Nullable Object execute(
