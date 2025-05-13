@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.task.BackgroundScheduler;
-import org.akazukin.intellij.background.task.SetRandomBackgroundTask;
+import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
 import org.akazukin.intellij.background.task.TaskManager;
 
 import java.io.File;

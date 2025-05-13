@@ -17,6 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Represents the configuration settings for the EditorBackgroundImage plugin.
+ * This configuration is persistent across application restarts and is stored in an XML file.
+ */
 @Service
 @State(
     name = EditorBackgroundImage.PLUGIN_NAME + "Config",

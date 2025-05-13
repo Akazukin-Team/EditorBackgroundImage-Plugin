@@ -2,14 +2,20 @@ package org.akazukin.intellij.background.listener;
 
 import com.intellij.ide.plugins.DynamicPluginListener;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-@Slf4j
+/**
+ * Implementation of the {@link DynamicPluginListener} interface,
+ * responsible for handling events related to the loading and unloading of dynamic plugins
+ * within an IntelliJ-based environment.
+ * <p>
+ * This class specifically listens for plugin lifecycle events
+ * and performs operations when this plugin is loaded or unloaded.
+ */
 public final class DynamicPluginListenerImpl implements DynamicPluginListener {
     @Override
     public void pluginLoaded(

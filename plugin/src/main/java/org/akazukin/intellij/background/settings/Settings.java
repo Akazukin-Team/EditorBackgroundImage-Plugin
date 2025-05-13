@@ -9,8 +9,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
-import org.akazukin.intellij.background.task.CacheBackgroundImagesTask;
-import org.akazukin.intellij.background.task.SetRandomBackgroundTask;
+import org.akazukin.intellij.background.task.tasks.CacheBackgroundImagesTask;
+import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
 import org.akazukin.intellij.background.utils.BundleUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The Settings class provides configuration management and user interface elements
+ * for controlling the behavior of the Editor Background Image plugin.
+ * It includes options for automatic background change, retry settings,
+ * and hierarchical exploration settings.
+ * This class implements the Configurable interface for integration with the IDE's settings system.
+ */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Settings implements Configurable {
     public static final TimeUnit[] TIME_UNITS = new TimeUnit[]{

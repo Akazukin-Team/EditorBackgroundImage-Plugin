@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.task;
+package org.akazukin.intellij.background.task.tasks;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,6 +15,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A task responsible for caching background images for the EditorBackgroundImage plugin.
+ * This task scans and validates image files as configured, generating a cache of valid image paths.
+ * <p>
+ * This task is executed when the plugin requires updating the cache of background images based
+ * on user-defined configurations. It ensures that the file paths meet the plugin's requirements
+ * for valid and accessible images.
+ */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
 public final class CacheBackgroundImagesTask implements ITask<Boolean> {
@@ -23,11 +31,6 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
     @Override
     public String getTaskName() {
         return "CacheBackgroundImages";
-    }
-
-    @Override
-    public long getServiceId() {
-        return 0L;
     }
 
     @Override

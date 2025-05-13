@@ -1,6 +1,6 @@
 [versions]
 # App deps
-akz-service = "1.1.0"
+akz-service = "3.0.0"
 lombok = "1.18.38"
 jetbrains-annotation = "26.0.2"
 

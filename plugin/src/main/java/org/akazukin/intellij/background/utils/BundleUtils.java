@@ -7,6 +7,15 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
+/**
+ * Utility class for handling localization and retrieving messages from a resource bundle.
+ * Provides methods to retrieve localized messages defined
+ * in a specific resource bundle for the plugin.
+ * <p>
+ * The resource bundle is identified by {@code BUNDLE_NAME}.
+ * This class uses the {@link DynamicBundle}
+ * to dynamically load and manage localization resources.
+ */
 @UtilityClass
 public class BundleUtils {
     public static final String BUNDLE_NAME =

@@ -8,6 +8,11 @@ import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
+/**
+ * Utility class for sending various types of notifications.
+ * This class provides methods to send error, warning, and informational notifications.
+ * Notifications can be sent with either plain text or localized messages from a resource bundle.
+ */
 @UtilityClass
 public class NotificationUtils {
 
