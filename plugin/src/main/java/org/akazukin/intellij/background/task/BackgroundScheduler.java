@@ -70,14 +70,14 @@ public final class BackgroundScheduler {
             = Executors.newSingleThreadScheduledExecutor();
 
         final Runnable task = () -> {
-            if (BackgroundScheduler.this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
-                return;
-            }
-
             try {
-                for (int fails = 0, end = state.getRetryTimes();
-                     fails < end; ) {
+                for (int tries = 0, retries = state.getRetryTimes();
+                     tries <= retries; tries++) {
+                    if (BackgroundScheduler.this.plugin.getTaskMgr()
+                        .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
+                        return;
+                    }
+
                     NotificationUtils.warning(
                         BundleUtils.message("messages.retry.title"),
                         BundleUtils.message("messages.retry.message",
@@ -90,22 +90,20 @@ public final class BackgroundScheduler {
                     if (Thread.currentThread().isInterrupted()) {
                         return;
                     }
-
-                    if (!BackgroundScheduler.this.plugin.getTaskMgr()
-                        .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
-                        fails++;
-
-                        if (fails == end) {
-                            synchronized (BackgroundScheduler.this) {
-                                if (BackgroundScheduler.this.pool == pool) {
-                                    BackgroundScheduler.this.shutdown();
-                                }
-                            }
-                        }
-                    }
                 }
             } catch (final InterruptedException e) {
+                synchronized (BackgroundScheduler.this) {
+                    if (BackgroundScheduler.this.pool == pool) {
+                        BackgroundScheduler.this.shutdown();
+                    }
+                }
                 throw new RuntimeException(e);
+            }
+
+            synchronized (BackgroundScheduler.this) {
+                if (BackgroundScheduler.this.pool == pool) {
+                    BackgroundScheduler.this.shutdown();
+                }
             }
         };
 

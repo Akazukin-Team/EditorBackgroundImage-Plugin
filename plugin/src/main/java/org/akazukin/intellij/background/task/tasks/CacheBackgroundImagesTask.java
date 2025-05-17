@@ -25,7 +25,7 @@ import java.util.Set;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
-public final class CacheBackgroundImagesTask implements ITask<Boolean> {
+public final class CacheBackgroundImagesTask implements ITask<File[]> {
     EditorBackgroundImage plugin;
 
     @Override
@@ -35,7 +35,7 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
 
     @Override
     @NotNull
-    public synchronized Boolean get() {
+    public synchronized File[] get() {
         final Config.State state = Config.getInstance();
 
         if (state.getImages().isEmpty()) {
@@ -43,7 +43,7 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
                 "messages.nopath.message");
             state.setAutoChangeEnabled(false);
             this.plugin.setImageCache(FileUtils.EMPTY_FILES);
-            return false;
+            return FileUtils.EMPTY_FILES;
         }
 
         final File[] files = state.getImages().entrySet().stream()
@@ -64,16 +64,17 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
             }
         }
         imagePaths.removeIf(file -> !FileUtils.isValidImage(file));
+        final File[] result = imagePaths.toArray(FileUtils.EMPTY_FILES);
 
         if (imagePaths.isEmpty()) {
             NotificationUtils.errorBundled("messages.noimage.title",
                 "messages.noimage.message");
             state.setAutoChangeEnabled(false);
-            this.plugin.setImageCache(FileUtils.EMPTY_FILES);
-            return false;
+            this.plugin.setImageCache(result);
+            return result;
         }
 
-        this.plugin.setImageCache(imagePaths.toArray(FileUtils.EMPTY_FILES));
-        return true;
+        this.plugin.setImageCache(result);
+        return result;
     }
 }
