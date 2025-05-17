@@ -1,7 +1,7 @@
 <idea-plugin require-restart="false">
     <id>org.akazukin.editorBackgroundImage</id>
     <name>Editor Background Image</name>
-    <version>2.0.1</version>
+    <version>3.0.0</version>
     <vendor
         email="akazukin.team+intellij-background@gmail.com"
         url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
@@ -57,7 +57,7 @@
                     <li>Refactor task manager</li>
                 </ul>
 
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/2.0.0...2.0.1"><h2>2.0.1</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/2.0.0...3.0.0"><h2>2.0.1</a>
                 <ul>
                     <li>Refactor and enhance image and error handling</li>
                 </ul>

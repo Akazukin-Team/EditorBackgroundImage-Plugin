@@ -57,10 +57,10 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
 
         final int imgsCount = state.isSynchronizeImages() ? 1 : targets.size();
 
-        @NotNull final File[] cachedImg = this.plugin.getImageCache();
+        @NotNull File[] cachedImg = this.plugin.getImageCache();
         if (cachedImg.length < imgsCount) {
-            if (!this.plugin.getTaskMgr()
-                .getServiceByImplementation(CacheBackgroundImagesTask.class).get()) {
+            if ((cachedImg = this.plugin.getTaskMgr()
+                .getServiceByImplementation(CacheBackgroundImagesTask.class).get()).length < imgsCount) {
                 state.setAutoChangeEnabled(false);
                 return false;
             }
@@ -84,8 +84,8 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             // remove the images that already selected
             images.removeAll(curImgs);
             // remove duplicated image from props
-            images.removeIf(f -> curTargets.stream().anyMatch(t ->
-                f.getAbsolutePath().equals(props.getValue(t))));
+            images.removeIf(f -> curTargets.stream()
+                .anyMatch(t -> f.getAbsolutePath().equals(props.getValue(t))));
 
             // select an image in some tried or less
             File img = null;
