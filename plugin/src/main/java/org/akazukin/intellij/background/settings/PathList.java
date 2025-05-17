@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.table.AbstractTableModel;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +34,8 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
     public static final String INVALID_COLUMN_MESSAGE = "Invalid column index";
+    @Serial
+    private static final long serialVersionUID = 1L;
     private static final FileChooserDescriptor CHOOSER =
         new FileChooserDescriptor(true, true, false, false, false, false);
 

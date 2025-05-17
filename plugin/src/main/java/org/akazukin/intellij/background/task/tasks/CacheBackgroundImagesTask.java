@@ -42,7 +42,7 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
             NotificationUtils.warningBundled("messages.nopath.title",
                 "messages.nopath.message");
             state.setAutoChangeEnabled(false);
-            this.plugin.setImageCache(null);
+            this.plugin.setImageCache(FileUtils.EMPTY_FILES);
             return false;
         }
 
@@ -69,7 +69,7 @@ public final class CacheBackgroundImagesTask implements ITask<Boolean> {
             NotificationUtils.errorBundled("messages.noimage.title",
                 "messages.noimage.message");
             state.setAutoChangeEnabled(false);
-            this.plugin.setImageCache(null);
+            this.plugin.setImageCache(FileUtils.EMPTY_FILES);
             return false;
         }
 

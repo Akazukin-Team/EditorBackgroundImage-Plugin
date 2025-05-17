@@ -222,6 +222,7 @@ public final class Settings implements Configurable {
                     .getServiceByImplementation(CacheBackgroundImagesTask.class).get();
             }
         }
+
         state.setImages(
             Map.ofEntries(this.backgroundsListPanel.getData().stream()
                 .map(e -> Map.entry(e.first.getAbsolutePath(), e.second))
@@ -302,7 +303,6 @@ public final class Settings implements Configurable {
     public void disposeUIResources() {
         if (!PluginHandler.isLoaded()
             || !PluginHandler.isEnabled()
-            || PluginHandler.getPlugin().getImageCache() == null
             || PluginHandler.getPlugin().getImageCache().length == 0) {
             return;
         }
