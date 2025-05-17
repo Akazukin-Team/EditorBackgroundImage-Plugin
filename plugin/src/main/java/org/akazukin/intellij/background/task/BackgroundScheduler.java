@@ -75,9 +75,9 @@ public final class BackgroundScheduler {
                 return;
             }
 
-            for (int fails = 0, end = state.getRetryTimes();
-                 fails < end; ) {
-                try {
+            try {
+                for (int fails = 0, end = state.getRetryTimes();
+                     fails < end; ) {
                     NotificationUtils.warning(
                         BundleUtils.message("messages.retry.title"),
                         BundleUtils.message("messages.retry.message",
@@ -90,22 +90,22 @@ public final class BackgroundScheduler {
                     if (Thread.currentThread().isInterrupted()) {
                         return;
                     }
-                } catch (final InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
 
-                if (!BackgroundScheduler.this.plugin.getTaskMgr()
-                    .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
-                    fails++;
+                    if (!BackgroundScheduler.this.plugin.getTaskMgr()
+                        .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
+                        fails++;
 
-                    if (fails == end) {
-                        synchronized (BackgroundScheduler.this) {
-                            if (BackgroundScheduler.this.pool == pool) {
-                                BackgroundScheduler.this.shutdown();
+                        if (fails == end) {
+                            synchronized (BackgroundScheduler.this) {
+                                if (BackgroundScheduler.this.pool == pool) {
+                                    BackgroundScheduler.this.shutdown();
+                                }
                             }
                         }
                     }
                 }
+            } catch (final InterruptedException e) {
+                throw new RuntimeException(e);
             }
         };
 
@@ -126,7 +126,7 @@ public final class BackgroundScheduler {
                 .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
 
             this.pool.shutdown();
-            if (this.pool.awaitTermination(5, TimeUnit.SECONDS)) {
+            if (!this.pool.awaitTermination(5, TimeUnit.SECONDS)) {
                 this.pool.shutdownNow();
             }
             this.pool = null;

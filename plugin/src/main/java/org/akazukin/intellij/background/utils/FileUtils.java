@@ -65,12 +65,13 @@ public final class FileUtils {
     /**
      * Validates if the provided file is a readable and supported image file.
      *
-     * @param file The file to be validated. Must not be null and must represent a readable file.
+     * @param file The file to be validated.
+     *             Must not be {@code null} and must represent a readable file.
      * @return {@code true} if the file exists, is readable, and has a MIME type
      * that starts with "image/" or equals "application/octet-stream".
      * Otherwise, returns {@code false}.
      */
-    public static boolean isValidImage(final File file) {
+    public static boolean isValidImage(@NotNull final File file) {
         if (!(file.exists() && file.isFile() && file.canRead())) {
             return false;
         }

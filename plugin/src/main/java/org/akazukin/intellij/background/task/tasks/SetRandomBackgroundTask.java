@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A task implementation for setting a random background image in the IDE.
@@ -31,7 +32,7 @@ import java.util.Random;
 public final class SetRandomBackgroundTask implements ITask<Boolean> {
     EditorBackgroundImage plugin;
 
-    Random random = new Random();
+    Random random = ThreadLocalRandom.current();
 
     @Override
     public String getTaskName() {
@@ -40,11 +41,6 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
 
     @Override
     public Boolean get() {
-        return this.get(0);
-    }
-
-    @NotNull
-    public Boolean get(final int tries) {
         final PropertiesComponent props = PropertiesComponent.getInstance();
         final Config.State state = Config.getInstance();
 
@@ -55,11 +51,14 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         if (state.isChangeFrame()) {
             targets.add(IdeBackgroundUtil.FRAME_PROP);
         }
+        if (targets.isEmpty()) {
+            return false;
+        }
 
         final int imgsCount = state.isSynchronizeImages() ? 1 : targets.size();
 
-        if (this.plugin.getImageCache() == null
-            || this.plugin.getImageCache().length < imgsCount) {
+        @NotNull final File[] cachedImg = this.plugin.getImageCache();
+        if (cachedImg.length < imgsCount) {
             if (!this.plugin.getTaskMgr()
                 .getServiceByImplementation(CacheBackgroundImagesTask.class).get()) {
                 state.setAutoChangeEnabled(false);
@@ -67,8 +66,8 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             }
         }
 
-        final List<File> cachedImgs =
-            new ArrayList<>(List.of(this.plugin.getImageCache()));
+        final List<File> cachedImgList =
+            new ArrayList<>(List.of(cachedImg));
         final List<File> curImgs = new ArrayList<>();
         for (int i = 0; i < imgsCount; i++) {
             // Set a target for the image that selected during the current loop
@@ -81,7 +80,7 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
 
             // Set selectable images by cache
             final List<File> images =
-                new ArrayList<>(cachedImgs);
+                new ArrayList<>(cachedImgList);
             // remove the images that already selected
             images.removeAll(curImgs);
             // remove duplicated image from props
@@ -90,16 +89,12 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
 
             // select an image in some tried or less
             File img = null;
-            while (img == null) {
-                if (images.isEmpty()) {
-                    break;
-                }
-
+            while (!images.isEmpty() && img == null) {
                 img = images.get(this.random.nextInt(images.size()));
                 images.remove(img);
 
                 if (!FileUtils.isValidImage(img)) {
-                    cachedImgs.remove(img);
+                    cachedImgList.remove(img);
                     img = null;
                     continue;
                 }
@@ -112,18 +107,18 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
                 NotificationUtils.errorBundled(
                     "messages.failedFetchImg.title",
                     "messages.failedFetchImg.message");
-                this.plugin.setImageCache(null);
+                this.plugin.setImageCache(FileUtils.EMPTY_FILES);
                 return false;
             }
         }
-        this.plugin.setImageCache(cachedImgs.toArray(FileUtils.EMPTY_FILES));
+        this.plugin.setImageCache(cachedImgList.toArray(FileUtils.EMPTY_FILES));
 
         // Set the backgrounds
-        int i3 = 0;
+        int imageIndex = 0;
         for (final String t : targets) {
-            props.setValue(t, curImgs.get(i3).getAbsolutePath());
+            props.setValue(t, curImgs.get(imageIndex).getAbsolutePath());
             if (!state.isSynchronizeImages()) {
-                i3++;
+                imageIndex++;
             }
         }
 
