@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public final class BackgroundScheduler {
+    private static final long POOl_TERMINATE_TIMEOUT = 5;
     final EditorBackgroundImage plugin;
     @Nullable
     ScheduledExecutorService pool;
@@ -63,7 +64,8 @@ public final class BackgroundScheduler {
 
 
         log.info("Schedule " + this.plugin.getTaskMgr()
-            .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
+            .getServiceByImplementation(SetRandomBackgroundTask.class)
+            .getTaskName());
 
 
         final ScheduledExecutorService pool
@@ -73,8 +75,10 @@ public final class BackgroundScheduler {
             try {
                 for (int tries = 0, retries = state.getRetryTimes();
                      tries <= retries; tries++) {
-                    if (BackgroundScheduler.this.plugin.getTaskMgr()
-                        .getServiceByImplementation(SetRandomBackgroundTask.class).get()) {
+                    if (BackgroundScheduler.this.plugin
+                        .getTaskMgr()
+                        .getServiceByImplementation(
+                            SetRandomBackgroundTask.class).get()) {
                         return;
                     }
 
@@ -113,7 +117,8 @@ public final class BackgroundScheduler {
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
             log.info("Scheduled " + this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
+                .getServiceByImplementation(SetRandomBackgroundTask.class)
+                .getTaskName());
         }
     }
 
@@ -121,10 +126,12 @@ public final class BackgroundScheduler {
     public synchronized void shutdown() {
         if (this.pool != null) {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class).getTaskName());
+                .getServiceByImplementation(SetRandomBackgroundTask.class)
+                .getTaskName());
 
             this.pool.shutdown();
-            if (!this.pool.awaitTermination(5, TimeUnit.SECONDS)) {
+            if (!this.pool.awaitTermination(
+                POOl_TERMINATE_TIMEOUT, TimeUnit.SECONDS)) {
                 this.pool.shutdownNow();
             }
             this.pool = null;

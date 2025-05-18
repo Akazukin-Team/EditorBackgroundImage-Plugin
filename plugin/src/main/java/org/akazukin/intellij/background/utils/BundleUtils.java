@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
- * Utility class for handling localization and retrieving messages from a resource bundle.
+ * Utility class for handling localization and retrieving messages
+ * from a resource bundle.
  * Provides methods to retrieve localized messages defined
  * in a specific resource bundle for the plugin.
  * <p>
@@ -24,6 +25,19 @@ public class BundleUtils {
     private static final DynamicBundle INSTANCE =
         new DynamicBundle(BundleUtils.class, BUNDLE_NAME);
 
+    /**
+     * Retrieves a localized message from a resource bundle using the given key
+     * and formats it with optional parameters.
+     * This method leverages {@link DynamicBundle} for resource management.
+     *
+     * @param key    The key for the message in the resource bundle.
+     *               Must not be {@code null} and should correspond to a valid entry
+     *               in the resource bundle identified by {@link BundleUtils#BUNDLE_NAME}.
+     * @param params Optional parameters to format the retrieved message.
+     *               These parameters will replace placeholders in the message template.
+     * @return A localized and optionally formatted message
+     * Never returns {@code null}.
+     */
     @NotNull
     public @Nls String message(
         @NotNull @PropertyKey(resourceBundle = BUNDLE_NAME) final String key,

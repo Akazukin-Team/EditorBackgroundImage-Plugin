@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Settings implements Configurable {
-    public static final TimeUnit[] TIME_UNITS = new TimeUnit[]{
+    public static final TimeUnit[] TIME_UNITS = {
         TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS
     };
 
@@ -53,11 +53,11 @@ public final class Settings implements Configurable {
     JCheckBox hierarchicalButton;
     JSpinner hierarchialSpinner;
     PathList backgroundsListPanel;
-    private JPanel autoChangePanel;
-    private ComboBox<String> retryTimeUnitBox;
-    private JSpinner retryIntervalSpinner;
-    private JCheckBox retryEnableButton;
-    private JSpinner retryTimesSpinner;
+    JPanel autoChangePanel;
+    ComboBox<String> retryTimeUnitBox;
+    JSpinner retryIntervalSpinner;
+    JCheckBox retryEnableButton;
+    JSpinner retryTimesSpinner;
 
     @Override
     public String getDisplayName() {
@@ -223,11 +223,10 @@ public final class Settings implements Configurable {
             }
         }
 
-        state.setImages(
-            Map.ofEntries(this.backgroundsListPanel.getData().stream()
-                .map(e -> Map.entry(e.first.getAbsolutePath(), e.second))
-                .toArray(Map.Entry[]::new))
-        );
+        @SuppressWarnings("unchecked") final Map.Entry<String, Boolean>[] panelRes = this.backgroundsListPanel.getData().stream()
+            .map(e -> Map.entry(e.first.getAbsolutePath(), e.second))
+            .toArray(Map.Entry[]::new);
+        state.setImages(Map.ofEntries(panelRes));
 
         this.autoChangeIntervalSpinner
             .setEnabled(this.autoChangeEnableButton.isSelected());

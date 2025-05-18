@@ -24,7 +24,10 @@ import org.jetbrains.annotations.NotNull;
  * related to background images.
  */
 public final class ClearBackgroundAction extends AnAction {
-
+    /**
+     * A constructor for the `ClearBackgroundAction` class.
+     * Initializes the action with a name, description, and icon.
+     */
     public ClearBackgroundAction() {
         super("Clear Background",
             "Clear background images and stop animation",

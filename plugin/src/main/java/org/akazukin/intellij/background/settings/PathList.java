@@ -43,7 +43,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
         CHOOSER.withFileFilter(f -> FileUtils.isValidImage(new File(f.getPath())));
     }
 
-    VirtualFile defaultFile = null;
+    VirtualFile defaultFile;
 
     public PathList() {
         super(getTableModel(), new ArrayList<>(),
