@@ -25,7 +25,8 @@ public final class EditorBackgroundImage {
     public static final String ACT_PLUGIN_ID_STRING =
         "org.akazukin.editorBackgroundImage";
 
-    public static final PluginId ACT_PLUGIN_ID = PluginId.getId(ACT_PLUGIN_ID_STRING);
+    public static final PluginId ACT_PLUGIN_ID =
+        PluginId.getId(ACT_PLUGIN_ID_STRING);
 
     final BackgroundScheduler scheduler = new BackgroundScheduler(this);
     final TaskManager taskMgr = new TaskManager(this);
@@ -47,7 +48,9 @@ public final class EditorBackgroundImage {
         if (state.isAutoChangeEnabled()) {
             synchronized (this.scheduler) {
                 if (!this.scheduler.isScheduled()) {
-                    this.taskMgr.getServiceByImplementation(SetRandomBackgroundTask.class).get();
+                    this.taskMgr.getServiceByImplementation(
+                            SetRandomBackgroundTask.class)
+                        .get();
                     this.scheduler.schedule();
                 }
             }

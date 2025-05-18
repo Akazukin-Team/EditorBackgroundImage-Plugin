@@ -19,22 +19,27 @@ import java.util.Map;
 
 /**
  * Represents the configuration settings for the EditorBackgroundImage plugin.
- * This configuration is persistent across application restarts and is stored in an XML file.
+ * This configuration is persistent across application restarts
+ * and is stored in an XML file.
  */
 @Service
-@State(
-    name = EditorBackgroundImage.PLUGIN_NAME + "Config",
-    storages = {@Storage(
-        roamingType = RoamingType.PER_OS,
-        value = EditorBackgroundImage.PLUGIN_NAME + "Config.xml"
-    )}
-)
+@State(name = EditorBackgroundImage.PLUGIN_NAME + "Config", storages = @Storage(
+    roamingType = RoamingType.PER_OS,
+    value = EditorBackgroundImage.PLUGIN_NAME + "Config.xml"
+))
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Config
     implements PersistentStateComponent<Config.State>, Disposable {
     State state;
 
+    /**
+     * Retrieves the persistent configuration state instance associated with the EditorBackgroundImage plugin.
+     * This state contains configurable settings relevant to the plugin's behavior and functionality.
+     *
+     * @return the {@link Config.State} instance representing the saved configuration of the plugin.
+     * The state object can be modified or queried to adjust the plugin's settings.
+     */
     @NotNull
     public static Config.State getInstance() {
         return ApplicationManager.getApplication()
@@ -71,7 +76,7 @@ public final class Config
         int retryTimes = 10;
 
         int retryIntervalAmount = 30;
-        int retryIntervalUnit = 0;
+        int retryIntervalUnit;
 
 
         boolean changeEditor = true;
@@ -79,7 +84,7 @@ public final class Config
 
         boolean synchronizeImages = true;
 
-        boolean hierarchicalExplore = false;
+        boolean hierarchicalExplore;
         int hierarchicalDepth = 3;
 
         Map<String, Boolean> images = new LinkedHashMap<>();

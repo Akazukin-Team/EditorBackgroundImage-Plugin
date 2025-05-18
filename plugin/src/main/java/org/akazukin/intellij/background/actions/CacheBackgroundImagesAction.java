@@ -16,6 +16,10 @@ import org.jetbrains.annotations.NotNull;
  * operations.
  */
 public final class CacheBackgroundImagesAction extends AnAction {
+    /**
+     * A constructor for the `CacheBackgroundImagesAction` class.
+     * Initializes the action with a name, description, and icon.
+     */
     public CacheBackgroundImagesAction() {
         super("Cache Background Images", "Cache images from the paths", null);
     }

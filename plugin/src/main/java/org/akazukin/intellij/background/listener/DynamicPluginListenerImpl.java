@@ -10,8 +10,8 @@ import java.util.Objects;
 
 /**
  * Implementation of the {@link DynamicPluginListener} interface,
- * responsible for handling events related to the loading and unloading of dynamic plugins
- * within an IntelliJ-based environment.
+ * responsible for handling events related to the loading
+ * and unloading of dynamic plugins within an IntelliJ-based environment.
  * <p>
  * This class specifically listens for plugin lifecycle events
  * and performs operations when this plugin is loaded or unloaded.
@@ -29,7 +29,8 @@ public final class DynamicPluginListenerImpl implements DynamicPluginListener {
     }
 
     @Override
-    public void beforePluginUnload(@NotNull final IdeaPluginDescriptor pluginDescriptor, final boolean isUpdate) {
+    public void beforePluginUnload(
+        @NotNull final IdeaPluginDescriptor pluginDescriptor, final boolean isUpdate) {
         if (!Objects.equals(pluginDescriptor.getPluginId(),
             EditorBackgroundImage.ACT_PLUGIN_ID)) {
             return;

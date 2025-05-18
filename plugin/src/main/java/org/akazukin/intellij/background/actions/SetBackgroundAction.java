@@ -18,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
  * visuals based on user-configured and validated image caches.
  */
 public final class SetBackgroundAction extends AnAction {
+    /**
+     * A constructor for the `SetBackgroundAction` class.
+     * Initializes the action with a name, description, and icon.
+     */
     public SetBackgroundAction() {
         super("Set Random Background Image",
             "Set random background image from cached images", null);
