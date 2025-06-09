@@ -5,7 +5,7 @@ lombok = "1.18.38"
 jetbrains-annotation = "26.0.2"
 
 #Test Modules
-junit-jupiter = "5.13.0-M3"
+junit-jupiter = "5.13.1"
 
 # JMH Libraries
 jmh-lib = "1.37"
