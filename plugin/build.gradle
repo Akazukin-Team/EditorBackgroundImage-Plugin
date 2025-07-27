@@ -1,10 +1,7 @@
 plugins {
-    id 'buildlogic.java-module-conventions'
-    id 'buildlogic.java-manifest-conventions'
-    id 'buildlogic.java-test-conventions'
     id 'buildlogic.java-intellij-conventions'
-    id 'buildlogic.java-library-fatjar-conventions'
-    id 'buildlogic.java-builddata-conventions'
+    id 'buildlogic.java-module-conventions'
+    id 'buildlogic.java-publish-conventions'
 }
 
 dependencies {
