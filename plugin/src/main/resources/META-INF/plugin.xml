@@ -1,11 +1,11 @@
 <idea-plugin require-restart="false">
     <id>org.akazukin.editorBackgroundImage</id>
-    <name>Editor Background Image</name>
-    <version>3.0.0</version>
+    <name>${name}</name>
+    <version>${version}</version>
     <vendor
         email="akazukin.team+intellij-background@gmail.com"
-        url="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin">
-        Akazukin-Team
+        url="${url}">
+        ${vendor}
     </vendor>
 
     <description><![CDATA[
@@ -15,51 +15,9 @@
     <change-notes>
         <![CDATA[
             <html>
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1c8bb286a80a568feff776f793bf68f4ba9692a3...1.0.0"><h2>1.0.0</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/3.0.0...4.0.0"><h2>4.0.0</a>
                 <ul>
-                    <li>First release</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.0.0...1.1.0"><h2>1.1.0</a>
-                <ul>
-                    <li>Added hierarchical setting</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.1.0...1.1.1"><h2>1.1.1</a>
-                <ul>
-                    <li>Remove bundled plugin</li>
-                    <li>Fix form layout</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.1.1...1.2.0"><h2>1.2.0</a>
-                <ul>
-                    <li>Remove bundled plugin</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.2.0...1.2.1"><h2>1.2.1</a>
-                <ul>
-                    <li>Remove bundled plugin</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.2.1...1.3.0"><h2>1.3.0</a>
-                <ul>
-                    <li>Fix deprecated api method calls</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.2.1...1.3.0"><h2>1.3.0</a>
-                <ul>
-                    <li>Fix deprecated api method calls</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/1.3.0...2.0.0"><h2>2.0.0</a>
-                <ul>
-                    <li>Make some methods non-static and change etc...</li>
-                    <li>Refactor task manager</li>
-                </ul>
-
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/2.0.0...3.0.0"><h2>2.0.1</a>
-                <ul>
-                    <li>Refactor and enhance image and error handling</li>
+                    <li>Update dependencies</li>
                 </ul>
             </html>
         ]]>
