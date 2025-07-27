@@ -16,7 +16,9 @@
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText resource-bundle="messages/EditorBackgroundImage" key="settings.autoChange.toolTip"/>
+        </properties>
         <border type="line" title-resource-bundle="messages/EditorBackgroundImage" title-key="settings.autoChange.title">
           <size top="0" left="0" bottom="0" right="0"/>
         </border>
@@ -69,7 +71,9 @@
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText resource-bundle="messages/EditorBackgroundImage" key="settings.retry.toolTip"/>
+        </properties>
         <border type="line" title-resource-bundle="messages/EditorBackgroundImage" title-key="settings.retry.title">
           <size top="0" left="0" bottom="0" right="0"/>
         </border>
@@ -143,7 +147,9 @@
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText resource-bundle="messages/EditorBackgroundImage" key="settings.frame.toolTip"/>
+        </properties>
         <border type="line" title-resource-bundle="messages/EditorBackgroundImage" title-key="settings.frame.title"/>
         <children>
           <component id="42dca6" class="javax.swing.JCheckBox" binding="editorButton">
@@ -180,7 +186,9 @@
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText resource-bundle="messages/EditorBackgroundImage" key="settings.hierarchical.toolTip"/>
+        </properties>
         <border type="line" title-resource-bundle="messages/EditorBackgroundImage" title-key="settings.hierarchical.title"/>
         <children>
           <component id="c3329" class="javax.swing.JCheckBox" binding="hierarchicalButton">
@@ -246,7 +254,6 @@
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
       </component>
     </children>
   </grid>
