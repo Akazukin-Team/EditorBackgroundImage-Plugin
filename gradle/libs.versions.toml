@@ -2,7 +2,7 @@
 # App deps
 akz-service = "3.0.0"
 lombok = "1.18.38"
-jetbrains-annotation = "26.0.2"
+jetbrains-annotation = "26.0.2-1"
 
 #Test Modules
 junit-jupiter = "5.13.0-M3"
