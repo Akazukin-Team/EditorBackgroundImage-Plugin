@@ -214,7 +214,7 @@ public final class Settings implements Configurable {
         if (!bgImgs.equals(new HashSet<>(this.backgroundsListPanel.getData()))) {
             if (PluginHandler.isInitialized()) {
                 PluginHandler.getPlugin().getTaskMgr()
-                    .getServiceByImplementation(CacheBackgroundImagesTask.class).get();
+                    .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get();
             }
         }
 
@@ -311,7 +311,7 @@ public final class Settings implements Configurable {
                     && !props.isValueSet(IdeBackgroundUtil.FRAME_PROP))) {
 
                 PluginHandler.getPlugin().getTaskMgr()
-                    .getServiceByImplementation(SetRandomBackgroundTask.class).get();
+                    .getServiceByInterfaceClass(SetRandomBackgroundTask.class).get();
             }
 
             if (this.editorButton.isSelected()

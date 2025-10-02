@@ -64,7 +64,7 @@ public final class BackgroundScheduler {
 
 
         log.info("Schedule " + this.plugin.getTaskMgr()
-            .getServiceByImplementation(SetRandomBackgroundTask.class)
+            .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
             .getTaskName());
 
 
@@ -75,9 +75,9 @@ public final class BackgroundScheduler {
             try {
                 for (int tries = 0, retries = state.getRetryTimes();
                      tries <= retries; tries++) {
-                    if (BackgroundScheduler.this.plugin
+                    if (this.plugin
                         .getTaskMgr()
-                        .getServiceByImplementation(
+                        .getServiceByInterfaceClass(
                             SetRandomBackgroundTask.class).get()) {
                         return;
                     }
@@ -96,17 +96,17 @@ public final class BackgroundScheduler {
                     }
                 }
             } catch (final InterruptedException e) {
-                synchronized (BackgroundScheduler.this) {
-                    if (BackgroundScheduler.this.pool == pool) {
-                        BackgroundScheduler.this.shutdown();
+                synchronized (this) {
+                    if (this.pool == pool) {
+                        this.shutdown();
                     }
                 }
                 throw new RuntimeException(e);
             }
 
-            synchronized (BackgroundScheduler.this) {
-                if (BackgroundScheduler.this.pool == pool) {
-                    BackgroundScheduler.this.shutdown();
+            synchronized (this) {
+                if (this.pool == pool) {
+                    this.shutdown();
                 }
             }
         };
@@ -117,7 +117,7 @@ public final class BackgroundScheduler {
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
             log.info("Scheduled " + this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class)
+                .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
                 .getTaskName());
         }
     }
@@ -126,7 +126,7 @@ public final class BackgroundScheduler {
     public synchronized void shutdown() {
         if (this.pool != null) {
             log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class)
+                .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
                 .getTaskName());
 
             this.pool.shutdown();

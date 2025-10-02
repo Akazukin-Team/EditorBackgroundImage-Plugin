@@ -60,7 +60,7 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         @NotNull File[] cachedImg = this.plugin.getImageCache();
         if (cachedImg.length < imgsCount) {
             if ((cachedImg = this.plugin.getTaskMgr()
-                .getServiceByImplementation(CacheBackgroundImagesTask.class).get()).length < imgsCount) {
+                .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get()).length < imgsCount) {
                 state.setAutoChangeEnabled(false);
                 return false;
             }
