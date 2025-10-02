@@ -6,7 +6,7 @@ import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.task.tasks.CacheBackgroundImagesTask;
 import org.akazukin.intellij.background.task.tasks.ITask;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
-import org.akazukin.service.manager.ASingleServiceManager;
+import org.akazukin.service.manager.single.ASingleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 /**

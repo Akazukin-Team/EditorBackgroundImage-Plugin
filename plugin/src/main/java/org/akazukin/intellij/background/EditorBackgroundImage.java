@@ -48,7 +48,7 @@ public final class EditorBackgroundImage {
         if (state.isAutoChangeEnabled()) {
             synchronized (this.scheduler) {
                 if (!this.scheduler.isScheduled()) {
-                    this.taskMgr.getServiceByImplementation(
+                    this.taskMgr.getServiceByInterfaceClass(
                             SetRandomBackgroundTask.class)
                         .get();
                     this.scheduler.schedule();

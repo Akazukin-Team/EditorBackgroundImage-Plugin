@@ -30,6 +30,6 @@ public final class SetBackgroundAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
         PluginHandler.getPlugin().getTaskMgr()
-            .getServiceByImplementation(SetRandomBackgroundTask.class).get();
+            .getServiceByInterfaceClass(SetRandomBackgroundTask.class).get();
     }
 }
