@@ -1,6 +1,7 @@
 package org.akazukin.intellij.background.utils;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -13,6 +14,7 @@ import java.util.List;
  * Utility class for file operations and validation.
  */
 @UtilityClass
+@Slf4j
 public final class FileUtils {
     public static final File[] EMPTY_FILES = new File[0];
 
@@ -65,17 +67,23 @@ public final class FileUtils {
     /**
      * Validates if the provided file is a readable and supported image file.
      *
-     * @param file The file to be validated.
-     *             Must not be {@code null} and must represent a readable file.
+     * @param file        The file to be validated.
+     *                    Must not be {@code null} and must represent a readable file.
+     * @param webpAllowed Whether WebP images are allowed.
      * @return {@code true} if the file exists, is readable, and has a MIME type
      * that starts with "image/" or equals "application/octet-stream".
      * Otherwise, returns {@code false}.
      */
-    public static boolean isValidImage(@NotNull final File file) {
+    public static boolean isValidImage(@NotNull final File file, final boolean webpAllowed) {
         if (!(file.exists() && file.isFile() && file.canRead())) {
             return false;
         }
         final String contentType = FILE_TYPE_MAP.getContentType(file);
+        log.debug("File {} has MIME type {}", file.getAbsolutePath(), contentType);
+
+        if (!webpAllowed && contentType.equals("application/octet-stream")) {
+            return false;
+        }
         return contentType.startsWith("image/")
             || contentType.equals("application/octet-stream");
     }
