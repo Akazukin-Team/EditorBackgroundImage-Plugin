@@ -40,7 +40,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
         new FileChooserDescriptor(true, true, false, false, false, false);
 
     static {
-        CHOOSER.withFileFilter(f -> FileUtils.isValidImage(new File(f.getPath())));
+        CHOOSER.withFileFilter(f -> FileUtils.isValidImage(new File(f.getPath()), false));
     }
 
     VirtualFile defaultFile;

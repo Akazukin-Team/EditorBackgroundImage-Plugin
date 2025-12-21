@@ -6,12 +6,12 @@ import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.task.tasks.CacheBackgroundImagesTask;
 import org.akazukin.intellij.background.task.tasks.ITask;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
-import org.akazukin.service.manager.ServiceManager;
+import org.akazukin.service.manager.single.ASingleServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Manages task registration and execution within the plugin.
- * This class extends {@link ServiceManager} to handle tasks
+ * This class extends {@link ASingleServiceManager} to handle tasks
  * implementing the {@link ITask} interface.
  * <p>
  * Responsibilities:
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * - Manages task service lifecycle for plugin operations.
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class TaskManager extends ServiceManager<ITask<?>> {
+public final class TaskManager extends ASingleServiceManager<ITask<?>> {
     EditorBackgroundImage plugin;
 
     @SuppressWarnings("unchecked")

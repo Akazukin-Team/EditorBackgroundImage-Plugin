@@ -64,7 +64,7 @@ public final class BackgroundScheduler {
 
 
         log.info("Schedule " + this.plugin.getTaskMgr()
-            .getServiceByImplementation(SetRandomBackgroundTask.class)
+            .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
             .getTaskName());
 
 
@@ -72,12 +72,13 @@ public final class BackgroundScheduler {
             = Executors.newSingleThreadScheduledExecutor();
 
         final Runnable task = () -> {
+            log.debug("Changing background image by scheduler");
             try {
                 for (int tries = 0, retries = state.getRetryTimes();
                      tries <= retries; tries++) {
-                    if (BackgroundScheduler.this.plugin
+                    if (this.plugin
                         .getTaskMgr()
-                        .getServiceByImplementation(
+                        .getServiceByInterfaceClass(
                             SetRandomBackgroundTask.class).get()) {
                         return;
                     }
@@ -96,17 +97,22 @@ public final class BackgroundScheduler {
                     }
                 }
             } catch (final InterruptedException e) {
-                synchronized (BackgroundScheduler.this) {
-                    if (BackgroundScheduler.this.pool == pool) {
-                        BackgroundScheduler.this.shutdown();
+                synchronized (this) {
+                    if (this.pool == pool) {
+                        this.shutdown();
                     }
                 }
+                log.info("Interrupted while changing background image");
                 throw new RuntimeException(e);
+            } catch (final Throwable e) {
+                log.error("Failed to change background image", e);
+                throw e;
             }
+            log.debug("Changed background image by scheduler");
 
-            synchronized (BackgroundScheduler.this) {
-                if (BackgroundScheduler.this.pool == pool) {
-                    BackgroundScheduler.this.shutdown();
+            synchronized (this) {
+                if (this.pool == pool) {
+                    this.shutdown();
                 }
             }
         };
@@ -116,8 +122,8 @@ public final class BackgroundScheduler {
             this.pool = pool;
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
-            log.info("Scheduled " + this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class)
+            log.debug("Scheduled " + this.plugin.getTaskMgr()
+                .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
                 .getTaskName());
         }
     }
@@ -125,8 +131,8 @@ public final class BackgroundScheduler {
     @SneakyThrows
     public synchronized void shutdown() {
         if (this.pool != null) {
-            log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
-                .getServiceByImplementation(SetRandomBackgroundTask.class)
+            log.debug("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
+                .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
                 .getTaskName());
 
             this.pool.shutdown();

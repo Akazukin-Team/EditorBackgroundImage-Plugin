@@ -67,7 +67,7 @@ public final class CacheBackgroundImagesTask implements ITask<File[]> {
                 imagePaths.add(path);
             }
         }
-        imagePaths.removeIf(file -> !FileUtils.isValidImage(file));
+        imagePaths.removeIf(file -> !FileUtils.isValidImage(file, this.plugin.getCachedSettings().isWebpSupport()));
         final File[] result = imagePaths.toArray(FileUtils.EMPTY_FILES);
 
         if (imagePaths.isEmpty()) {

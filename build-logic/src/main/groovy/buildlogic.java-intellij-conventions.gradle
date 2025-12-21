@@ -27,21 +27,43 @@ dependencies {
     }
 }
 
-patchPluginXml {
-    sinceBuild = '231.1'
-    untilBuild = '998.*'
-}
-
-intellijPlatform {
-    autoReload = true
-}
-
 
 Properties props = new Properties()
 try (FileInputStream fis = new FileInputStream(new File(parent.rootDir.getPath(), 'application.properties'))) {
     props.load(fis)
 }
 
+patchPluginXml {
+    sinceBuild = props.getProperty('sinceBuild')
+    untilBuild = props.getProperty('untilBuild')
+}
+
+intellijPlatform {
+    autoReload = true
+}
+
+buildSearchableOptions {
+    enabled = false
+}
+
 tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
     archiveBaseName = props.getProperty('artifactId')
+}
+
+tasks.named('buildPlugin') {
+    dependsOn(processResources)
+}
+
+tasks.processResources {
+    doLast {
+        String txt = file("build/resources/main/META-INF/plugin.xml").text
+        txt = txt.replace('${name}', props.getProperty('name'))
+            .replace('${version}', props.getProperty('version'))
+            .replace('${url}', props.getProperty('url'))
+            .replace('${vendor}', props.getProperty('vendor'))
+            .replace('${sinceBuild}', props.getProperty('sinceBuild'))
+            .replace('${untilBuild}', props.getProperty('untilBuild'))
+
+        file("build/resources/main/META-INF/plugin.xml").write(txt)
+    }
 }

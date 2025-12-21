@@ -5,6 +5,7 @@ import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.utils.FileUtils;
@@ -29,6 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
+@Slf4j
 public final class SetRandomBackgroundTask implements ITask<Boolean> {
     EditorBackgroundImage plugin;
 
@@ -41,87 +43,94 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
 
     @Override
     public Boolean get() {
-        final PropertiesComponent props = PropertiesComponent.getInstance();
-        final Config.State state = Config.getInstance();
+        log.info("Try to set random background image");
+        try {
+            final PropertiesComponent props = PropertiesComponent.getInstance();
+            final Config.State state = Config.getInstance();
 
-        final List<String> targets = new ArrayList<>();
-        if (state.isChangeEditor()) {
-            targets.add(IdeBackgroundUtil.EDITOR_PROP);
-        }
-        if (state.isChangeFrame()) {
-            targets.add(IdeBackgroundUtil.FRAME_PROP);
-        }
-        if (targets.isEmpty()) {
-            return false;
-        }
-
-        final int imgsCount = state.isSynchronizeImages() ? 1 : targets.size();
-
-        @NotNull File[] cachedImg = this.plugin.getImageCache();
-        if (cachedImg.length < imgsCount) {
-            if ((cachedImg = this.plugin.getTaskMgr()
-                .getServiceByImplementation(CacheBackgroundImagesTask.class).get()).length < imgsCount) {
-                state.setAutoChangeEnabled(false);
+            final List<String> targets = new ArrayList<>();
+            if (state.isChangeEditor()) {
+                targets.add(IdeBackgroundUtil.EDITOR_PROP);
+            }
+            if (state.isChangeFrame()) {
+                targets.add(IdeBackgroundUtil.FRAME_PROP);
+            }
+            if (targets.isEmpty()) {
                 return false;
             }
-        }
 
-        final List<File> cachedImgList =
-            new ArrayList<>(List.of(cachedImg));
-        final List<File> curImgs = new ArrayList<>();
-        for (int i = 0; i < imgsCount; i++) {
-            // Set a target for the image that selected during the current loop
-            final List<String> curTargets = new ArrayList<>();
-            if (state.isSynchronizeImages()) {
-                curTargets.addAll(targets);
-            } else {
-                curTargets.add(targets.get(i));
+            final int imgsCount = state.isSynchronizeImages() ? 1 : targets.size();
+
+            @NotNull File[] cachedImg = this.plugin.getImageCache();
+            if (cachedImg.length < imgsCount) {
+                if ((cachedImg = this.plugin.getTaskMgr()
+                    .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get()).length < imgsCount) {
+                    state.setAutoChangeEnabled(false);
+                    return false;
+                }
             }
 
-            // Set selectable images by cache
-            final List<File> images =
-                new ArrayList<>(cachedImgList);
-            // remove the images that already selected
-            images.removeAll(curImgs);
-            // remove duplicated image from props
-            images.removeIf(f -> curTargets.stream()
-                .anyMatch(t -> f.getAbsolutePath().equals(props.getValue(t))));
-
-            // select an image in some tried or less
-            File img = null;
-            while (!images.isEmpty() && img == null) {
-                img = images.get(this.random.nextInt(images.size()));
-                images.remove(img);
-
-                if (!FileUtils.isValidImage(img)) {
-                    cachedImgList.remove(img);
-                    img = null;
-                    continue;
+            final List<File> cachedImgList =
+                new ArrayList<>(List.of(cachedImg));
+            final List<File> curImgs = new ArrayList<>();
+            for (int i = 0; i < imgsCount; i++) {
+                // Set a target for the image that selected during the current loop
+                final List<String> curTargets = new ArrayList<>();
+                if (state.isSynchronizeImages()) {
+                    curTargets.addAll(targets);
+                } else {
+                    curTargets.add(targets.get(i));
                 }
 
-                curImgs.add(img);
+                // Set selectable images by cache
+                final List<File> images =
+                    new ArrayList<>(cachedImgList);
+                // remove the images that already selected
+                images.removeAll(curImgs);
+                // remove duplicated image from props
+                images.removeIf(f -> curTargets.stream()
+                    .anyMatch(t -> f.getAbsolutePath().equals(props.getValue(t))));
+
+                // select an image in some tried or less
+                File img = null;
+                while (!images.isEmpty() && img == null) {
+                    img = images.get(this.random.nextInt(images.size()));
+                    images.remove(img);
+
+                    if (!FileUtils.isValidImage(img, this.plugin.getCachedSettings().isWebpSupport())) {
+                        cachedImgList.remove(img);
+                        img = null;
+                        continue;
+                    }
+
+                    curImgs.add(img);
+                }
+
+                // when failed to fetch the image
+                if (img == null) {
+                    NotificationUtils.errorBundled(
+                        "messages.failedFetchImg.title",
+                        "messages.failedFetchImg.message");
+                    this.plugin.setImageCache(FileUtils.EMPTY_FILES);
+                    return false;
+                }
+            }
+            this.plugin.setImageCache(cachedImgList.toArray(FileUtils.EMPTY_FILES));
+
+            // Set the backgrounds
+            int imageIndex = 0;
+            for (final String t : targets) {
+                props.setValue(t, curImgs.get(imageIndex).getAbsolutePath());
+                log.info("Set background image to {}, {}", curImgs.get(imageIndex).getAbsolutePath(), t);
+                if (!state.isSynchronizeImages()) {
+                    imageIndex++;
+                }
             }
 
-            // when failed to fetch the image
-            if (img == null) {
-                NotificationUtils.errorBundled(
-                    "messages.failedFetchImg.title",
-                    "messages.failedFetchImg.message");
-                this.plugin.setImageCache(FileUtils.EMPTY_FILES);
-                return false;
-            }
+            return true;
+        } catch (final Throwable e) {
+            log.error("Failed to set random background image", e);
+            return false;
         }
-        this.plugin.setImageCache(cachedImgList.toArray(FileUtils.EMPTY_FILES));
-
-        // Set the backgrounds
-        int imageIndex = 0;
-        for (final String t : targets) {
-            props.setValue(t, curImgs.get(imageIndex).getAbsolutePath());
-            if (!state.isSynchronizeImages()) {
-                imageIndex++;
-            }
-        }
-
-        return true;
     }
 }

@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The Settings class provides configuration management and user interface elements
@@ -116,10 +118,11 @@ public final class Settings implements Configurable {
     public boolean isModified() {
         final Config.State state = Config.getInstance();
 
-        final List<Pair<File, Boolean>> bgImgs =
+        final Set<Pair<File, Boolean>> bgImgs =
             state.getImages().entrySet().stream()
                 .map(e ->
-                    Pair.pair(new File(e.getKey()), e.getValue())).toList();
+                    Pair.pair(new File(e.getKey()), e.getValue()))
+                .collect(Collectors.toSet());
 
         return
             state.isAutoChangeEnabled()
@@ -163,11 +166,7 @@ public final class Settings implements Configurable {
                 .getNumber().intValue()
 
 
-                || !new HashSet<>(bgImgs)
-                .containsAll(this.backgroundsListPanel.getData())
-
-                || !new HashSet<>(this.backgroundsListPanel.getData())
-                .containsAll(bgImgs);
+                || !bgImgs.equals(new HashSet<>(this.backgroundsListPanel.getData()));
     }
 
     @Override
@@ -207,19 +206,15 @@ public final class Settings implements Configurable {
                 .getNumber().intValue());
 
 
-        final List<Pair<File, Boolean>> bgImgs =
+        final Set<Pair<File, Boolean>> bgImgs =
             state.getImages().entrySet().stream()
                 .map(e ->
-                    Pair.pair(new File(e.getKey()), e.getValue())).toList();
-        if (!new HashSet<>(bgImgs)
-            .containsAll(this.backgroundsListPanel.getData())
-
-            || !new HashSet<>(this.backgroundsListPanel.getData())
-            .containsAll(bgImgs)) {
-
+                    Pair.pair(new File(e.getKey()), e.getValue()))
+                .collect(Collectors.toSet());
+        if (!bgImgs.equals(new HashSet<>(this.backgroundsListPanel.getData()))) {
             if (PluginHandler.isInitialized()) {
                 PluginHandler.getPlugin().getTaskMgr()
-                    .getServiceByImplementation(CacheBackgroundImagesTask.class).get();
+                    .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get();
             }
         }
 
@@ -316,7 +311,7 @@ public final class Settings implements Configurable {
                     && !props.isValueSet(IdeBackgroundUtil.FRAME_PROP))) {
 
                 PluginHandler.getPlugin().getTaskMgr()
-                    .getServiceByImplementation(SetRandomBackgroundTask.class).get();
+                    .getServiceByInterfaceClass(SetRandomBackgroundTask.class).get();
             }
 
             if (this.editorButton.isSelected()

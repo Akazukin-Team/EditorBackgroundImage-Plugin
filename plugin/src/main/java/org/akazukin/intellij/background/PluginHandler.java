@@ -1,8 +1,11 @@
 package org.akazukin.intellij.background;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import org.akazukin.intellij.background.listener.WebpDynamicPluginListenerImpl;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -10,7 +13,10 @@ import org.jetbrains.annotations.Nullable;
  * This class provides methods to initialize, enable, disable, and check the status of the plugin.
  */
 @UtilityClass
+@Slf4j
 public final class PluginHandler {
+    @Getter
+    private static final Object LOCK = new Object();
     @Getter
     @Nullable
     private static EditorBackgroundImage plugin;
@@ -39,11 +45,14 @@ public final class PluginHandler {
      * Invokes the `onEnable` method of the plugin instance to activate the plugin.
      * Synchronized to ensure thread-safe execution during startup.
      */
-    public synchronized void onStartup() {
-        if (!isInitialized()) {
-            init();
+    public void onStartup() {
+        synchronized (LOCK) {
+            if (!isInitialized()) {
+                init();
+            }
+
+            plugin.onEnable();
         }
-        plugin.onEnable();
     }
 
     /**
@@ -51,8 +60,16 @@ public final class PluginHandler {
      * Creates a new instance of the `EditorBackgroundImage` class and assigns it to the plugin variable.
      * Synchronized to ensure thread-safety during initialization.
      */
-    public synchronized void init() {
-        plugin = new EditorBackgroundImage();
+    public void init() {
+        synchronized (LOCK) {
+            plugin = new EditorBackgroundImage();
+
+            {
+                final IdeaPluginDescriptor webpPl =
+                    PluginManager.getInstance().findEnabledPlugin(WebpDynamicPluginListenerImpl.PLUGIN_ID);
+                PluginHandler.getPlugin().getCachedSettings().setWebpSupport(webpPl != null && webpPl.isEnabled());
+            }
+        }
     }
 
     /**
@@ -70,7 +87,9 @@ public final class PluginHandler {
      * @return true if the plugin instance is non-null and enabled; false otherwise.
      */
     public synchronized boolean isEnabled() {
-        return plugin != null && plugin.isEnabled();
+        synchronized (LOCK) {
+            return plugin != null && plugin.isEnabled();
+        }
     }
 
     /**
