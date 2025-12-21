@@ -14,12 +14,12 @@ import org.jetbrains.annotations.Nullable;
  */
 @UtilityClass
 @Slf4j
-public final class PluginHandler {
+public class PluginHandler {
     @Getter
-    private static final Object LOCK = new Object();
+    private final Object LOCK = new Object();
     @Getter
     @Nullable
-    private static EditorBackgroundImage plugin;
+    private EditorBackgroundImage plugin;
 
     public synchronized void onUnload() {
         if (plugin == null) {
@@ -51,7 +51,7 @@ public final class PluginHandler {
                 init();
             }
 
-            plugin.onEnable();
+            onEnable();
         }
     }
 
@@ -82,6 +82,15 @@ public final class PluginHandler {
     }
 
     /**
+     * Activates the `EditorBackgroundImage` plugin.
+     * Invokes the `onEnable` method of the plugin instance.
+     * This method is synchronized to ensure thread-safe execution during activation.
+     */
+    public synchronized void onEnable() {
+        plugin.onEnable();
+    }
+
+    /**
      * Checks if the `EditorBackgroundImage` plugin is enabled and actively scheduled.
      *
      * @return true if the plugin instance is non-null and enabled; false otherwise.
@@ -90,15 +99,6 @@ public final class PluginHandler {
         synchronized (LOCK) {
             return plugin != null && plugin.isEnabled();
         }
-    }
-
-    /**
-     * Activates the `EditorBackgroundImage` plugin.
-     * Invokes the `onEnable` method of the plugin instance.
-     * This method is synchronized to ensure thread-safe execution during activation.
-     */
-    public synchronized void onEnable() {
-        plugin.onEnable();
     }
 
     /**

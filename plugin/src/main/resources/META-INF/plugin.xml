@@ -3,8 +3,8 @@
     <name>${name}</name>
     <version>${version}</version>
     <vendor
-        email="akazukin.team+intellij-background@gmail.com"
-        url="${url}">
+            email="akazukin.team+intellij-background@gmail.com"
+            url="${url}">
         ${vendor}
     </vendor>
 

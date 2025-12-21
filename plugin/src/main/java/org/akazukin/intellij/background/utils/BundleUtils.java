@@ -19,10 +19,10 @@ import org.jetbrains.annotations.PropertyKey;
  */
 @UtilityClass
 public class BundleUtils {
-    public static final String BUNDLE_NAME =
+    public final String BUNDLE_NAME =
         "messages." + EditorBackgroundImage.PLUGIN_NAME;
 
-    private static final DynamicBundle INSTANCE =
+    private final DynamicBundle INSTANCE =
         new DynamicBundle(BundleUtils.class, BUNDLE_NAME);
 
     /**

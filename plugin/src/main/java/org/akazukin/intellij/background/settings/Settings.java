@@ -53,7 +53,7 @@ public final class Settings implements Configurable {
     JCheckBox editorButton;
     JCheckBox frameButton;
     JCheckBox hierarchicalButton;
-    JSpinner hierarchialSpinner;
+    JSpinner hierarchicalSpinner;
     PathList backgroundsListPanel;
     JPanel autoChangePanel;
     ComboBox<String> retryTimeUnitBox;
@@ -105,9 +105,9 @@ public final class Settings implements Configurable {
         }
 
         this.hierarchicalButton.addActionListener(e ->
-            this.hierarchialSpinner
+            this.hierarchicalSpinner
                 .setEnabled(this.hierarchicalButton.isSelected()));
-        this.hierarchialSpinner
+        this.hierarchicalSpinner
             .setModel(new SpinnerNumberModel(3, 1, MAX_DEPTH, 1));
 
 
@@ -162,7 +162,7 @@ public final class Settings implements Configurable {
                 != this.hierarchicalButton.isSelected()
 
                 || state.getHierarchicalDepth()
-                != ((SpinnerNumberModel) this.hierarchialSpinner.getModel())
+                != ((SpinnerNumberModel) this.hierarchicalSpinner.getModel())
                 .getNumber().intValue()
 
 
@@ -202,7 +202,7 @@ public final class Settings implements Configurable {
 
         state.setHierarchicalExplore(this.hierarchicalButton.isSelected());
         state.setHierarchicalDepth(
-            ((SpinnerNumberModel) this.hierarchialSpinner.getModel())
+            ((SpinnerNumberModel) this.hierarchicalSpinner.getModel())
                 .getNumber().intValue());
 
 
@@ -280,8 +280,8 @@ public final class Settings implements Configurable {
 
         this.hierarchicalButton.setSelected(state.isHierarchicalExplore());
 
-        this.hierarchialSpinner.setValue(state.getHierarchicalDepth());
-        this.hierarchialSpinner.setEnabled(
+        this.hierarchicalSpinner.setValue(state.getHierarchicalDepth());
+        this.hierarchicalSpinner.setEnabled(
             this.hierarchicalButton.isSelected());
 
 
