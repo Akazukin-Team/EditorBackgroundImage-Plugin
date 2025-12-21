@@ -1,11 +1,8 @@
 [versions]
 # App deps
 akz-service = "4.0.0-SNAPSHOT"
-lombok = "1.18.38"
+lombok = "1.18.42"
 jetbrains-annotation = "26.0.2"
-
-#Test Modules
-junit-jupiter = "5.13.0-M3"
 
 # JMH Libraries
 jmh-lib = "1.37"
@@ -21,10 +18,6 @@ intellij = "2.5.0"
 akz-service = { module = "org.akazukin:service", version.ref = "akz-service" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotation" }
-
-#Test Modules
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
-junit-platform = { module = "org.junit.platform:junit-platform-launcher" }
 
 # JMH Libraries
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh-lib" }
