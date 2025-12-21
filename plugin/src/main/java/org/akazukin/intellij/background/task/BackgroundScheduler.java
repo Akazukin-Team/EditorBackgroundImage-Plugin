@@ -72,6 +72,7 @@ public final class BackgroundScheduler {
             = Executors.newSingleThreadScheduledExecutor();
 
         final Runnable task = () -> {
+            log.debug("Changing background image by scheduler");
             try {
                 for (int tries = 0, retries = state.getRetryTimes();
                      tries <= retries; tries++) {
@@ -101,8 +102,13 @@ public final class BackgroundScheduler {
                         this.shutdown();
                     }
                 }
+                log.info("Interrupted while changing background image");
                 throw new RuntimeException(e);
+            } catch (final Throwable e) {
+                log.error("Failed to change background image", e);
+                throw e;
             }
+            log.debug("Changed background image by scheduler");
 
             synchronized (this) {
                 if (this.pool == pool) {
@@ -116,7 +122,7 @@ public final class BackgroundScheduler {
             this.pool = pool;
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
-            log.info("Scheduled " + this.plugin.getTaskMgr()
+            log.debug("Scheduled " + this.plugin.getTaskMgr()
                 .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
                 .getTaskName());
         }
@@ -125,7 +131,7 @@ public final class BackgroundScheduler {
     @SneakyThrows
     public synchronized void shutdown() {
         if (this.pool != null) {
-            log.info("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
+            log.debug("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
                 .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
                 .getTaskName());
 

@@ -29,6 +29,8 @@
     <applicationListeners>
         <listener class="org.akazukin.intellij.background.listener.DynamicPluginListenerImpl"
                   topic="com.intellij.ide.plugins.DynamicPluginListener"/>
+        <listener class="org.akazukin.intellij.background.listener.WebpDynamicPluginListenerImpl"
+                  topic="com.intellij.ide.plugins.DynamicPluginListener"/>
     </applicationListeners>
 
 

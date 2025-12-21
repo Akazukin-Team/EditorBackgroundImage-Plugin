@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.akazukin.intellij.background.settings.CachedSettings;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.task.BackgroundScheduler;
 import org.akazukin.intellij.background.task.TaskManager;
@@ -28,6 +29,8 @@ public final class EditorBackgroundImage {
     public static final PluginId ACT_PLUGIN_ID =
         PluginId.getId(ACT_PLUGIN_ID_STRING);
 
+
+    final CachedSettings cachedSettings = new CachedSettings();
     final BackgroundScheduler scheduler = new BackgroundScheduler(this);
     final TaskManager taskMgr = new TaskManager(this);
     @Setter
