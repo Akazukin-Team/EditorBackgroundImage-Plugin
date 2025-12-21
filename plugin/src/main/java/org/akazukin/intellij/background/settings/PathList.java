@@ -20,9 +20,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The PathList class provides a graphical interface for managing a list
@@ -97,18 +94,12 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
             @NotNull
             public @NlsContexts.ColumnName String getColumnName(
                 final int columnIndex) {
-                final String id;
-                switch (columnIndex) {
-                    case 0:
-                        id = "path";
-                        break;
-                    case 1:
-                        id = "enable";
-                        break;
-                    default:
-                        throw new IllegalArgumentException(
-                            PathList.INVALID_COLUMN_MESSAGE);
-                }
+                final String id = switch (columnIndex) {
+                    case 0 -> "path";
+                    case 1 -> "enable";
+                    default -> throw new IllegalArgumentException(
+                        PathList.INVALID_COLUMN_MESSAGE);
+                };
                 return BundleUtils.message("settings.backgrounds." + id);
             }
 
@@ -120,15 +111,12 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return File.class;
-                    case 1:
-                        return Boolean.class;
-                    default:
-                        throw new IllegalArgumentException(
-                            PathList.INVALID_COLUMN_MESSAGE);
-                }
+                return switch (columnIndex) {
+                    case 0 -> File.class;
+                    case 1 -> Boolean.class;
+                    default -> throw new IllegalArgumentException(
+                        PathList.INVALID_COLUMN_MESSAGE);
+                };
             }
         };
     }
@@ -167,21 +155,5 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
                 new File(virtualFile.getPath()), pair.getSecond());
         }
         return pair;
-    }
-
-    public Map<File, Boolean> getDataAsMap() {
-        final Map<File, Boolean> result = new LinkedHashMap<>();
-        for (final Pair<File, Boolean> p : this.getData()) {
-            result.put(p.getFirst(), p.getSecond());
-        }
-        return result;
-    }
-
-    public void setDataFromMap(final Map<File, Boolean> map) {
-        final List<Pair<File, Boolean>> result = new ArrayList<>();
-        for (final Map.Entry<File, Boolean> e : map.entrySet()) {
-            result.add(Pair.create(e.getKey(), e.getValue()));
-        }
-        this.setData(result);
     }
 }

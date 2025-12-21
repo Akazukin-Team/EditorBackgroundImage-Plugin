@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public final class BackgroundScheduler {
-    private static final long POOl_TERMINATE_TIMEOUT = 5;
+    private static final long POOL_TERMINATE_TIMEOUT = 5;
     final EditorBackgroundImage plugin;
     @Nullable
     ScheduledExecutorService pool;
@@ -137,7 +137,7 @@ public final class BackgroundScheduler {
 
             this.pool.shutdown();
             if (!this.pool.awaitTermination(
-                POOl_TERMINATE_TIMEOUT, TimeUnit.SECONDS)) {
+                POOL_TERMINATE_TIMEOUT, TimeUnit.SECONDS)) {
                 this.pool.shutdownNow();
             }
             this.pool = null;

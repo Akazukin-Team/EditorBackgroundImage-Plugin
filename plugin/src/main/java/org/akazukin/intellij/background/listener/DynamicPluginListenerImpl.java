@@ -42,4 +42,14 @@ public final class DynamicPluginListenerImpl implements DynamicPluginListener {
 
         PluginHandler.onDisable();
     }
+
+    @Override
+    public void pluginUnloaded(@NotNull final IdeaPluginDescriptor pluginDescriptor, final boolean isUpdate) {
+        if (!Objects.equals(pluginDescriptor.getPluginId(),
+            EditorBackgroundImage.ACT_PLUGIN_ID)) {
+            return;
+        }
+
+        PluginHandler.onUnload();
+    }
 }

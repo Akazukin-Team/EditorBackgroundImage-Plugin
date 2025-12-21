@@ -202,7 +202,7 @@
               <toolTipText resource-bundle="messages/EditorBackgroundImage" key="settings.hierarchical.enable.toolTip"/>
             </properties>
           </component>
-          <component id="be79f" class="javax.swing.JSpinner" binding="hierarchialSpinner">
+          <component id="be79f" class="javax.swing.JSpinner" binding="hierarchicalSpinner">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
             </constraints>

@@ -15,13 +15,13 @@ import java.util.List;
  */
 @UtilityClass
 @Slf4j
-public final class FileUtils {
-    public static final File[] EMPTY_FILES = new File[0];
+public class FileUtils {
+    public final File[] EMPTY_FILES = new File[0];
 
-    public static final String EXC_NEGA_DEPTH = "The depth is must be positive";
-    public static final String EXC_DIR_IS_FILE = "The directory is not a file";
+    public final String EXC_NEGATIVE_DEPTH = "The depth is must be positive";
+    public final String EXC_DIR_IS_FILE = "The directory is not a file";
 
-    private static final MimetypesFileTypeMap FILE_TYPE_MAP
+    private final MimetypesFileTypeMap FILE_TYPE_MAP
         = new MimetypesFileTypeMap();
 
     /**
@@ -38,13 +38,13 @@ public final class FileUtils {
      * @throws IllegalStateException    If the given {@code directory} is not a directory but a file.
      * @throws IllegalArgumentException If the specified {@code depth} is negative.
      */
-    public static File[] collectFiles(
+    public File[] collectFiles(
         @NotNull final File directory, final int depth) {
         if (directory.isFile()) {
             throw new IllegalStateException(EXC_DIR_IS_FILE);
         }
         if (depth < 0) {
-            throw new IllegalArgumentException(EXC_NEGA_DEPTH);
+            throw new IllegalArgumentException(EXC_NEGATIVE_DEPTH);
         }
 
         final File[] files = directory.listFiles();
@@ -74,7 +74,7 @@ public final class FileUtils {
      * that starts with "image/" or equals "application/octet-stream".
      * Otherwise, returns {@code false}.
      */
-    public static boolean isValidImage(@NotNull final File file, final boolean webpAllowed) {
+    public boolean isValidImage(@NotNull final File file, final boolean webpAllowed) {
         if (!(file.exists() && file.isFile() && file.canRead())) {
             return false;
         }
