@@ -18,6 +18,7 @@
                 <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/3.0.0...4.0.0"><h2>4.0.0</a>
                 <ul>
                     <li>Update dependencies</li>
+                    <li>Check WebP supports</li>
                 </ul>
             </html>
         ]]>
