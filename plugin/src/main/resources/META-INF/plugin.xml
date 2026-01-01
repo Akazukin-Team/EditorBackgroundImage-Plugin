@@ -25,6 +25,7 @@
     </change-notes>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true">intellij.webp</depends>
 
 
     <applicationListeners>
