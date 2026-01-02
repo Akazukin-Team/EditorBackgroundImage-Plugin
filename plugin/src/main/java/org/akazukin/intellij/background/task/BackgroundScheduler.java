@@ -8,10 +8,10 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.bundle.BundleUtils;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.settings.Settings;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
-import org.akazukin.intellij.background.utils.BundleUtils;
 import org.akazukin.intellij.background.utils.NotificationUtils;
 import org.jetbrains.annotations.Nullable;
 

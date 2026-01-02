@@ -5,6 +5,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import lombok.experimental.UtilityClass;
 import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.bundle.BundleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
