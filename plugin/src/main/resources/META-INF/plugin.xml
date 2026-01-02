@@ -15,10 +15,9 @@
     <change-notes>
         <![CDATA[
             <html>
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/3.0.0...4.0.0"><h2>4.0.0</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/4.0.0...4.1.0"><h2>4.1.0</a>
                 <ul>
-                    <li>Update dependencies</li>
-                    <li>Check WebP supports</li>
+                    <li>Add support opacity and position, adjust method</li>
                 </ul>
             </html>
         ]]>
