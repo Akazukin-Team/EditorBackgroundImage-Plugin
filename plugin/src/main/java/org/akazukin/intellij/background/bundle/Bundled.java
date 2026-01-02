@@ -8,15 +8,15 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Bundled<E> {
     E value;
-    String name;
+    String message;
 
-    public Bundled(final E value, final String name) {
+    public Bundled(final E value, final String message) {
         this.value = value;
-        this.name = name;
+        this.message = message;
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return this.message;
     }
 }

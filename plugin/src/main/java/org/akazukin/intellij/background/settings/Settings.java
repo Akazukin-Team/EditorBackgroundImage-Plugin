@@ -110,7 +110,7 @@ public final class Settings implements Configurable {
 
 
         for (final TimeUnit e : TIME_UNITS) {
-            final String msg = BundleUtils.message(
+            final String msg = BundleUtils.getBundledMessage(
                 "settings.timeunit." + e.name().toLowerCase());
             this.autoChangeTimeUnitBox.addItem(msg);
             this.retryTimeUnitBox.addItem(msg);
@@ -122,13 +122,13 @@ public final class Settings implements Configurable {
             .setModel(new SpinnerNumberModel(MIN_OPACITY, MIN_OPACITY, MAX_OPACITY, 1));
 
         for (final Position e : Position.values()) {
-            final Bundled<Position> msg = BundleUtils.message(e);
+            final Bundled<Position> msg = BundleUtils.getBundledMessage(e);
             this.editorPos.addItem(msg);
             this.framePos.addItem(msg);
         }
 
         for (final Adjust e : Adjust.values()) {
-            final Bundled<Adjust> msg = BundleUtils.message(e);
+            final Bundled<Adjust> msg = BundleUtils.getBundledMessage(e);
             this.editorAdjust.addItem(msg);
             this.frameAdjust.addItem(msg);
         }

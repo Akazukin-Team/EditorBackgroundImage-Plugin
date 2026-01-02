@@ -84,10 +84,10 @@ public final class BackgroundScheduler {
                     }
 
                     NotificationUtils.warning(
-                        BundleUtils.message("messages.retry.title"),
-                        BundleUtils.message("messages.retry.message",
+                        BundleUtils.getBundledMessage("messages.retry.title"),
+                        BundleUtils.getBundledMessage("messages.retry.message",
                             retryInterval,
-                            BundleUtils.message(
+                            BundleUtils.getBundledMessage(
                                 "settings.timeunit."
                                     + retryTimeUnit.name().toLowerCase())));
                     Thread.sleep(
