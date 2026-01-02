@@ -1,12 +1,16 @@
 package org.akazukin.intellij.background.task.tasks;
 
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.intellij.Adjust;
+import org.akazukin.intellij.background.intellij.BackgroundData;
+import org.akazukin.intellij.background.intellij.BackgroundManager;
+import org.akazukin.intellij.background.intellij.Frame;
+import org.akazukin.intellij.background.intellij.Position;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.utils.FileUtils;
 import org.akazukin.intellij.background.utils.NotificationUtils;
@@ -45,15 +49,14 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
     public Boolean get() {
         log.info("Try to set random background image");
         try {
-            final PropertiesComponent props = PropertiesComponent.getInstance();
             final Config.State state = Config.getInstance();
 
-            final List<String> targets = new ArrayList<>();
+            final List<Target> targets = new ArrayList<>();
             if (state.isChangeEditor()) {
-                targets.add(IdeBackgroundUtil.EDITOR_PROP);
+                targets.add(new Target(Frame.EDITOR, (byte) state.getEditorOpacity(), state.getEditorPos(), state.getEditorAdjust()));
             }
             if (state.isChangeFrame()) {
-                targets.add(IdeBackgroundUtil.FRAME_PROP);
+                targets.add(new Target(Frame.FRAME, (byte) state.getFrameOpacity(), state.getFramePos(), state.getFrameAdjust()));
             }
             if (targets.isEmpty()) {
                 return false;
@@ -75,7 +78,7 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
             final List<File> curImgs = new ArrayList<>();
             for (int i = 0; i < imgsCount; i++) {
                 // Set a target for the image that selected during the current loop
-                final List<String> curTargets = new ArrayList<>();
+                final List<Target> curTargets = new ArrayList<>();
                 if (state.isSynchronizeImages()) {
                     curTargets.addAll(targets);
                 } else {
@@ -89,7 +92,10 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
                 images.removeAll(curImgs);
                 // remove duplicated image from props
                 images.removeIf(f -> curTargets.stream()
-                    .anyMatch(t -> f.getAbsolutePath().equals(props.getValue(t))));
+                    .anyMatch(t -> {
+                        final BackgroundData bg = BackgroundManager.getBackground(t.getFrame());
+                        return bg != null && f.getAbsoluteFile().equals(bg.getFile());
+                    }));
 
                 // select an image in some tried or less
                 File img = null;
@@ -119,8 +125,8 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
 
             // Set the backgrounds
             int imageIndex = 0;
-            for (final String t : targets) {
-                props.setValue(t, curImgs.get(imageIndex).getAbsolutePath());
+            for (final Target t : targets) {
+                BackgroundManager.setBackground(t.getFrame(), new File(curImgs.get(imageIndex).getAbsolutePath()), t.getOpacity(), t.getAdjust(), t.getPos());
                 log.info("Set background image to {}, {}", curImgs.get(imageIndex).getAbsolutePath(), t);
                 if (!state.isSynchronizeImages()) {
                     imageIndex++;
@@ -131,6 +137,21 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         } catch (final Throwable e) {
             log.error("Failed to set random background image", e);
             return false;
+        }
+    }
+
+    @Getter
+    private static class Target {
+        Frame frame;
+        byte opacity;
+        Position pos;
+        Adjust adjust;
+
+        public Target(final Frame frame, final byte opacity, final Position pos, final Adjust adjust) {
+            this.frame = frame;
+            this.opacity = opacity;
+            this.pos = pos;
+            this.adjust = adjust;
         }
     }
 }

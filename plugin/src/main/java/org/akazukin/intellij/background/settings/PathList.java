@@ -10,7 +10,7 @@ import com.intellij.ui.ClickListener;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.akazukin.intellij.background.utils.BundleUtils;
+import org.akazukin.intellij.background.bundle.BundleUtils;
 import org.akazukin.intellij.background.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
