@@ -84,12 +84,12 @@ public final class Config
 
 
         boolean changeEditor = true;
-        int editorOpacity = 30;
+        int editorOpacity = 15;
         Position editorPos = Position.MIDDLE_CENTER;
         Adjust editorAdjust = Adjust.STRETCH;
 
         boolean changeFrame = true;
-        int frameOpacity = 30;
+        int frameOpacity = 15;
         Position framePos = Position.MIDDLE_CENTER;
         Adjust frameAdjust = Adjust.STRETCH;
 
