@@ -45,10 +45,9 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
     public PathList() {
         super(getTableModel(), new ArrayList<>(),
             BundleUtils.getBundledMessage("settings.backgrounds.title"));
-        this.getTable().setShowColumns(true);
-        this.getTable().getColumnModel()
-            .getColumn(1).setMaxWidth(75);
-
+        final var table = this.getTable();
+        table.setShowColumns(true);
+        table.getColumnModel().getColumn(1).setMaxWidth(75);
 
         new ClickListener() {
             @Override
@@ -57,19 +56,20 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
                 PathList.this.doClick(event.getButton());
                 return true;
             }
-        }.installOn(this.getTable());
+        }.installOn(table);
     }
 
     private void doClick(final int button) {
-        final int selected = this.getTable().getSelectedRow();
+        final var table = this.getTable();
+        final int selected = table.getSelectedRow();
         if (selected >= 0) {
-            final Pair<File, Boolean> o =
-                this.clickItem(this.getData().get(selected), button);
+            final var data = this.getData();
+            final Pair<File, Boolean> o = this.clickItem(data.get(selected), button);
             if (o != null) {
-                this.getData().set(selected, o);
+                data.set(selected, o);
             }
 
-            ((AbstractTableModel) this.getTable().getModel())
+            ((AbstractTableModel) table.getModel())
                 .fireTableRowsUpdated(selected, selected);
         }
     }
@@ -142,18 +142,18 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
     @Override
     protected @Nullable Pair<File, Boolean> editItem(
         final Pair<File, Boolean> pair) {
-        if (this.getTable().getSelectedColumn() == 0) {
-            final VirtualFile virtualFile =
-                FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
-
-            if (virtualFile == null) {
-                return pair;
-            }
-
-            this.defaultFile = virtualFile;
-            return new Pair<>(
-                new File(virtualFile.getPath()), pair.getSecond());
+        if (this.getTable().getSelectedColumn() != 0) {
+            return pair;
         }
-        return pair;
+
+        final VirtualFile virtualFile =
+            FileChooser.chooseFile(CHOOSER, null, this.defaultFile);
+
+        if (virtualFile == null) {
+            return pair;
+        }
+
+        this.defaultFile = virtualFile;
+        return new Pair<>(new File(virtualFile.getPath()), pair.getSecond());
     }
 }
