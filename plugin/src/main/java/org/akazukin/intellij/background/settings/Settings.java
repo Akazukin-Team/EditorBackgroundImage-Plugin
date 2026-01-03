@@ -378,7 +378,7 @@ public final class Settings implements Configurable {
     public void disposeUIResources() {
         if (!PluginHandler.isLoaded()
             || !PluginHandler.isEnabled()
-            || PluginHandler.getPlugin().getImageCache().length == 0) {
+            || PluginHandler.getPlugin().getCachedSettings().getImageCache().length == 0) {
             return;
         }
 

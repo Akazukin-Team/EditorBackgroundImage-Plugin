@@ -18,8 +18,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -51,47 +56,35 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         try {
             final Config.State state = Config.getInstance();
 
-            final List<Target> targets = new ArrayList<>();
-            if (state.isChangeEditor()) {
-                targets.add(new Target(Frame.EDITOR, (byte) state.getEditorOpacity(), state.getEditorPos(), state.getEditorAdjust()));
-            }
-            if (state.isChangeFrame()) {
-                targets.add(new Target(Frame.FRAME, (byte) state.getFrameOpacity(), state.getFramePos(), state.getFrameAdjust()));
-            }
-            if (targets.isEmpty()) {
+            final Targets[] targets = this.getTargets();
+            if (targets.length == 0) {
                 return false;
             }
 
-            final int imgsCount = state.isSynchronizeImages() ? 1 : targets.size();
-
-            @NotNull File[] cachedImg = this.plugin.getImageCache();
-            if (cachedImg.length < imgsCount) {
-                if ((cachedImg = this.plugin.getTaskMgr()
-                    .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get()).length < imgsCount) {
+            @NotNull File[] cachedImg = this.plugin.getCachedSettings().getImageCache();
+            if (cachedImg.length < targets.length) {
+                cachedImg = this.plugin.getTaskMgr()
+                    .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get();
+                if (cachedImg.length < targets.length) {
                     state.setAutoChangeEnabled(false);
                     return false;
                 }
             }
 
-            final List<File> cachedImgList =
-                new ArrayList<>(List.of(cachedImg));
-            final List<File> curImgs = new ArrayList<>();
-            for (int i = 0; i < imgsCount; i++) {
+            final Set<File> cachedImgList =
+                new HashSet<>(List.of(cachedImg));
+            final Map<Target, File> curImgs = new HashMap<>();
+            final boolean webpSupported = this.plugin.getCachedSettings().isWebpSupport();
+            for (final Targets tar : targets) {
                 // Set a target for the image that selected during the current loop
-                final List<Target> curTargets = new ArrayList<>();
-                if (state.isSynchronizeImages()) {
-                    curTargets.addAll(targets);
-                } else {
-                    curTargets.add(targets.get(i));
-                }
 
                 // Set selectable images by cache
                 final List<File> images =
                     new ArrayList<>(cachedImgList);
                 // remove the images that already selected
-                images.removeAll(curImgs);
+                images.removeAll(curImgs.values());
                 // remove duplicated image from props
-                images.removeIf(f -> curTargets.stream()
+                images.removeIf(f -> Arrays.stream(tar.targets)
                     .anyMatch(t -> {
                         final BackgroundData bg = BackgroundManager.getBackground(t.getFrame());
                         return bg != null && f.getAbsoluteFile().equals(bg.getFile());
@@ -103,13 +96,15 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
                     img = images.get(this.random.nextInt(images.size()));
                     images.remove(img);
 
-                    if (!FileUtils.isValidImage(img, this.plugin.getCachedSettings().isWebpSupport())) {
+                    if (!FileUtils.isValidImage(img, webpSupported)) {
                         cachedImgList.remove(img);
                         img = null;
                         continue;
                     }
 
-                    curImgs.add(img);
+                    for (final Target t : tar.targets) {
+                        curImgs.put(t, img);
+                    }
                 }
 
                 // when failed to fetch the image
@@ -117,20 +112,16 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
                     NotificationUtils.errorBundled(
                         "messages.failedFetchImg.title",
                         "messages.failedFetchImg.message");
-                    this.plugin.setImageCache(FileUtils.EMPTY_FILES);
+                    this.plugin.getCachedSettings().setImageCache(FileUtils.EMPTY_FILES);
                     return false;
                 }
             }
-            this.plugin.setImageCache(cachedImgList.toArray(FileUtils.EMPTY_FILES));
+            this.plugin.getCachedSettings().setImageCache(cachedImgList.toArray(FileUtils.EMPTY_FILES));
 
             // Set the backgrounds
-            int imageIndex = 0;
-            for (final Target t : targets) {
-                BackgroundManager.setBackground(t.getFrame(), new File(curImgs.get(imageIndex).getAbsolutePath()), t.getOpacity(), t.getAdjust(), t.getPos());
-                log.info("Set background image to {}, {}", curImgs.get(imageIndex).getAbsolutePath(), t);
-                if (!state.isSynchronizeImages()) {
-                    imageIndex++;
-                }
+            for (final Map.Entry<Target, File> e : curImgs.entrySet()) {
+                BackgroundManager.setBackground(e.getKey().getFrame(), e.getValue(), e.getKey().getOpacity(), e.getKey().getAdjust(), e.getKey().getPos());
+                log.info("Set background image to {}, {}", e.getValue().getAbsolutePath(), e);
             }
 
             return true;
@@ -140,8 +131,35 @@ public final class SetRandomBackgroundTask implements ITask<Boolean> {
         }
     }
 
+    private Targets[] getTargets() {
+        final Config.State state = Config.getInstance();
+
+        final List<Target> targets = new ArrayList<>();
+        if (state.isChangeEditor()) {
+            targets.add(new Target(Frame.EDITOR, (byte) state.getEditorOpacity(), state.getEditorPos(), state.getEditorAdjust()));
+        }
+        if (state.isChangeFrame()) {
+            targets.add(new Target(Frame.FRAME, (byte) state.getFrameOpacity(), state.getFramePos(), state.getFrameAdjust()));
+        }
+
+        if (state.isSynchronizeImages()) {
+            return new Targets[]{new Targets(targets.toArray(Target.ARR))};
+        } else {
+            return targets.stream().map(Targets::new).toArray(Targets[]::new);
+        }
+    }
+
+    private static class Targets {
+        Target[] targets;
+
+        public Targets(final Target... targets) {
+            this.targets = targets;
+        }
+    }
+
     @Getter
     private static class Target {
+        public static final Target[] ARR = new Target[0];
         Frame frame;
         byte opacity;
         Position pos;

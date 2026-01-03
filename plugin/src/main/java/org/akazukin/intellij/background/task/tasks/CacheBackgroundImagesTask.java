@@ -46,7 +46,7 @@ public final class CacheBackgroundImagesTask implements ITask<File[]> {
             NotificationUtils.warningBundled("messages.nopath.title",
                 "messages.nopath.message");
             state.setAutoChangeEnabled(false);
-            this.plugin.setImageCache(FileUtils.EMPTY_FILES);
+            this.plugin.getCachedSettings().setImageCache(FileUtils.EMPTY_FILES);
             return FileUtils.EMPTY_FILES;
         }
 
@@ -58,6 +58,7 @@ public final class CacheBackgroundImagesTask implements ITask<File[]> {
         final int depth = state.isHierarchicalExplore()
             ? state.getHierarchicalDepth() : 0;
 
+        final boolean webpSupported = this.plugin.getCachedSettings().isWebpSupport();
         final Set<File> imagePaths = new HashSet<>();
         for (final File path : files) {
             if (path.isDirectory()) {
@@ -67,18 +68,16 @@ public final class CacheBackgroundImagesTask implements ITask<File[]> {
                 imagePaths.add(path);
             }
         }
-        imagePaths.removeIf(file -> !FileUtils.isValidImage(file, this.plugin.getCachedSettings().isWebpSupport()));
+        imagePaths.removeIf(file -> !FileUtils.isValidImage(file, webpSupported));
         final File[] result = imagePaths.toArray(FileUtils.EMPTY_FILES);
+        this.plugin.getCachedSettings().setImageCache(result);
 
         if (imagePaths.isEmpty()) {
             NotificationUtils.errorBundled("messages.noimage.title",
                 "messages.noimage.message");
             state.setAutoChangeEnabled(false);
-            this.plugin.setImageCache(result);
-            return result;
         }
 
-        this.plugin.setImageCache(result);
         return result;
     }
 }

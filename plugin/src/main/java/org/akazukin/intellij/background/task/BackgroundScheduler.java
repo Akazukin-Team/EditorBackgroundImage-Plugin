@@ -57,15 +57,13 @@ public final class BackgroundScheduler {
         final int delay = props.isValueSet(IdeBackgroundUtil.EDITOR_PROP)
             ? autoChangeInterval : 0;
 
-
         final int retryInterval = state.getRetryIntervalAmount();
         final TimeUnit retryTimeUnit
             = Settings.TIME_UNITS[state.getRetryIntervalUnit()];
 
-
-        log.info("Schedule " + this.plugin.getTaskMgr()
-            .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
-            .getTaskName());
+        final SetRandomBackgroundTask randomBgTask = this.plugin.getTaskMgr()
+            .getServiceByInterfaceClass(SetRandomBackgroundTask.class);
+        log.info("Schedule " + randomBgTask.getTaskName());
 
 
         final ScheduledExecutorService pool
@@ -76,10 +74,7 @@ public final class BackgroundScheduler {
             try {
                 for (int tries = 0, retries = state.getRetryTimes();
                      tries <= retries; tries++) {
-                    if (this.plugin
-                        .getTaskMgr()
-                        .getServiceByInterfaceClass(
-                            SetRandomBackgroundTask.class).get()) {
+                    if (randomBgTask.get()) {
                         return;
                     }
 
@@ -122,19 +117,14 @@ public final class BackgroundScheduler {
             this.pool = pool;
             this.pool.scheduleWithFixedDelay(task, delay,
                 autoChangeInterval, autoChangeTimeUnit);
-            log.debug("Scheduled " + this.plugin.getTaskMgr()
-                .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
-                .getTaskName());
+            log.debug("Scheduled " + randomBgTask.getTaskName());
         }
     }
 
     @SneakyThrows
     public synchronized void shutdown() {
         if (this.pool != null) {
-            log.debug("Shutdown scheduled tasks " + this.plugin.getTaskMgr()
-                .getServiceByInterfaceClass(SetRandomBackgroundTask.class)
-                .getTaskName());
-
+            log.debug("Shutdown scheduled tasks");
             this.pool.shutdown();
             if (!this.pool.awaitTermination(
                 POOL_TERMINATE_TIMEOUT, TimeUnit.SECONDS)) {
