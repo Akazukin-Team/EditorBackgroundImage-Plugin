@@ -44,7 +44,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     public PathList() {
         super(getTableModel(), new ArrayList<>(),
-            BundleUtils.message("settings.backgrounds.title"));
+            BundleUtils.getBundledMessage("settings.backgrounds.title"));
         this.getTable().setShowColumns(true);
         this.getTable().getColumnModel()
             .getColumn(1).setMaxWidth(75);
@@ -100,7 +100,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
                     default -> throw new IllegalArgumentException(
                         PathList.INVALID_COLUMN_MESSAGE);
                 };
-                return BundleUtils.message("settings.backgrounds." + id);
+                return BundleUtils.getBundledMessage("settings.backgrounds." + id);
             }
 
             @Override

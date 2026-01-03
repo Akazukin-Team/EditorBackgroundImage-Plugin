@@ -50,7 +50,7 @@ public class NotificationUtils {
         @NotNull @PropertyKey(resourceBundle = BundleUtils.BUNDLE_NAME) final String title,
         @NotNull @PropertyKey(resourceBundle = BundleUtils.BUNDLE_NAME) final String message,
         final NotificationType type) {
-        notice(BundleUtils.message(title), BundleUtils.message(message), type);
+        notice(BundleUtils.getBundledMessage(title), BundleUtils.getBundledMessage(message), type);
     }
 
     public void warningBundled(

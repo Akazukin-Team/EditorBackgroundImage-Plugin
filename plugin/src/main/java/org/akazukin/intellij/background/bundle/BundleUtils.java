@@ -26,10 +26,10 @@ public class BundleUtils {
         new DynamicBundle(BundleUtils.class, BUNDLE_NAME);
 
     @NotNull
-    public <E extends IBundlable> @Nls Bundled<E> message(
+    public <E extends IBundlable> @Nls Bundled<E> getBundledMessage(
         final E item,
         final Object... params) {
-        return new Bundled<>(item, message(item.getBundleId(), params));
+        return new Bundled<>(item, getBundledMessage(item.getBundleId(), params));
     }
 
     /**
@@ -46,7 +46,7 @@ public class BundleUtils {
      * Never returns {@code null}.
      */
     @NotNull
-    public @Nls String message(
+    public @Nls String getBundledMessage(
         @NotNull @PropertyKey(resourceBundle = BUNDLE_NAME) final String key,
         final Object... params) {
         return INSTANCE.getMessage(key, params);
