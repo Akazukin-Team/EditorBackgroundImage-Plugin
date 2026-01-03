@@ -7,12 +7,15 @@ on:
     branches:
       - 'main'
       - 'master'
+      - 'product'
+      - 'prod'
+
       - 'develop'
       - 'dev'
 
 
 env:
-  JDK_VERSION: 21
+  JDK_VERSION: 17
 
 
 jobs:
@@ -41,6 +44,9 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Clean cache
+        run: ./gradlew clean
 
       - name: Build and Test
         run: ./gradlew build test

@@ -23,9 +23,9 @@ jobs:
           desired_labels=$(cat .github/labels.json | jq -c '[.[] | .name]')
           
           current_labels=$(gh api /repos/${GITHUB_REPOSITORY}/labels --jq '[.[] | .name]')
-          
+
           labels_to_delete=$(echo "${current_labels}" "${desired_labels}" | jq -sc '.[0] - .[1]')
-          
+
           echo "${labels_to_delete}" | jq -r '.[]' | while read -r name
           do
             gh api --method DELETE \
