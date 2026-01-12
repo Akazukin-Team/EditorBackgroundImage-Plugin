@@ -14,7 +14,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity '2025.1'
+        intellijIdeaCommunity '2025.2'
         jetbrainsRuntime()
 
         //bundledPlugin 'com.intellij.java'
