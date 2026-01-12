@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +27,15 @@ public class FileUtils {
 
     private final MimetypesFileTypeMap FILE_TYPE_MAP
         = new MimetypesFileTypeMap();
+    private final MessageDigest DIGEST;
+
+    static {
+        try {
+            DIGEST = MessageDigest.getInstance("SHA-256");
+        } catch (final NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Collects files from a given directory up to a specified depth.
@@ -81,10 +94,27 @@ public class FileUtils {
         final String contentType = FILE_TYPE_MAP.getContentType(file);
         log.debug("File {} has MIME type {}", file.getAbsolutePath(), contentType);
 
+        return isValidType(contentType, webpAllowed);
+    }
+
+    public boolean isValidType(@NotNull final String contentType, final boolean webpAllowed) {
         if (!webpAllowed && contentType.equals("application/octet-stream")) {
             return false;
         }
         return contentType.startsWith("image/")
             || contentType.equals("application/octet-stream");
+    }
+
+    public byte[] calcFileHash(@NotNull final File file) throws IOException {
+        try (final FileInputStream fis = new FileInputStream(file)) {
+            return calcFileHash(fis.readAllBytes());
+        }
+    }
+
+    public byte[] calcFileHash(@NotNull final byte[] bytes) {
+        synchronized (DIGEST) {
+            DIGEST.update(bytes);
+            return DIGEST.digest();
+        }
     }
 }

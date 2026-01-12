@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.listener.WebpDynamicPluginListenerImpl;
+import org.akazukin.util.utils.FileUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.FileNotFoundException;
 
 /**
  * A utility class for managing the lifecycle and state of an `EditorBackgroundImage` plugin.
@@ -27,6 +30,11 @@ public class PluginHandler {
         }
         plugin.onDisable();
         plugin = null;
+
+        try {
+            FileUtils.deleteDirectory(EditorBackgroundImage.TEMP_DIR.toFile());
+        } catch (final FileNotFoundException ignored) {
+        }
     }
 
     /**
@@ -63,6 +71,10 @@ public class PluginHandler {
     public void init() {
         synchronized (LOCK) {
             plugin = new EditorBackgroundImage();
+            try {
+                FileUtils.deleteDirectory(EditorBackgroundImage.TEMP_DIR.toFile());
+            } catch (final FileNotFoundException ignored) {
+            }
 
             {
                 final IdeaPluginDescriptor webpPl =

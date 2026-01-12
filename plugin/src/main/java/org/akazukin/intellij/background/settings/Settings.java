@@ -3,9 +3,9 @@ package org.akazukin.intellij.background.settings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import lombok.AccessLevel;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
@@ -15,6 +15,7 @@ import org.akazukin.intellij.background.intellij.Adjust;
 import org.akazukin.intellij.background.intellij.Position;
 import org.akazukin.intellij.background.task.tasks.CacheBackgroundImagesTask;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
+import org.akazukin.util.object.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JCheckBox;
@@ -23,6 +24,9 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -59,7 +63,8 @@ public final class Settings implements Configurable {
     JCheckBox frameButton;
     JCheckBox hierarchicalButton;
     JSpinner hierarchicalSpinner;
-    PathList backgroundsListPanel;
+    FilePathList backgroundsFilesPanel;
+    UrlPathList backgroundsUrlsPanel;
     ComboBox<String> retryTimeUnitBox;
     JSpinner retryIntervalSpinner;
     JCheckBox retryEnableButton;
@@ -148,10 +153,22 @@ public final class Settings implements Configurable {
     public boolean isModified() {
         final Config.State state = Config.getInstance();
 
-        final Set<Pair<File, Boolean>> bgImgs =
+        final Set<Pair<File, Boolean>> bgImgFiles =
             state.getImages().entrySet().stream()
                 .map(e ->
-                    Pair.pair(new File(e.getKey()), e.getValue()))
+                    new Pair<>(new File(e.getKey()), e.getValue()))
+                .collect(Collectors.toSet());
+
+        final Set<Pair<URL, Boolean>> bgImgUrls =
+            state.getImageUrls().entrySet().stream()
+                .map(e ->
+                {
+                    try {
+                        return new Pair<>(URI.create(e.getKey()).toURL(), e.getValue());
+                    } catch (final MalformedURLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                })
                 .collect(Collectors.toSet());
 
         return
@@ -205,9 +222,11 @@ public final class Settings implements Configurable {
                 .getNumber().intValue()
 
 
-                || !bgImgs.equals(new HashSet<>(this.backgroundsListPanel.getData()));
+                || !bgImgFiles.equals(new HashSet<>(this.backgroundsFilesPanel.getData()))
+                || !bgImgUrls.equals(new HashSet<>(this.backgroundsUrlsPanel.getData()));
     }
 
+    @SneakyThrows
     @Override
     public void apply() {
         final Config.State state = Config.getInstance();
@@ -255,23 +274,27 @@ public final class Settings implements Configurable {
             ((SpinnerNumberModel) this.hierarchicalSpinner.getModel())
                 .getNumber().intValue());
 
+        {
+            @SuppressWarnings("unchecked") final Map<String, Boolean> filePanelRes = this.backgroundsFilesPanel.getData().stream()
+                .map(e -> Map.entry(e.getKey().getAbsolutePath(), e.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            @SuppressWarnings("unchecked") final Map<String, Boolean> urlPanelRes = this.backgroundsUrlsPanel.getData().stream()
+                .map(e -> Map.entry(e.getKey().toExternalForm(), e.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        final Set<Pair<File, Boolean>> bgImgs =
-            state.getImages().entrySet().stream()
-                .map(e ->
-                    Pair.pair(new File(e.getKey()), e.getValue()))
-                .collect(Collectors.toSet());
-        if (!bgImgs.equals(new HashSet<>(this.backgroundsListPanel.getData()))) {
-            if (PluginHandler.isInitialized()) {
-                PluginHandler.getPlugin().getTaskMgr()
-                    .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get();
+            final boolean filesChanged = !state.getImages().equals(filePanelRes);
+            final boolean urlsChanged = !state.getImageUrls().equals(urlPanelRes);
+
+            state.setImages(filePanelRes);
+            state.setImageUrls(urlPanelRes);
+
+            if (filesChanged || urlsChanged) {
+                if (PluginHandler.isInitialized()) {
+                    PluginHandler.getPlugin().getTaskMgr()
+                        .getServiceByInterfaceClass(CacheBackgroundImagesTask.class).get();
+                }
             }
         }
-
-        @SuppressWarnings("unchecked") final Map.Entry<String, Boolean>[] panelRes = this.backgroundsListPanel.getData().stream()
-            .map(e -> Map.entry(e.first.getAbsolutePath(), e.second))
-            .toArray(Map.Entry[]::new);
-        state.setImages(Map.ofEntries(panelRes));
 
         this.autoChangeIntervalSpinner
             .setEnabled(this.autoChangeEnableButton.isSelected());
@@ -366,12 +389,25 @@ public final class Settings implements Configurable {
             this.hierarchicalButton.isSelected());
 
 
-        final List<Pair<File, Boolean>> bgImgs =
+        final List<Pair<File, Boolean>> bgImgFiles =
             new ArrayList<>(state.getImages().entrySet().stream()
                 .map(e ->
-                    Pair.pair(new File(e.getKey()), e.getValue()))
+                    new Pair<>(new File(e.getKey()), e.getValue()))
                 .toList());
-        this.backgroundsListPanel.setData(bgImgs);
+        this.backgroundsFilesPanel.setData(bgImgFiles);
+
+        final List<Pair<URL, Boolean>> bgImgUrls =
+            new ArrayList<>(state.getImageUrls().entrySet().stream()
+                .map(e ->
+                {
+                    try {
+                        return new Pair<>(URI.create(e.getKey()).toURL(), e.getValue());
+                    } catch (final MalformedURLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                })
+                .toList());
+        this.backgroundsUrlsPanel.setData(bgImgUrls);
     }
 
     @Override

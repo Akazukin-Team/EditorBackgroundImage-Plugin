@@ -1,6 +1,7 @@
 [versions]
 # App deps
 akz-service = "4.0.0-SNAPSHOT"
+akz-snowflake = "1.2.0"
 lombok = "1.18.42"
 jetbrains-annotation = "26.0.2"
 
@@ -16,6 +17,7 @@ intellij = "2.5.0"
 [libraries]
 # App deps
 akz-service = { module = "org.akazukin:service", version.ref = "akz-service" }
+akz-snowflake = { module = "org.akazukin:snowflake", version.ref = "akz-snowflake" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotation" }
 
