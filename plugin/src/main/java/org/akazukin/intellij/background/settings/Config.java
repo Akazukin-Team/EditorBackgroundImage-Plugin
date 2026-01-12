@@ -99,5 +99,6 @@ public final class Config
         int hierarchicalDepth = 3;
 
         Map<String, Boolean> images = new LinkedHashMap<>();
+        Map<String, Boolean> imageUrls = new LinkedHashMap<>();
     }
 }

@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
     libFatjar libs.akz.service
+    libFatjar libs.akz.snowflake
 }

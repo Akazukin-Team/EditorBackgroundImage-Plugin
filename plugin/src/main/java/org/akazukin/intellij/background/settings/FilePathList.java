@@ -3,7 +3,6 @@ package org.akazukin.intellij.background.settings;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AddEditRemovePanel;
 import com.intellij.ui.ClickListener;
@@ -12,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.bundle.BundleUtils;
 import org.akazukin.intellij.background.utils.FileUtils;
+import org.akazukin.util.object.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
  */
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
+public final class FilePathList extends AddEditRemovePanel<Pair<File, Boolean>> {
     public static final String INVALID_COLUMN_MESSAGE = "Invalid column index";
     @Serial
     private static final long serialVersionUID = 1L;
@@ -42,9 +42,9 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
 
     VirtualFile defaultFile;
 
-    public PathList() {
+    public FilePathList() {
         super(getTableModel(), new ArrayList<>(),
-            BundleUtils.getBundledMessage("settings.backgrounds.title"));
+            BundleUtils.getBundledMessage("settings.background.file.title"));
         final var table = this.getTable();
         table.setShowColumns(true);
         table.getColumnModel().getColumn(1).setMaxWidth(75);
@@ -53,7 +53,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
             @Override
             public boolean onClick(
                 @NotNull final MouseEvent event, final int clickCount) {
-                PathList.this.doClick(event.getButton());
+                FilePathList.this.doClick(event.getButton());
                 return true;
             }
         }.installOn(table);
@@ -78,7 +78,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
     private Pair<File, Boolean> clickItem(
         final Pair<File, Boolean> pair, final int button) {
         if (this.getTable().getSelectedColumn() == 1) {
-            return new Pair<>(pair.getFirst(), !pair.getSecond());
+            return new Pair<>(pair.getKey(), !pair.getValue());
         }
         return pair;
     }
@@ -94,19 +94,18 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
             @NotNull
             public @NlsContexts.ColumnName String getColumnName(
                 final int columnIndex) {
-                final String id = switch (columnIndex) {
-                    case 0 -> "path";
-                    case 1 -> "enable";
+                return switch (columnIndex) {
+                    case 0 -> BundleUtils.getBundledMessage("settings.background.file.path");
+                    case 1 -> BundleUtils.getBundledMessage("settings.backgrounds.enable");
                     default -> throw new IllegalArgumentException(
-                        PathList.INVALID_COLUMN_MESSAGE);
+                        FilePathList.INVALID_COLUMN_MESSAGE);
                 };
-                return BundleUtils.getBundledMessage("settings.backgrounds." + id);
             }
 
             @Override
             public Object getField(
                 final Pair<File, Boolean> o, final int columnIndex) {
-                return columnIndex == 0 ? o.getFirst() : o.getSecond();
+                return columnIndex == 0 ? o.getKey() : o.getValue();
             }
 
             @Override
@@ -115,7 +114,7 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
                     case 0 -> File.class;
                     case 1 -> Boolean.class;
                     default -> throw new IllegalArgumentException(
-                        PathList.INVALID_COLUMN_MESSAGE);
+                        FilePathList.INVALID_COLUMN_MESSAGE);
                 };
             }
         };
@@ -154,6 +153,6 @@ public final class PathList extends AddEditRemovePanel<Pair<File, Boolean>> {
         }
 
         this.defaultFile = virtualFile;
-        return new Pair<>(new File(virtualFile.getPath()), pair.getSecond());
+        return new Pair<>(new File(virtualFile.getPath()), pair.getValue());
     }
 }
