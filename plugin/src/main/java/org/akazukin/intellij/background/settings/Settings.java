@@ -9,9 +9,12 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.PluginHandler;
+import org.akazukin.intellij.background.bundle.BundleUtils;
+import org.akazukin.intellij.background.bundle.Bundled;
+import org.akazukin.intellij.background.intellij.Adjust;
+import org.akazukin.intellij.background.intellij.Position;
 import org.akazukin.intellij.background.task.tasks.CacheBackgroundImagesTask;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
-import org.akazukin.intellij.background.utils.BundleUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JCheckBox;
@@ -44,22 +47,29 @@ public final class Settings implements Configurable {
     private static final int MAX_INTERVAL = 360;
     private static final int MAX_RETRIES = 50;
     private static final int MAX_DEPTH = 10;
+    private static final int MAX_OPACITY = 100;
+    private static final int MIN_OPACITY = 0;
 
     JPanel rootPanel;
     JCheckBox autoChangeEnableButton;
     JSpinner autoChangeIntervalSpinner;
     ComboBox<String> autoChangeTimeUnitBox;
-    JCheckBox synchronizeImageButton;
+    JCheckBox synchImgButton;
     JCheckBox editorButton;
     JCheckBox frameButton;
     JCheckBox hierarchicalButton;
     JSpinner hierarchicalSpinner;
     PathList backgroundsListPanel;
-    JPanel autoChangePanel;
     ComboBox<String> retryTimeUnitBox;
     JSpinner retryIntervalSpinner;
     JCheckBox retryEnableButton;
     JSpinner retryTimesSpinner;
+    JSpinner editorOpacity;
+    JSpinner frameOpacity;
+    ComboBox<Bundled<Adjust>> frameAdjust;
+    ComboBox<Bundled<Adjust>> editorAdjust;
+    ComboBox<Bundled<Position>> editorPos;
+    ComboBox<Bundled<Position>> framePos;
 
     @Override
     public String getDisplayName() {
@@ -79,6 +89,8 @@ public final class Settings implements Configurable {
             this.autoChangeTimeUnitBox
                 .setEnabled(this.autoChangeEnableButton.isSelected());
         });
+
+
         this.autoChangeIntervalSpinner
             .setModel(new SpinnerNumberModel(1, 1, MAX_INTERVAL, 2));
 
@@ -97,12 +109,30 @@ public final class Settings implements Configurable {
             .setModel(new SpinnerNumberModel(1, 1, MAX_INTERVAL, 2));
 
 
-        for (final TimeUnit timeUnit : TIME_UNITS) {
-            final String msg = BundleUtils.message(
-                "settings.timeunit." + timeUnit.name().toLowerCase());
+        for (final TimeUnit e : TIME_UNITS) {
+            final String msg = BundleUtils.getBundledMessage(
+                "settings.timeunit." + e.name().toLowerCase());
             this.autoChangeTimeUnitBox.addItem(msg);
             this.retryTimeUnitBox.addItem(msg);
         }
+
+        this.editorOpacity
+            .setModel(new SpinnerNumberModel(MIN_OPACITY, MIN_OPACITY, MAX_OPACITY, 1));
+        this.frameOpacity
+            .setModel(new SpinnerNumberModel(MIN_OPACITY, MIN_OPACITY, MAX_OPACITY, 1));
+
+        for (final Position e : Position.values()) {
+            final Bundled<Position> msg = BundleUtils.getBundledMessage(e);
+            this.editorPos.addItem(msg);
+            this.framePos.addItem(msg);
+        }
+
+        for (final Adjust e : Adjust.values()) {
+            final Bundled<Adjust> msg = BundleUtils.getBundledMessage(e);
+            this.editorAdjust.addItem(msg);
+            this.frameAdjust.addItem(msg);
+        }
+
 
         this.hierarchicalButton.addActionListener(e ->
             this.hierarchicalSpinner
@@ -151,11 +181,20 @@ public final class Settings implements Configurable {
 
 
                 || state.isChangeEditor() != this.editorButton.isSelected()
+                || state.getEditorOpacity()
+                != ((SpinnerNumberModel) this.editorOpacity.getModel()).getNumber().byteValue()
+                || state.getEditorPos() != this.editorPos.getItem().getValue()
+                || state.getEditorAdjust() != this.editorAdjust.getItem().getValue()
+
                 || state.isChangeFrame() != this.frameButton.isSelected()
+                || state.getFrameOpacity()
+                != ((SpinnerNumberModel) this.frameOpacity.getModel()).getNumber().byteValue()
+                || state.getFramePos() != this.framePos.getItem().getValue()
+                || state.getFrameAdjust() != this.frameAdjust.getItem().getValue()
 
 
                 || state.isSynchronizeImages()
-                != this.synchronizeImageButton.isSelected()
+                != this.synchImgButton.isSelected()
 
 
                 || state.isHierarchicalExplore()
@@ -193,11 +232,22 @@ public final class Settings implements Configurable {
             this.retryTimeUnitBox.getSelectedIndex());
 
 
-        state.setSynchronizeImages(this.synchronizeImageButton.isSelected());
+        state.setSynchronizeImages(this.synchImgButton.isSelected());
 
 
         state.setChangeEditor(this.editorButton.isSelected());
+        state.setEditorOpacity(
+            ((SpinnerNumberModel) this.editorOpacity.getModel())
+                .getNumber().byteValue());
+        state.setEditorPos(((Bundled<Position>) this.editorPos.getSelectedItem()).getValue());
+        state.setEditorAdjust(((Bundled<Adjust>) this.editorAdjust.getSelectedItem()).getValue());
+
         state.setChangeFrame(this.frameButton.isSelected());
+        state.setFrameOpacity(
+            ((SpinnerNumberModel) this.frameOpacity.getModel())
+                .getNumber().byteValue());
+        state.setFramePos(((Bundled<Position>) this.framePos.getSelectedItem()).getValue());
+        state.setFrameAdjust(((Bundled<Adjust>) this.frameAdjust.getSelectedItem()).getValue());
 
 
         state.setHierarchicalExplore(this.hierarchicalButton.isSelected());
@@ -272,10 +322,41 @@ public final class Settings implements Configurable {
 
 
         this.editorButton.setSelected(state.isChangeEditor());
+        this.editorOpacity.setValue(state.getEditorOpacity());
+        for (int i = 0; i < this.editorPos.getModel().getSize(); i++) {
+            final Bundled<Position> e = this.editorPos.getItemAt(i);
+            if (e.getValue() == state.getEditorPos()) {
+                this.editorPos.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < this.editorAdjust.getModel().getSize(); i++) {
+            final Bundled<Adjust> e = this.editorAdjust.getItemAt(i);
+            if (e.getValue() == state.getEditorAdjust()) {
+                this.editorAdjust.setSelectedIndex(i);
+                break;
+            }
+        }
+
         this.frameButton.setSelected(state.isChangeFrame());
+        this.frameOpacity.setValue(state.getFrameOpacity());
+        for (int i = 0; i < this.framePos.getModel().getSize(); i++) {
+            final Bundled<Position> e = this.framePos.getItemAt(i);
+            if (e.getValue() == state.getFramePos()) {
+                this.framePos.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < this.frameAdjust.getModel().getSize(); i++) {
+            final Bundled<Adjust> e = this.frameAdjust.getItemAt(i);
+            if (e.getValue() == state.getFrameAdjust()) {
+                this.frameAdjust.setSelectedIndex(i);
+                break;
+            }
+        }
 
 
-        this.synchronizeImageButton.setSelected(state.isSynchronizeImages());
+        this.synchImgButton.setSelected(state.isSynchronizeImages());
 
 
         this.hierarchicalButton.setSelected(state.isHierarchicalExplore());
@@ -297,7 +378,7 @@ public final class Settings implements Configurable {
     public void disposeUIResources() {
         if (!PluginHandler.isLoaded()
             || !PluginHandler.isEnabled()
-            || PluginHandler.getPlugin().getImageCache().length == 0) {
+            || PluginHandler.getPlugin().getCachedSettings().getImageCache().length == 0) {
             return;
         }
 

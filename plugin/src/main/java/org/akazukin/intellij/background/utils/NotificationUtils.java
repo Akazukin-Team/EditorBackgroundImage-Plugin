@@ -5,6 +5,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import lombok.experimental.UtilityClass;
 import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.bundle.BundleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -49,7 +50,7 @@ public class NotificationUtils {
         @NotNull @PropertyKey(resourceBundle = BundleUtils.BUNDLE_NAME) final String title,
         @NotNull @PropertyKey(resourceBundle = BundleUtils.BUNDLE_NAME) final String message,
         final NotificationType type) {
-        notice(BundleUtils.message(title), BundleUtils.message(message), type);
+        notice(BundleUtils.getBundledMessage(title), BundleUtils.getBundledMessage(message), type);
     }
 
     public void warningBundled(

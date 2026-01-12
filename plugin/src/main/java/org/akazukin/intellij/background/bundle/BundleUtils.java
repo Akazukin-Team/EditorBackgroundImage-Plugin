@@ -1,4 +1,4 @@
-package org.akazukin.intellij.background.utils;
+package org.akazukin.intellij.background.bundle;
 
 import com.intellij.DynamicBundle;
 import lombok.experimental.UtilityClass;
@@ -25,6 +25,13 @@ public class BundleUtils {
     private final DynamicBundle INSTANCE =
         new DynamicBundle(BundleUtils.class, BUNDLE_NAME);
 
+    @NotNull
+    public <E extends IBundlable> @Nls Bundled<E> getBundledMessage(
+        final E item,
+        final Object... params) {
+        return new Bundled<>(item, getBundledMessage(item.getBundleId(), params));
+    }
+
     /**
      * Retrieves a localized message from a resource bundle using the given key
      * and formats it with optional parameters.
@@ -39,7 +46,7 @@ public class BundleUtils {
      * Never returns {@code null}.
      */
     @NotNull
-    public @Nls String message(
+    public @Nls String getBundledMessage(
         @NotNull @PropertyKey(resourceBundle = BUNDLE_NAME) final String key,
         final Object... params) {
         return INSTANCE.getMessage(key, params);

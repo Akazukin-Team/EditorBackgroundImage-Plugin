@@ -6,6 +6,11 @@ on:
     branches:
       - 'main'
       - 'master'
+      - 'product'
+      - 'prod'
+
+      - 'develop'
+      - 'dev'
 
 
 jobs:

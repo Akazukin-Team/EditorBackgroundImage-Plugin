@@ -12,7 +12,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.akazukin.intellij.background.EditorBackgroundImage;
+import org.akazukin.intellij.background.intellij.Adjust;
+import org.akazukin.intellij.background.intellij.Position;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,10 +30,11 @@ import java.util.Map;
     roamingType = RoamingType.PER_OS,
     value = EditorBackgroundImage.PLUGIN_NAME + "Config.xml"
 ))
-@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
 public final class Config
     implements PersistentStateComponent<Config.State>, Disposable {
+    @Nullable
     State state;
 
     /**
@@ -80,7 +84,14 @@ public final class Config
 
 
         boolean changeEditor = true;
+        int editorOpacity = 15;
+        Position editorPos = Position.MIDDLE_CENTER;
+        Adjust editorAdjust = Adjust.STRETCH;
+
         boolean changeFrame = true;
+        int frameOpacity = 15;
+        Position framePos = Position.MIDDLE_CENTER;
+        Adjust frameAdjust = Adjust.STRETCH;
 
         boolean synchronizeImages = true;
 
