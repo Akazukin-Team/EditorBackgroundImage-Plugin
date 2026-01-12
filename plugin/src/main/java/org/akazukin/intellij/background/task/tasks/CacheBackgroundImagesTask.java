@@ -53,11 +53,13 @@ public final class CacheBackgroundImagesTask implements ITask<File[]> {
 
         final Set<File> imagePaths = new HashSet<>();
         {
+            final int maxDepth = state.getHierarchicalDepth();
+
             final FileCache cache = this.plugin.getCacheMgr().getCache(FileCache.class);
             synchronized (cache) {
                 cache.clear();
                 state.getImages().forEach((file, enabled) ->
-                    cache.analyzeAndCache(new File(file), enabled, webpSupported));
+                    cache.analyzeAndCache(new File(file), enabled, maxDepth, webpSupported));
                 imagePaths.addAll(Arrays.asList(cache.getValidAndEnabledFiles()));
             }
         }

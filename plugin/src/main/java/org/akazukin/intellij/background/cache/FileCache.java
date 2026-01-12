@@ -15,20 +15,18 @@ import java.util.Set;
 public final class FileCache implements ICache {
     Map<File, FileData> cache = new HashMap<>();
 
-    public void analyzeAndCache(final File[] files, final boolean enabled, final int maxdDepth, final boolean webpSupport) {
+    public void analyzeAndCache(final File file, final boolean enabled, final int maxdDepth, final boolean webpSupport) {
         final Set<File> fileSet = new HashSet<>();
-        for (final File f : files) {
-            if (f.isDirectory()) {
-                fileSet.addAll(List.of(FileUtils.collectFiles(f, maxdDepth)));
-            } else {
-                fileSet.add(f);
-            }
+        if (file.isDirectory()) {
+            fileSet.addAll(List.of(FileUtils.collectFiles(file, maxdDepth)));
+        } else {
+            fileSet.add(file);
         }
 
-        fileSet.forEach(f -> this.analyzeAndCache(f, enabled, webpSupport));
+        fileSet.forEach(f -> this.analyzeFileAndCache(f, enabled, webpSupport));
     }
 
-    public void analyzeAndCache(final File file, final boolean enabled, final boolean webpSupport) {
+    public void analyzeFileAndCache(final File file, final boolean enabled, final boolean webpSupport) {
         this.cache(file, enabled, webpSupport, FileUtils.isValidImage(file, webpSupport));
     }
 
