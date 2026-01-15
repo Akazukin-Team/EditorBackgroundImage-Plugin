@@ -1,17 +1,25 @@
 package org.akazukin.intellij.background;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.extensions.PluginId;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.akazukin.intellij.background.cache.CacheManager;
+import org.akazukin.intellij.background.cache.ICacheManager;
 import org.akazukin.intellij.background.settings.CachedSettings;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.task.BackgroundScheduler;
 import org.akazukin.intellij.background.task.TaskManager;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
+import org.akazukin.snowflake.config.SnowFlakeConfig;
+import org.akazukin.snowflake.generator.AtomicSnowFlake;
+import org.akazukin.snowflake.generator.ISnowFlake;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+import java.nio.file.Path;
+
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 @Slf4j
 public final class EditorBackgroundImage {
@@ -24,13 +32,19 @@ public final class EditorBackgroundImage {
     public static final PluginId ACT_PLUGIN_ID =
         PluginId.getId(ACT_PLUGIN_ID_STRING);
 
+    public static final Path TEMP_DIR = Path.of(PathManager.getTempPath(), EditorBackgroundImage.ACT_PLUGIN_ID_STRING);
 
-    final CachedSettings cachedSettings = new CachedSettings();
-    final BackgroundScheduler scheduler = new BackgroundScheduler(this);
-    final TaskManager taskMgr = new TaskManager(this);
+
+    CachedSettings cachedSettings = new CachedSettings();
+    BackgroundScheduler scheduler = new BackgroundScheduler(this);
+    TaskManager taskMgr = new TaskManager(this);
+    ICacheManager cacheMgr = new CacheManager();
+    ISnowFlake snowflake;
 
     {
-        this.taskMgr.registerServices();
+        this.taskMgr.registerTasks();
+        this.cacheMgr.registerCaches();
+        this.snowflake = new AtomicSnowFlake(new SnowFlakeConfig(1735689600000L, 0L, (byte) 0, (byte) 22), 0);
     }
 
     public boolean isEnabled() {

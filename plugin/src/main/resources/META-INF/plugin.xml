@@ -15,10 +15,11 @@
     <change-notes>
         <![CDATA[
             <html>
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/4.0.0...5.0.0"><h2>5.0.0</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/5.0.0...6.0.0"><h2>6.0.0</a>
                 <ul>
-                    <li>Add support opacity and position, adjust method</li>
-                    <li>Optimize some classes</li>
+                    <li>Support URL to fetch images</li>
+                    <li>Refactor the cache logic</li>
+                    <li>Optimize Settings class</li>
                 </ul>
             </html>
         ]]>

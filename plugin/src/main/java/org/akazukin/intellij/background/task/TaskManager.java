@@ -28,7 +28,7 @@ public final class TaskManager extends ASingleServiceManager<ITask<?>> {
         this.plugin = plugin;
     }
 
-    public void registerServices() {
+    public void registerTasks() {
         this.registerService(new CacheBackgroundImagesTask(this.plugin));
         this.registerService(new SetRandomBackgroundTask(this.plugin));
     }
