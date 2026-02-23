@@ -3,7 +3,7 @@
 akz-service = "4.0.0-SNAPSHOT"
 akz-snowflake = "1.2.0"
 lombok = "1.18.42"
-jetbrains-annotation = "26.0.2"
+jetbrains-annotation = "26.1.0"
 
 # JMH Libraries
 jmh-lib = "1.37"
