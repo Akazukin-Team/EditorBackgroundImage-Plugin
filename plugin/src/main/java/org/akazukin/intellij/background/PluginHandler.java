@@ -1,6 +1,5 @@
 package org.akazukin.intellij.background;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -77,9 +76,8 @@ public class PluginHandler {
             }
 
             {
-                final IdeaPluginDescriptor webpPl =
-                    PluginManager.getInstance().findEnabledPlugin(WebpDynamicPluginListenerImpl.PLUGIN_ID);
-                PluginHandler.getPlugin().getCachedSettings().setWebpSupport(webpPl != null && webpPl.isEnabled());
+                final boolean webpSupported = PluginManager.isPluginInstalled(WebpDynamicPluginListenerImpl.PLUGIN_ID);
+                PluginHandler.getPlugin().getCachedSettings().setWebpSupport(webpSupported);
             }
         }
     }

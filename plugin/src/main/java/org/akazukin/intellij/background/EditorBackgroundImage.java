@@ -7,12 +7,18 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.cache.CacheManager;
+import org.akazukin.intellij.background.cache.FileCache;
+import org.akazukin.intellij.background.cache.ICache;
 import org.akazukin.intellij.background.cache.ICacheManager;
+import org.akazukin.intellij.background.cache.UrlCache;
 import org.akazukin.intellij.background.settings.CachedSettings;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.task.BackgroundScheduler;
 import org.akazukin.intellij.background.task.TaskManager;
+import org.akazukin.intellij.background.task.tasks.CacheBackgroundImagesTask;
+import org.akazukin.intellij.background.task.tasks.ITask;
 import org.akazukin.intellij.background.task.tasks.SetRandomBackgroundTask;
+import org.akazukin.service.registry.SingleServiceRegistry;
 import org.akazukin.snowflake.config.SnowFlakeConfig;
 import org.akazukin.snowflake.generator.AtomicSnowFlake;
 import org.akazukin.snowflake.generator.ISnowFlake;
@@ -37,13 +43,25 @@ public final class EditorBackgroundImage {
 
     CachedSettings cachedSettings = new CachedSettings();
     BackgroundScheduler scheduler = new BackgroundScheduler(this);
-    TaskManager taskMgr = new TaskManager(this);
-    ICacheManager cacheMgr = new CacheManager();
+    TaskManager taskMgr;
+    ICacheManager cacheMgr;
     ISnowFlake snowflake;
 
     {
-        this.taskMgr.registerTasks();
-        this.cacheMgr.registerCaches();
+        {
+            final SingleServiceRegistry<ITask<?>> reg = new SingleServiceRegistry<>((Class<ITask<?>>) (Object) ITask.class);
+            reg.registerService(new CacheBackgroundImagesTask(this));
+            reg.registerService(new SetRandomBackgroundTask(this));
+            this.taskMgr = new TaskManager(reg, this);
+        }
+
+        {
+            final SingleServiceRegistry<ICache> reg = new SingleServiceRegistry<>(ICache.class);
+            reg.registerService(new UrlCache());
+            reg.registerService(new FileCache());
+            this.cacheMgr = new CacheManager(reg);
+        }
+
         this.snowflake = new AtomicSnowFlake(new SnowFlakeConfig(1735689600000L, 0L, (byte) 0, (byte) 22), 0);
     }
 
