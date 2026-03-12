@@ -1,4 +1,4 @@
-# <PLACEHOLDER_NAME>
+# EditorBackgroundImage Plugin for Intellij Platform
 
 [![Build Status](https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/actions/workflows/build.yml?query=branch:main)
 

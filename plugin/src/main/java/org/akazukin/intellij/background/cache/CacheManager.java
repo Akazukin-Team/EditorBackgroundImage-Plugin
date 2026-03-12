@@ -1,12 +1,12 @@
 package org.akazukin.intellij.background.cache;
 
-import org.akazukin.service.data.IServiceHolder;
-import org.akazukin.service.manager.single.ASingleServiceManager;
+import org.akazukin.service.manager.single.SingleServiceManager;
+import org.akazukin.service.registry.SingleServiceRegistry;
 import org.jetbrains.annotations.NotNull;
 
-public final class CacheManager extends ASingleServiceManager<ICache> implements ICacheManager {
-    public CacheManager() {
-        super(ICache.class);
+public final class CacheManager extends SingleServiceManager<ICache> implements ICacheManager {
+    public CacheManager(final SingleServiceRegistry<ICache> reg) {
+        super(reg);
     }
 
     @Override
@@ -16,14 +16,6 @@ public final class CacheManager extends ASingleServiceManager<ICache> implements
 
     @Override
     public ICache[] getCaches() {
-        return this.services.stream()
-            .map(IServiceHolder::getImplementation)
-            .toArray(ICache[]::new);
-    }
-
-    @Override
-    public void registerCaches() {
-        this.registerService(new FileCache());
-        this.registerService(new UrlCache());
+        return this.getAllServices();
     }
 }

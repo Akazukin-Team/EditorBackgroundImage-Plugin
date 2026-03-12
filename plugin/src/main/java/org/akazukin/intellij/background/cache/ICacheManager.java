@@ -6,6 +6,4 @@ public interface ICacheManager {
     <T extends ICache> T getCache(@NotNull Class<T> service);
 
     ICache[] getCaches();
-
-    void registerCaches();
 }
