@@ -229,7 +229,8 @@ public final class Settings implements Configurable {
     @SneakyThrows
     @Override
     public void apply() {
-        final Config.State state = Config.getInstance();
+        final Config comp = Config.getComponent();
+        final Config.State state = comp.getState();
 
 
         state.setAutoChangeEnabled(this.autoChangeEnableButton.isSelected());
@@ -295,6 +296,10 @@ public final class Settings implements Configurable {
                 }
             }
         }
+
+        // Apply the settings to the current background
+        comp.apply();
+
 
         this.autoChangeIntervalSpinner
             .setEnabled(this.autoChangeEnableButton.isSelected());
