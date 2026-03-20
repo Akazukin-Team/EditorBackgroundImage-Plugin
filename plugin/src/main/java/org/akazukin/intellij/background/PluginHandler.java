@@ -3,19 +3,13 @@ package org.akazukin.intellij.background;
 import com.intellij.ide.plugins.PluginManager;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-import org.akazukin.intellij.background.listener.WebpDynamicPluginListenerImpl;
-import org.akazukin.util.utils.FileUtils;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.FileNotFoundException;
 
 /**
  * A utility class for managing the lifecycle and state of an `EditorBackgroundImage` plugin.
  * This class provides methods to initialize, enable, disable, and check the status of the plugin.
  */
 @UtilityClass
-@Slf4j
 public class PluginHandler {
     @Getter
     private final Object LOCK = new Object();
@@ -29,11 +23,6 @@ public class PluginHandler {
         }
         plugin.onDisable();
         plugin = null;
-
-        try {
-            FileUtils.deleteDirectory(EditorBackgroundImage.TEMP_DIR.toFile());
-        } catch (final FileNotFoundException ignored) {
-        }
     }
 
     /**
@@ -70,15 +59,6 @@ public class PluginHandler {
     public void init() {
         synchronized (LOCK) {
             plugin = new EditorBackgroundImage();
-            try {
-                FileUtils.deleteDirectory(EditorBackgroundImage.TEMP_DIR.toFile());
-            } catch (final FileNotFoundException ignored) {
-            }
-
-            {
-                final boolean webpSupported = PluginManager.isPluginInstalled(WebpDynamicPluginListenerImpl.PLUGIN_ID);
-                PluginHandler.getPlugin().getCachedSettings().setWebpSupport(webpSupported);
-            }
         }
     }
 

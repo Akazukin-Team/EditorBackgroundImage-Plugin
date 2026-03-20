@@ -417,9 +417,7 @@ public final class Settings implements Configurable {
 
     @Override
     public void disposeUIResources() {
-        if (!PluginHandler.isLoaded()
-            || !PluginHandler.isEnabled()
-            || PluginHandler.getPlugin().getCachedSettings().getImageCache().length == 0) {
+        if (!PluginHandler.isEnabled()) {
             return;
         }
 
