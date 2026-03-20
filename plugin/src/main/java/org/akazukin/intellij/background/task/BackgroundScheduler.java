@@ -65,6 +65,9 @@ public final class BackgroundScheduler {
             .getServiceByInterfaceClass(SetRandomBackgroundTask.class);
         log.info("Schedule " + randomBgTask.getTaskName());
 
+        NotificationUtils.infoBundled(
+            "messages.scheduler.title", "messages.scheduler.message.scheduled");
+
 
         final ScheduledExecutorService pool
             = Executors.newSingleThreadScheduledExecutor();
@@ -125,6 +128,9 @@ public final class BackgroundScheduler {
     public synchronized void shutdown() {
         if (this.pool != null) {
             log.debug("Shutdown scheduled tasks");
+            NotificationUtils.infoBundled(
+                "messages.scheduler.title", "messages.scheduler.message.cancelled");
+
             this.pool.shutdown();
             if (!this.pool.awaitTermination(
                 POOL_TERMINATE_TIMEOUT, TimeUnit.SECONDS)) {
