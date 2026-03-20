@@ -27,9 +27,7 @@ public final class DynamicPluginListenerImpl implements DynamicPluginListener {
             return;
         }
 
-        synchronized (PluginHandler.getLOCK()) {
-            PluginHandler.onStartup();
-        }
+        PluginHandler.onStartup();
     }
 
     @Override
