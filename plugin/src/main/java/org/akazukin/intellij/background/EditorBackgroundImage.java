@@ -1,5 +1,6 @@
 package org.akazukin.intellij.background;
 
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.extensions.PluginId;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import org.akazukin.intellij.background.cache.FileCache;
 import org.akazukin.intellij.background.cache.ICache;
 import org.akazukin.intellij.background.cache.ICacheManager;
 import org.akazukin.intellij.background.cache.UrlCache;
+import org.akazukin.intellij.background.listener.WebpDynamicPluginListenerImpl;
 import org.akazukin.intellij.background.settings.CachedSettings;
 import org.akazukin.intellij.background.settings.Config;
 import org.akazukin.intellij.background.task.BackgroundScheduler;
@@ -22,10 +24,12 @@ import org.akazukin.service.registry.SingleServiceRegistry;
 import org.akazukin.snowflake.config.SnowFlakeConfig;
 import org.akazukin.snowflake.generator.AtomicSnowFlake;
 import org.akazukin.snowflake.generator.ISnowFlake;
+import org.akazukin.util.utils.FileUtils;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Slf4j
 public final class EditorBackgroundImage {
@@ -41,11 +45,12 @@ public final class EditorBackgroundImage {
     public static final Path TEMP_DIR = Path.of(PathManager.getTempPath(), EditorBackgroundImage.ACT_PLUGIN_ID_STRING);
 
 
-    CachedSettings cachedSettings = new CachedSettings();
-    BackgroundScheduler scheduler = new BackgroundScheduler(this);
-    TaskManager taskMgr;
-    ICacheManager cacheMgr;
-    ISnowFlake snowflake;
+    final CachedSettings cachedSettings = new CachedSettings();
+    final BackgroundScheduler scheduler = new BackgroundScheduler(this);
+    final TaskManager taskMgr;
+    final ICacheManager cacheMgr;
+    final ISnowFlake snowflake;
+    boolean enabled;
 
     {
         {
@@ -65,12 +70,19 @@ public final class EditorBackgroundImage {
         this.snowflake = new AtomicSnowFlake(new SnowFlakeConfig(1735689600000L, 0L, (byte) 0, (byte) 22), 0);
     }
 
-    public boolean isEnabled() {
-        return this.scheduler.isScheduled();
-    }
-
     public void onEnable() {
         log.info("Enabling " + PLUGIN_NAME_SPACE);
+
+        try {
+            FileUtils.deleteDirectory(EditorBackgroundImage.TEMP_DIR.toFile());
+        } catch (final FileNotFoundException ignored) {
+        }
+
+        {
+            final boolean webpSupported = PluginManager.isPluginInstalled(WebpDynamicPluginListenerImpl.PLUGIN_ID);
+            this.cachedSettings.setWebpSupport(webpSupported);
+        }
+
         final Config.State state = Config.getInstance();
         if (state.isAutoChangeEnabled()) {
             synchronized (this.scheduler) {
@@ -83,11 +95,20 @@ public final class EditorBackgroundImage {
             }
         }
         log.info("Enabled " + PLUGIN_NAME_SPACE);
+
+        this.enabled = true;
     }
 
     public void onDisable() {
         log.info("Disabling " + PLUGIN_NAME_SPACE);
         this.scheduler.shutdown();
+
+        try {
+            FileUtils.deleteDirectory(EditorBackgroundImage.TEMP_DIR.toFile());
+        } catch (final FileNotFoundException ignored) {
+        }
         log.info("Disabled " + PLUGIN_NAME_SPACE);
+
+        this.enabled = false;
     }
 }

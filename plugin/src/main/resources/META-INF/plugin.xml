@@ -15,10 +15,11 @@
     <change-notes>
         <![CDATA[
             <html>
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/6.0.0...7.0.0"><h2>7.0.0</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/7.0.0...7.1.0"><h2>7.1.0</a>
                 <ul>
-                    <li>Update dependencies</li>
-                    <li>Fix translations</li>
+                    <li>Refactor plugin lifecycle</li>
+                    <li>Add notification for scheduler</li>
+                    <li>Add auto-apply settings when they are changed</li>
                 </ul>
             </html>
         ]]>

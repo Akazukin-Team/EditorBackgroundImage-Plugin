@@ -11,8 +11,12 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.akazukin.intellij.background.EditorBackgroundImage;
 import org.akazukin.intellij.background.intellij.Adjust;
+import org.akazukin.intellij.background.intellij.BackgroundData;
+import org.akazukin.intellij.background.intellij.BackgroundManager;
+import org.akazukin.intellij.background.intellij.Frame;
 import org.akazukin.intellij.background.intellij.Position;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +36,7 @@ import java.util.Map;
 ))
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
+@Slf4j
 public final class Config
     implements PersistentStateComponent<Config.State>, Disposable {
     @Nullable
@@ -46,8 +51,21 @@ public final class Config
      */
     @NotNull
     public static Config.State getInstance() {
+        return getComponent().getState();
+    }
+
+    /**
+     * Retrieves the {@link Config} component instance, which serves as the core
+     * configuration service for the EditorBackgroundImage plugin.
+     * This method resolves the application-level service through the {@link ApplicationManager}.
+     *
+     * @return the {@link Config} instance representing the plugin's main service component.
+     * The returned instance is used to access the plugin's state or manage its lifecycle.
+     */
+    @NotNull
+    public static Config getComponent() {
         return ApplicationManager.getApplication()
-            .getService(Config.class).getState();
+            .getService(Config.class);
     }
 
     @Override
@@ -56,9 +74,34 @@ public final class Config
     }
 
     @Override
-    public void initializeComponent() {
+    public synchronized void initializeComponent() {
         if (this.state == null) {
             this.state = new State();
+        }
+    }
+
+    public synchronized void apply() {
+        for (final Frame f : Frame.values()) {
+            final BackgroundData data = BackgroundManager.getBackground(f);
+            if (data == null) {
+                continue;
+            }
+            log.info("Applying background for {}", f.getName());
+
+            final int opacity;
+            final Adjust adjust;
+            final Position pos;
+            if (f == Frame.EDITOR) {
+                opacity = this.state.getEditorOpacity();
+                adjust = this.state.getEditorAdjust();
+                pos = this.state.getEditorPos();
+            } else {
+                opacity = this.state.getFrameOpacity();
+                adjust = this.state.getFrameAdjust();
+                pos = this.state.getFramePos();
+            }
+
+            BackgroundManager.setBackground(f, data.getFile(), (byte) opacity, adjust, pos);
         }
     }
 

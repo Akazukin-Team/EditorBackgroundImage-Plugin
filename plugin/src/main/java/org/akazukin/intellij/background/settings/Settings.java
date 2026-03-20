@@ -229,7 +229,8 @@ public final class Settings implements Configurable {
     @SneakyThrows
     @Override
     public void apply() {
-        final Config.State state = Config.getInstance();
+        final Config comp = Config.getComponent();
+        final Config.State state = comp.getState();
 
 
         state.setAutoChangeEnabled(this.autoChangeEnableButton.isSelected());
@@ -258,15 +259,15 @@ public final class Settings implements Configurable {
         state.setEditorOpacity(
             ((SpinnerNumberModel) this.editorOpacity.getModel())
                 .getNumber().byteValue());
-        state.setEditorPos(((Bundled<Position>) this.editorPos.getSelectedItem()).getValue());
-        state.setEditorAdjust(((Bundled<Adjust>) this.editorAdjust.getSelectedItem()).getValue());
+        state.setEditorPos(this.editorPos.getItem().getValue());
+        state.setEditorAdjust(this.editorAdjust.getItem().getValue());
 
         state.setChangeFrame(this.frameButton.isSelected());
         state.setFrameOpacity(
             ((SpinnerNumberModel) this.frameOpacity.getModel())
                 .getNumber().byteValue());
-        state.setFramePos(((Bundled<Position>) this.framePos.getSelectedItem()).getValue());
-        state.setFrameAdjust(((Bundled<Adjust>) this.frameAdjust.getSelectedItem()).getValue());
+        state.setFramePos(this.framePos.getItem().getValue());
+        state.setFrameAdjust(this.frameAdjust.getItem().getValue());
 
 
         state.setHierarchicalExplore(this.hierarchicalButton.isSelected());
@@ -275,10 +276,10 @@ public final class Settings implements Configurable {
                 .getNumber().intValue());
 
         {
-            @SuppressWarnings("unchecked") final Map<String, Boolean> filePanelRes = this.backgroundsFilesPanel.getData().stream()
+            final Map<String, Boolean> filePanelRes = this.backgroundsFilesPanel.getData().stream()
                 .map(e -> Map.entry(e.getKey().getAbsolutePath(), e.getValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-            @SuppressWarnings("unchecked") final Map<String, Boolean> urlPanelRes = this.backgroundsUrlsPanel.getData().stream()
+            final Map<String, Boolean> urlPanelRes = this.backgroundsUrlsPanel.getData().stream()
                 .map(e -> Map.entry(e.getKey().toExternalForm(), e.getValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
@@ -295,6 +296,10 @@ public final class Settings implements Configurable {
                 }
             }
         }
+
+        // Apply the settings to the current background
+        comp.apply();
+
 
         this.autoChangeIntervalSpinner
             .setEnabled(this.autoChangeEnableButton.isSelected());
@@ -412,9 +417,7 @@ public final class Settings implements Configurable {
 
     @Override
     public void disposeUIResources() {
-        if (!PluginHandler.isLoaded()
-            || !PluginHandler.isEnabled()
-            || PluginHandler.getPlugin().getCachedSettings().getImageCache().length == 0) {
+        if (!PluginHandler.isEnabled()) {
             return;
         }
 
