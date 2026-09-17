@@ -15,11 +15,10 @@
     <change-notes>
         <![CDATA[
             <html>
-                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/7.0.0...7.1.0"><h2>7.1.0</a>
+                <a target="_blank" href="https://github.com/Akazukin-Team/EditorBackgroundImage-Plugin/compare/7.1.0...7.2.0"><h2>7.2.0</a>
                 <ul>
-                    <li>Refactor plugin lifecycle</li>
-                    <li>Add notification for scheduler</li>
-                    <li>Add auto-apply settings when they are changed</li>
+                    <li>Add a shortcut for toggling auto background switch</li>
+                    <li>Add a shortcut for reloading background images</li>
                 </ul>
             </html>
         ]]>
@@ -51,7 +50,11 @@
     <actions>
         <action id="randomBackgroundImage"
                 class="org.akazukin.intellij.background.actions.SetBackgroundAction"
-                text="Set Background To Random Image"/>
+                text="Set Background To Random Image">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift W" os="windows"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift W" os="linux"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="meta shift W" os="mac"/>
+        </action>
 
         <action id="clearBackgroundImage"
                 class="org.akazukin.intellij.background.actions.ClearBackgroundAction"
@@ -61,11 +64,29 @@
                 class="org.akazukin.intellij.background.actions.CacheBackgroundImagesAction"
                 text="Cache Background Images"/>
 
+        <action id="toggleAutoSwitch"
+                class="org.akazukin.intellij.background.actions.ToggleAutoSwitchAction"
+                text="Toggle Automatic Wallpaper Switching">
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt W" os="windows"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt W" os="linux"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="meta alt W" os="mac"/>
+        </action>
+
+        <action id="cacheAndReloadBackgroundImage"
+                class="org.akazukin.intellij.background.actions.CacheAndReloadBackgroundAction"
+                text="Cache the background images and set a random image">
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift W" os="windows"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift W" os="linux"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="meta shift W" os="mac"/>
+        </action>
+
         <group id="editorBackgroundImage" text="Editor Background Image" description="Editor Background Image"
                popup="true">
             <reference ref="randomBackgroundImage"/>
             <reference ref="clearBackgroundImage"/>
             <reference ref="cacheBackgroundImage"/>
+            <reference ref="toggleAutoSwitch"/>
+            <reference ref="cacheAndReloadBackgroundImage"/>
             <add-to-group group-id="ViewMenu" anchor="last"/>
         </group>
     </actions>
